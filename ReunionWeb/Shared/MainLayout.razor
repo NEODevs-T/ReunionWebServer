@@ -151,10 +151,20 @@
                     NotificationService.Notify(Notificar.Notificacion("error", "Atención", mensaje));
 
                     carga = false;
-                }
-                else if (ValidarToken == "null")
+                }else if(ValidarToken == "DeactivatedUser"){
+                    mensaje = "El usuario esta desactivado en este proyecto";
+                    NotificationService.Notify(Notificar.Notificacion("error", "Atención", mensaje));
+
+                    carga = false;
+
+                }else if(ValidarToken == "DeactivatedUserAll"){
+                    mensaje = "El usuario esta desactivado";
+                    NotificationService.Notify(Notificar.Notificacion("error", "Atención", mensaje));
+
+                    carga = false;
+
+                }else if (ValidarToken == "null")
                 {
-                   
                     mensaje = "Este usuario no está registrado en este proyecto."; 
                     NotificationService.Notify(Notificar.Notificacion("error", "Atención", mensaje));
                     carga = false;
