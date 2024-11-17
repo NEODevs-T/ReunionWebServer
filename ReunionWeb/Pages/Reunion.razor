@@ -5,187 +5,385 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime IJS
-
-@*@attribute [Authorize(Roles = "Admin,AdminChempro, SupIntendente,SupIntendenteGeneral,SuperAdmin, Planificador, Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
-
-<h3>Formato de Reunión</h3>
+@inject AuthenticationStateProvider AuthStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 
-<BSContainer>
-
-    @if (APIReunionService.centro.Count() == 0)
-    {
+@*@attribute [Authorize(Roles = "Admin,AdminChempro, SupIntendente,SupIntendenteGeneral,SuperAdmin, Planificador,
+Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
 
 
-        <div class="loader"></div>
-    }
-    else
-    {
-        @error
-        <BSRow>
-            <BSCol Column="3" ColumnSmall="2">
-                <BSLabel>Centro</BSLabel>
-                <BSInput InputType="InputType.Select" @bind-Value="IdCentro">
-                    <option value="">Seleccione</option>
-                    @foreach (var d in APIReunionService.centro)
-                    {
-                        <option value="@d.IdCentro">@d.Cnom</option>
-                    }
-                </BSInput>
-            </BSCol>
+@if(idPais == TrinidadYTobago)
+{
+    <h3>Meeting Format</h3>
 
-            <BSCol Column="3" >
-                <BSLabel>División</BSLabel>
-                <BSInput InputType="InputType.Select" @bind-Value="IdDiv">
-                    <option value="">Seleccione</option>
-                    @foreach (var d in APIReunionService.centro)
-                    {
-                        @foreach (var e in d.Divisions)
+
+    <BSContainer>
+
+        @if (APIReunionService.centro.Count() == 0)
+        {
+
+
+            <div class="loader"></div>
+        }
+        else
+        {
+            @error
+            <BSRow>
+                <BSCol Column="3" ColumnSmall="2">
+                    <BSLabel>Center</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="IdCentro">
+                        <option value="">Select</option>
+                        @foreach (var d in APIReunionService.centro)
                         {
-                            if (IdCentro == d.IdCentro)
+                            <option value="@d.IdCentro">@d.Cnom</option>
+                        }
+                    </BSInput>
+                </BSCol>
+
+                <BSCol Column="3">
+                    <BSLabel>Division</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="IdDiv">
+                        <option value="">Select</option>
+                        @foreach (var d in APIReunionService.centro)
+                        {
+                            @foreach (var e in d.Divisions)
                             {
-                                <option value="@e.IdDivision">@e.Dnombre</option>
+                                if (IdCentro == d.IdCentro)
+                                {
+                                    <option value="@e.IdDivision">@e.Dnombre</option>
+                                }
+                            }
+                        }
+                    </BSInput>
+                </BSCol>
+
+                <BSCol Column="3">
+                    <BSLabel>Code</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="Codigo">
+                        <option value="Todo">All</option>
+                        <option value="1">1- In Progress</option>
+                        <option value="2">2- Next Stop</option>
+                        <option value="3">3- Spare part missing</option>
+                        <option value="4">4- Lack of Personnel</option>
+                        <option value="5">5- Eq. not available</option>
+                    </BSInput>
+                </BSCol>
+                <BSCol Column="2">
+                    <BSRow>
+                        <BSLabel>Accept</BSLabel>
+                    </BSRow>
+                    <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get"> Reunión <span
+                            class="oi oi-check"></span></BSButton>
+                </BSCol>
+                @if (DbReunionService.reudiatablas.Count() > 0 && dataIsLoaded == 2)
+                {
+                    <BSCol ColumnSmall="2">
+                        <BSRow>
+                            <BSLabel>Print</BSLabel>
+                        </BSRow>
+                        <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="PrintDocument"> <span
+                                class="oi oi-print"></span></BSButton>
+                    </BSCol>
+                }
+            </BSRow>
+        }
+
+    </BSContainer>
+
+    <p>
+    </p>
+
+    @if (DbReunionService.reudiatablas.Count() > 0 && dataIsLoaded == 2)
+    {
+        <BSContainer>
+
+            <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
+                <BSTHead Class="cabecera">
+                    <BSTR>
+
+                        @*<BSTD>Id</BSTD>*@
+
+                        <BSTD>Area</BSTD>
+                        <BSTD>Ksf</BSTD>
+                        <BSTD>Equipment Code</BSTD>
+                        <BSTD ColSpan="4">Issue</BSTD>
+                        <BSTD>Code</BSTD>
+                        <BSTD>Plan of action</BSTD>
+                        <BSTD>Time</BSTD>
+                        <BSTD ColSpan="1">Responsible</BSTD>
+                        <BSTD>Status</BSTD>
+                        <BSTD>ODT</BSTD>
+                        <BSTD>Job Date</BSTD>@*Fecha de listo el trabajo*@
+                        @if (Rol == "Admin" | Rol == "AdminChempro" | Rol == "SupIntendente" | Rol == "SupIntendenteGeneral")
+                        {
+                            <BSTD></BSTD>
+
+                        }
+
+                    </BSTR>
+                </BSTHead>
+                <BSTBody>
+                    @foreach (var d in DbReunionService.reudiatablas)
+                    {
+                        @if (d.Rdstatus != "Listo" & d.RdfecTra <= DateTime.Now | (d.Rdstatus != "Listo" & (d.Rdodt == "" | d.Rdodt
+                    is null)))
+                        //@if (d.Rdstatus != "Listo")
+                        {
+                            @if (Codigo == d.RdcodDis | Codigo == "Todo")
+                            {
+
+                                <BSTR>
+
+                                    @*<BSTD>@d.IdReuDia</BSTD>*@
+                                    @* <BSTD>@d.Rddiv</BSTD>*@
+                                    <BSTD>@d.Rdarea</BSTD>
+                                    <BSTD>@d.IdksfNavigation.KsfNombre</BSTD>
+                                    <BSTD>@d.RdcodEq</BSTD>
+                                    <BSTD ColSpan="4">@d.Rddisc.ToUpper()</BSTD>
+                                    <BSTD>@d.RdcodDis</BSTD>
+                                    @if (@d.RdplanAcc is not null)
+                                    {
+                                        <BSTD Class="textotabla listo">@d.RdplanAcc</BSTD>
+                                    }
+                                    else
+                                    {
+                                        <BSTD Class="textotabla ">@d.RdplanAcc</BSTD>
+                                    }
+                                    <BSTD>@d.Rdtiempo</BSTD>
+                                    @if (@d.IdResReuNavigation.Rrnombre == "Por Definir")
+                                    {
+                                        <BSTD Class="Definir">@d.IdResReuNavigation.Rrnombre </BSTD>
+                                    }
+                                    else
+                                    {
+                                        <BSTD ColSpan="1">@d.IdResReuNavigation.Rrnombre</BSTD>
+                                    }
+
+                                    @if (@d.Rdstatus == "Revisar")
+                                    {
+                                        <BSTD Class="cabecera">@d.Rdstatus</BSTD>
+                                    }
+                                    else
+                                    {
+                                        <BSTD Class="">@d.Rdstatus</BSTD>
+                                    }
+                                    <BSTD>@d.Rdodt</BSTD>
+                                    <BSTD>@d.RdfecTra.ToString("dd/MM/yyyy") </BSTD>
+                                    @if (Rol == "Admin" | Rol == "AdminChempro" | Rol == "SupIntendente" | Rol == "SupIntendenteGeneral")
+                                    {
+                                        <BSTD>
+                                            <button class="btn btn-success" @onclick="(() => Editar(d.IdReuDia))"><i
+                                                    class="oi oi-pencil"></i></button>
+                                        </BSTD>
+                                    }
+
+                                </BSTR>
                             }
                         }
                     }
-                </BSInput>
-            </BSCol>
 
-            <BSCol Column="3">
-                <BSLabel>Código</BSLabel>
-                <BSInput InputType="InputType.Select" @bind-Value="Codigo">
-                    <option value="Todo">Todo</option>
-                    <option value="1">1- En Curso</option>
-                    <option value="2">2- Próxima Parada</option>
-                    <option value="3">3- Falta Repuesto</option>
-                    <option value="4">4- Falta de Personal</option>
-                    <option value="5">5- Eq. no Disponible</option>
-                </BSInput>
-            </BSCol>
-            <BSCol Column="2">
-                <BSRow>
-                    <BSLabel>Aceptar</BSLabel>
-                </BSRow>
-                <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get"> Reunión <span class="oi oi-check"></span></BSButton>
-                </BSCol>
-                @if (DbReunionService.reudiatablas.Count() > 0 && dataIsLoaded == 2)
-            {
-                <BSCol ColumnSmall="2">
-                    <BSRow>
-                        <BSLabel>Imprimir</BSLabel>
-                    </BSRow>
-                    <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="PrintDocument">  <span class="oi oi-print"></span></BSButton>
-                    </BSCol>
-            }
-        </BSRow>
+
+                </BSTBody>
+
+            </BSTable>
+        </BSContainer>
+    }
+    else if (dataIsLoaded == 1 && DbReunionService.reunionditablas.Count() == 0)
+    {
+        <div class="loader"></div>
+    }
+    else if (dataIsLoaded == 2 && DbReunionService.reunionditablas.Count() == 0)
+    {
+        <p>There is no data for this date.</p>
     }
 
-</BSContainer>
+}else{
+    <h3>Formato de Reunión</h3>
 
-<p>
-</p>
 
-@if (DbReunionService.reudiatablas.Count() > 0 && dataIsLoaded == 2)
-{
     <BSContainer>
 
-        <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
-            <BSTHead Class="cabecera">
-                <BSTR>
+        @if (APIReunionService.centro.Count() == 0)
+        {
 
-                    @*<BSTD>Id</BSTD>*@
-             
-                    <BSTD>Área</BSTD>
-                    <BSTD>Ksf</BSTD>
-                    <BSTD>Código de Equipo</BSTD>
-                    <BSTD ColSpan="4">Discrepancia</BSTD>
-                    <BSTD>Código</BSTD>
-                    <BSTD>Plan de Acción</BSTD>
-                    <BSTD>Tiempo</BSTD>
-                    <BSTD ColSpan="1">Responsable</BSTD>
-                    <BSTD>Status</BSTD>
-                    <BSTD>ODT</BSTD>
-                    <BSTD>Fecha del Trabajo</BSTD>@*Fecha de listo el trabajo*@
-                    @if (Rol == "Admin" | Rol == "AdminChempro" | Rol == "SupIntendente" | Rol == "SupIntendenteGeneral")
-                    {
-                        <BSTD></BSTD>
 
-                    }
-
-                </BSTR>
-            </BSTHead>
-            <BSTBody>
-                @foreach (var d in DbReunionService.reudiatablas)
-                {
-                    @if (d.Rdstatus != "Listo" & d.RdfecTra <= DateTime.Now | (d.Rdstatus != "Listo" & (d.Rdodt == "" | d.Rdodt is null)))
-                    //@if (d.Rdstatus != "Listo")
-                    {
-                        @if (Codigo == d.RdcodDis | Codigo == "Todo")
+            <div class="loader"></div>
+        }
+        else
+        {
+            @error
+            <BSRow>
+                <BSCol Column="3" ColumnSmall="2">
+                    <BSLabel>Centro</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="IdCentro">
+                        <option value="">Seleccione</option>
+                        @foreach (var d in APIReunionService.centro)
                         {
+                            <option value="@d.IdCentro">@d.Cnom</option>
+                        }
+                    </BSInput>
+                </BSCol>
 
-                            <BSTR>
+                <BSCol Column="3">
+                    <BSLabel>División</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="IdDiv">
+                        <option value="">Seleccione</option>
+                        @foreach (var d in APIReunionService.centro)
+                        {
+                            @foreach (var e in d.Divisions)
+                            {
+                                if (IdCentro == d.IdCentro)
+                                {
+                                    <option value="@e.IdDivision">@e.Dnombre</option>
+                                }
+                            }
+                        }
+                    </BSInput>
+                </BSCol>
 
-                                @*<BSTD>@d.IdReuDia</BSTD>*@                         
-                                    @*  <BSTD>@d.Rddiv</BSTD>*@
-                                <BSTD>@d.Rdarea</BSTD>
-                                <BSTD>@d.IdksfNavigation.KsfNombre</BSTD>                            
-                                <BSTD>@d.RdcodEq</BSTD>
-                                <BSTD ColSpan="4">@d.Rddisc.ToUpper()</BSTD>
-                                <BSTD>@d.RdcodDis</BSTD>
-                                @if (@d.RdplanAcc is not null)
-                                {
-                                    <BSTD Class="textotabla listo">@d.RdplanAcc</BSTD>
-                                }
-                                else
-                                {
-                                    <BSTD Class="textotabla ">@d.RdplanAcc</BSTD>
-                                }
-                                <BSTD>@d.Rdtiempo</BSTD>
-                                @if (@d.IdResReuNavigation.Rrnombre == "Por Definir")
-                                {
-                                    <BSTD Class="Definir">@d.IdResReuNavigation.Rrnombre </BSTD>
-                                }
-                                else
-                                {
-                                    <BSTD ColSpan="1">@d.IdResReuNavigation.Rrnombre</BSTD>
-                                }
+                <BSCol Column="3">
+                    <BSLabel>Código</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="Codigo">
+                        <option value="Todo">Todo</option>
+                        <option value="1">1- En Curso</option>
+                        <option value="2">2- Próxima Parada</option>
+                        <option value="3">3- Falta Repuesto</option>
+                        <option value="4">4- Falta de Personal</option>
+                        <option value="5">5- Eq. no Disponible</option>
+                    </BSInput>
+                </BSCol>
+                <BSCol Column="2">
+                    <BSRow>
+                        <BSLabel>Aceptar</BSLabel>
+                    </BSRow>
+                    <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get"> Reunión <span
+                            class="oi oi-check"></span></BSButton>
+                </BSCol>
+                @if (DbReunionService.reudiatablas.Count() > 0 && dataIsLoaded == 2)
+                {
+                    <BSCol ColumnSmall="2">
+                        <BSRow>
+                            <BSLabel>Imprimir</BSLabel>
+                        </BSRow>
+                        <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="PrintDocument"> <span
+                                class="oi oi-print"></span></BSButton>
+                    </BSCol>
+                }
+            </BSRow>
+        }
 
-                                @if (@d.Rdstatus == "Revisar")
-                                {
-                                    <BSTD Class="cabecera">@d.Rdstatus</BSTD>
-                                }
-                                else
-                                {
-                                    <BSTD Class="">@d.Rdstatus</BSTD>
-                                }
-                                <BSTD>@d.Rdodt</BSTD>
-                                <BSTD>@d.RdfecTra.ToString("dd/MM/yyyy") </BSTD>
-                                @if (Rol == "Admin" | Rol == "AdminChempro" | Rol == "SupIntendente" | Rol == "SupIntendenteGeneral")
-                                {
-                                    <BSTD>
-                                        <button class="btn btn-success" @onclick="(() => Editar(d.IdReuDia))"><i class="oi oi-pencil"></i></button>
-                                    </BSTD>
-                                }
+    </BSContainer>
 
-                            </BSTR>
+    <p>
+    </p>
+
+    @if (DbReunionService.reudiatablas.Count() > 0 && dataIsLoaded == 2)
+    {
+        <BSContainer>
+
+            <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
+                <BSTHead Class="cabecera">
+                    <BSTR>
+
+                        @*<BSTD>Id</BSTD>*@
+
+                        <BSTD>Área</BSTD>
+                        <BSTD>Ksf</BSTD>
+                        <BSTD>Código de Equipo</BSTD>
+                        <BSTD ColSpan="4">Discrepancia</BSTD>
+                        <BSTD>Código</BSTD>
+                        <BSTD>Plan de Acción</BSTD>
+                        <BSTD>Tiempo</BSTD>
+                        <BSTD ColSpan="1">Responsable</BSTD>
+                        <BSTD>Status</BSTD>
+                        <BSTD>ODT</BSTD>
+                        <BSTD>Fecha del Trabajo</BSTD>@*Fecha de listo el trabajo*@
+                        @if (Rol == "Admin" | Rol == "AdminChempro" | Rol == "SupIntendente" | Rol == "SupIntendenteGeneral")
+                        {
+                            <BSTD></BSTD>
+
+                        }
+
+                    </BSTR>
+                </BSTHead>
+                <BSTBody>
+                    @foreach (var d in DbReunionService.reudiatablas)
+                    {
+                        @if (d.Rdstatus != "Listo" & d.RdfecTra <= DateTime.Now | (d.Rdstatus != "Listo" & (d.Rdodt == "" | d.Rdodt
+                       is null)))
+                        //@if (d.Rdstatus != "Listo")
+                        {
+                            @if (Codigo == d.RdcodDis | Codigo == "Todo")
+                            {
+
+                                <BSTR>
+
+                                    @*<BSTD>@d.IdReuDia</BSTD>*@
+                                    @* <BSTD>@d.Rddiv</BSTD>*@
+                                    <BSTD>@d.Rdarea</BSTD>
+                                    <BSTD>@d.IdksfNavigation.KsfNombre</BSTD>
+                                    <BSTD>@d.RdcodEq</BSTD>
+                                    <BSTD ColSpan="4">@d.Rddisc.ToUpper()</BSTD>
+                                    <BSTD>@d.RdcodDis</BSTD>
+                                    @if (@d.RdplanAcc is not null)
+                                    {
+                                        <BSTD Class="textotabla listo">@d.RdplanAcc</BSTD>
+                                    }
+                                    else
+                                    {
+                                        <BSTD Class="textotabla ">@d.RdplanAcc</BSTD>
+                                    }
+                                    <BSTD>@d.Rdtiempo</BSTD>
+                                    @if (@d.IdResReuNavigation.Rrnombre == "Por Definir")
+                                    {
+                                        <BSTD Class="Definir">@d.IdResReuNavigation.Rrnombre </BSTD>
+                                    }
+                                    else
+                                    {
+                                        <BSTD ColSpan="1">@d.IdResReuNavigation.Rrnombre</BSTD>
+                                    }
+
+                                    @if (@d.Rdstatus == "Revisar")
+                                    {
+                                        <BSTD Class="cabecera">@d.Rdstatus</BSTD>
+                                    }
+                                    else
+                                    {
+                                        <BSTD Class="">@d.Rdstatus</BSTD>
+                                    }
+                                    <BSTD>@d.Rdodt</BSTD>
+                                    <BSTD>@d.RdfecTra.ToString("dd/MM/yyyy") </BSTD>
+                                    @if (Rol == "Admin" | Rol == "AdminChempro" | Rol == "SupIntendente" | Rol == "SupIntendenteGeneral")
+                                    {
+                                        <BSTD>
+                                            <button class="btn btn-success" @onclick="(() => Editar(d.IdReuDia))"><i
+                                                    class="oi oi-pencil"></i></button>
+                                        </BSTD>
+                                    }
+
+                                </BSTR>
+                            }
                         }
                     }
-                }
 
 
-            </BSTBody>
+                </BSTBody>
 
-        </BSTable>
-    </BSContainer>
+            </BSTable>
+        </BSContainer>
+    }
+    else if (dataIsLoaded == 1 && DbReunionService.reunionditablas.Count() == 0)
+    {
+        <div class="loader"></div>
+    }
+    else if (dataIsLoaded == 2 && DbReunionService.reunionditablas.Count() == 0)
+    {
+        <p>No hay datos para esta fecha.</p>
+    }
+
 }
-else if (dataIsLoaded == 1 && DbReunionService.reunionditablas.Count() == 0)
-{
-    <div class="loader"></div>
-}
-else if (dataIsLoaded == 2 && DbReunionService.reunionditablas.Count() == 0)
-{
-    <p>No hay datos para esta fecha.</p>
-}
+
 
 
 @code {
@@ -193,7 +391,7 @@ else if (dataIsLoaded == 2 && DbReunionService.reunionditablas.Count() == 0)
     [Parameter]
     public string? accion { get; set; }//centro
     [Parameter]
-    public string? division { get; set; }//division    
+    public string? division { get; set; }//division
     [Parameter]
     public string? linea { get; set; }//linea
     [Parameter]
@@ -201,7 +399,7 @@ else if (dataIsLoaded == 2 && DbReunionService.reunionditablas.Count() == 0)
     [Parameter]
     public string? f2 { get; set; }
     [Parameter]
-    public string? tipo { get; set; }   
+    public string? tipo { get; set; }
     [Parameter]
     public string? est { get; set; }
 
@@ -225,6 +423,11 @@ else if (dataIsLoaded == 2 && DbReunionService.reunionditablas.Count() == 0)
 
     private List<Claim> claims { get; set; }
 
+
+    private int idPais { get; set; }
+    private int TrinidadYTobago = 6;
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
     private async Task CreateData()
 
     {
@@ -236,26 +439,43 @@ else if (dataIsLoaded == 2 && DbReunionService.reunionditablas.Count() == 0)
 
     protected override async Task OnInitializedAsync()
     {
-        await CreateData();
-        Rol =claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
-
-
-        if (Rol == "Admin" || Rol == "SuperAdmin" || Rol == "MttoAdmin" || Rol == "SeguridadAdmin" || Rol == "CalidadAdmin" || Rol == "Auditores")
+        if (authenticationState is not null)
         {
-            // await APIReunionService.GetCentros("All");
-            await APIReunionService.GetCentrosxEmpresa("All" + claims[10].Value);
-        }
-        else
-        {
-            //await APIReunionService.GetCentros(claims[6].Value.ToString());
-            await APIReunionService.GetCentrosxEmpresa(claims[11].Value);
-        }
+            AuthenticationState authState = await authenticationState;
+            ClaimsPrincipal? usuario = authState?.User;
 
-        IdCentro = int.Parse(claims[11].Value);
-        IdDiv = int.Parse(claims[12].Value);
-        await APIReunionService.Getksf();
-        await APIReunionService.GetResReu();
+            if (usuario?.Identity is not null && usuario.Identity.IsAuthenticated)
+            {
+                idPais = GetIdPais(usuario);
+                await CreateData();
+                Rol = claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
 
+
+                if (Rol == "Admin" || Rol == "SuperAdmin" || Rol == "MttoAdmin" || Rol == "SeguridadAdmin" || Rol == "CalidadAdmin" ||
+                Rol == "Auditores")
+                {
+                    // await APIReunionService.GetCentros("All");
+                    await APIReunionService.GetCentrosxEmpresa("All" + claims[10].Value);
+                }
+                else
+                {
+                    //await APIReunionService.GetCentros(claims[6].Value.ToString());
+                    await APIReunionService.GetCentrosxEmpresa(claims[11].Value);
+                }
+
+                IdCentro = int.Parse(claims[11].Value);
+                IdDiv = int.Parse(claims[12].Value);
+                await APIReunionService.Getksf();
+                await APIReunionService.GetResReu();
+
+            }
+        }
+    }
+
+    private int GetIdPais(ClaimsPrincipal user)
+    {
+        int _idPais = Int32.Parse(user.FindFirst(c => c.Type == "IdPais")?.Value ?? "0");
+        return _idPais;
     }
 
     protected async Task Get()
@@ -266,15 +486,16 @@ else if (dataIsLoaded == 2 && DbReunionService.reunionditablas.Count() == 0)
             if (dataIsLoaded != 1)
             {
                 dataIsLoaded = 1;
-                await DbReunionService.GetPendientes(IdCentro.ToString(), IdDiv.ToString(), DateTime.Now.AddDays(-1), DateTime.Now, "1", "Reunion");
+                await DbReunionService.GetPendientes(IdCentro.ToString(), IdDiv.ToString(), DateTime.Now.AddDays(-1), DateTime.Now, "1",
+                "Reunion");
                 dataIsLoaded = 2;
             }
         }
         else
         {
-       
-                error = "Seleccione los valores en las listas*";
-            
+
+            error = "Seleccione los valores en las listas*";
+
         }
     }
     void Editar(int id)
@@ -295,8 +516,8 @@ else if (dataIsLoaded == 2 && DbReunionService.reunionditablas.Count() == 0)
     }
     public async Task PrintDocument()
     {
-        //NavigationManager.NavigateTo($"TablaReunion/{IdCentro.ToString()}/{IdDiv.ToString()}/{DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy")}/{DateTime.Now.ToString("dd-MM-yyyy")}/1", forceLoad: true);
-        await IJS.InvokeAsync<object>("open", new object[] { $"TablaReunion/{IdCentro.ToString()}/{IdDiv.ToString()}/{DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy")}/{DateTime.Now.ToString("dd-MM-yyyy")}/1", "_blank" });
+    //NavigationManager.NavigateTo($"TablaReunion/{IdCentro.ToString()}/{IdDiv.ToString()}/{DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy")}/{DateTime.Now.ToString("dd-MM-yyyy")}/1",forceLoad: true);
+        await IJS.InvokeAsync<object>("open", new object[] {$"TablaReunion/{IdCentro.ToString()}/{IdDiv.ToString()}/{DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy")}/{DateTime.Now.ToString("dd-MM-yyyy")}/1","_blank" });
     }
 
 }
