@@ -7,220 +7,439 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
 @inject NotificationService NotificationService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AuthenticationStateProvider AuthStateProvider
+
 
 @attribute [Authorize(Roles = "Admin, AdminChempro, SupIntendente, SupIntendenteGeneral,SuperAdmin")]
 
+@if(idPais == TrinidadYTobago)
+{
+    <h3>Issue</h3>
 
-<h3>Discrepancias</h3>
-
-<p></p>
-
-<BSForm Model="Reuniondb" Class="boxhome" IsRow="true" Gutters="Gutters.Medium" OnSubmit="Insert" OnReset="Reset">
-    <DataAnnotationsValidator />
-    <BSCol ColumnMedium="8">
-        @_message
-        <BSValidationSummary />
-    </BSCol>
-    <BSRow>
-
-    
-        <BSCol Column="3">
-            <BSLabel>Centro</BSLabel>
-            <BSInput InputType="InputType.Select" @bind-Value="IdCent">
-                <option value="">Seleccione...</option>
-                @foreach (var d in APIReunionService.centro)
-                {
-                    <option value="@d.IdCentro">@d.Cnom</option>
-                }
-            </BSInput>
-        </BSCol>
-
-
-
-        <BSCol Column="3">
-            <BSLabel>Division</BSLabel>
-            <BSInput InputType="InputType.Select" @onchange='cambio' @bind-Value="IdDiv">
-                
-
-                <option value="">Seleccione...</option>
-                @foreach (var d in APIReunionService.centro)
-                {
-                    @foreach (var e in d.Divisions.Where(di => di.IdCentro == IdCent))
-                    {
-
-                        <option value="@e.IdDivision">@e.Dnombre</option>
-
-                    }
-                }
-            </BSInput>
-        
-        </BSCol>
-
-
-        <BSCol Column="3">
-            <BSLabel>Línea</BSLabel>
-            <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.Rdarea">
-                <option value="">Seleccione...</option>
-                @foreach (var d in APIReunionService.centro)
-                {
-                    @foreach (var e in d.Lineas.Where(li => li.IdDivision == IdDiv && li.IdDivisionNavigation.IdCentro == IdCent))
-                    {
-                        <option value="@e.Lnom">@e.Lnom</option>
-                    }
-                }
-            </BSInput>
-          
-        </BSCol>
-
-    </BSRow>
     <p></p>
-    <BSRow>
 
-        <BSCol Column="2">
-            <BSRow>
-                <BSLabel>Filtrar: </BSLabel>
-            </BSRow>
-
-
-            <BSInputRadio CheckedValue="@("0")" @bind-Value="tipoequipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-                <span class="oi oi-list"></span>
-            </BSInputRadio>
-
-            <BSInputRadio CheckedValue="@("1")" @bind-Value="tipoequipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-                <span class="oi oi-magnifying-glass"></span>
-            </BSInputRadio>
-
-
+    <BSForm Model="Reuniondb" Class="boxhome" IsRow="true" Gutters="Gutters.Medium" OnSubmit="Insert" OnReset="Reset">
+        <DataAnnotationsValidator />
+        <BSCol ColumnMedium="8">
+            @_message
+            <BSValidationSummary />
         </BSCol>
-        @if (APIReunionService.centro.Count > 0 & tipoequipo == "0")
-        {
-          
-            @if (Reuniondb.Rdcentro != "Chempro")
-            {
-                <BSCol Column="4">
-                    <BSLabel>C. Equipo</BSLabel>
-                    <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.RdcodEq">
+        <BSRow>
 
-                        <option value="">Seleccione...</option>
-                        @foreach (var d in APIReunionService.equipos)
-                        {
-                            if (Reuniondb.Rdarea == d.IdLineaNavigation.Lnom)
-                            {
-                                <option value="@d.EcodEquiEam">@d.EcodEquiEam - @d.EnombreEam</option>
-                            }
-                        }
-
-
-                    </BSInput>
-               
-                </BSCol>
-
-            }
-            else
-            {
-                <BSCol Column="4">
-                    <BSLabel>C. Equipo</BSLabel>
-                    <BSInput InputType="InputType.Text" @bind-Value="Reuniondb.RdcodEq" />
-                  
-                </BSCol>
-            }
-        }
-        else if (APIReunionService.centro.Count > 0 & tipoequipo == "1")
-        {
-            <BSCol Column="4">
-                <BSLabel>C. Equipo</BSLabel>
-                <div class="autocomplete">
-                    <input @bind=selectedEquipoId @oninput=HandleInput class="form-control filter" />
-                    @if (equiposfiltro is not null)
+        
+            <BSCol Column="3">
+                <BSLabel>Center</BSLabel>
+                <BSInput InputType="InputType.Select" @bind-Value="IdCent">
+                    <option value="">Select...</option>
+                    @foreach (var d in APIReunionService.centro)
                     {
-                        <ul class="options">
-                            @if (equiposfiltro.Any())
-                            {
+                        <option value="@d.IdCentro">@d.Cnom</option>
+                    }
+                </BSInput>
+            </BSCol>
 
-                                @foreach (var e in equiposfiltro)
+
+
+            <BSCol Column="3">
+                <BSLabel>Division</BSLabel>
+                <BSInput InputType="InputType.Select" @onchange='cambio' @bind-Value="IdDiv">
+                    
+
+                    <option value="">Select...</option>
+                    @foreach (var d in APIReunionService.centro)
+                    {
+                        @foreach (var e in d.Divisions.Where(di => di.IdCentro == IdCent))
+                        {
+
+                            <option value="@e.IdDivision">@e.Dnombre</option>
+
+                        }
+                    }
+                </BSInput>
+            
+            </BSCol>
+
+
+            <BSCol Column="3">
+                <BSLabel>Line</BSLabel>
+                <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.Rdarea">
+                    <option value="">Select...</option>
+                    @foreach (var d in APIReunionService.centro)
+                    {
+                        @foreach (var e in d.Lineas.Where(li => li.IdDivision == IdDiv && li.IdDivisionNavigation.IdCentro == IdCent))
+                        {
+                            <option value="@e.Lnom">@e.Lnom</option>
+                        }
+                    }
+                </BSInput>
+            
+            </BSCol>
+
+        </BSRow>
+        <p></p>
+        <BSRow>
+
+            <BSCol Column="2">
+                <BSRow>
+                    <BSLabel>Filter: </BSLabel>
+                </BSRow>
+
+
+                <BSInputRadio CheckedValue="@("0")" @bind-Value="tipoequipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+                    <span class="oi oi-list"></span>
+                </BSInputRadio>
+
+                <BSInputRadio CheckedValue="@("1")" @bind-Value="tipoequipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+                    <span class="oi oi-magnifying-glass"></span>
+                </BSInputRadio>
+
+
+            </BSCol>
+            @if (APIReunionService.centro.Count > 0 & tipoequipo == "0")
+            {
+            
+                @if (Reuniondb.Rdcentro != "Chempro")
+                {
+                    <BSCol Column="4">
+                        <BSLabel>Equipment C.</BSLabel>
+                        <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.RdcodEq">
+
+                            <option value="">Select...</option>
+                            @foreach (var d in APIReunionService.equipos)
+                            {
+                                if (Reuniondb.Rdarea == d.IdLineaNavigation.Lnom)
                                 {
-                                    if (Reuniondb.Rdarea == e.IdLineaNavigation.Lnom)
-                                    {
-                                        <li class="option" @onclick=@(_ => SelectEquipo(e.EcodEquiEam))>
-                                            <span class="option-text">@e.EcodEquiEam - @e.EnombreEam</span>
-                                        </li>
-                                    }
+                                    <option value="@d.EcodEquiEam">@d.EcodEquiEam - @d.EnombreEam</option>
                                 }
                             }
-                            else
-                            {
-                                <li class="disabled option">No results</li>
-                            }
-                        </ul>
+
+
+                        </BSInput>
+                
+                    </BSCol>
+
+                }
+                else
+                {
+                    <BSCol Column="4">
+                        <BSLabel>Equipment C.</BSLabel>
+                        <BSInput InputType="InputType.Text" @bind-Value="Reuniondb.RdcodEq" />
+                    
+                    </BSCol>
+                }
+            }
+            else if (APIReunionService.centro.Count > 0 & tipoequipo == "1")
+            {
+                <BSCol Column="4">
+                    <BSLabel>Equipment C.</BSLabel>
+                    <div class="autocomplete">
+                        <input @bind=selectedEquipoId @oninput=HandleInput class="form-control filter" />
+                        @if (equiposfiltro is not null)
+                        {
+                            <ul class="options">
+                                @if (equiposfiltro.Any())
+                                {
+
+                                    @foreach (var e in equiposfiltro)
+                                    {
+                                        if (Reuniondb.Rdarea == e.IdLineaNavigation.Lnom)
+                                        {
+                                            <li class="option" @onclick=@(_ => SelectEquipo(e.EcodEquiEam))>
+                                                <span class="option-text">@e.EcodEquiEam - @e.EnombreEam</span>
+                                            </li>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="disabled option">No results</li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(selectedEquipoId))
+                    {
+                        <p class="mt-4">
+                            @selectedEquipoName - <strong>@selectedEquipoId</strong>
+                        </p>
                     }
-                </div>
-                @if (!string.IsNullOrWhiteSpace(selectedEquipoId))
-                {
-                    <p class="mt-4">
-                        @selectedEquipoName - <strong>@selectedEquipoId</strong>
-                    </p>
-                }
-              
+                
+                </BSCol>
+            }
+        
+
+
+            <BSCol Column="3">
+                <BSLabel>Ksf</BSLabel>
+
+                <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.Idksf">
+
+                    <option value="">Select...</option>
+                    @foreach (var d in APIReunionService.ksfs)
+                    {
+                        <option value="@d.Idksf">@d.KsfNombre</option>
+                    }
+
+                </BSInput>
+            
             </BSCol>
-        }
-      
 
 
-        <BSCol Column="3">
-            <BSLabel>Ksf</BSLabel>
+        </BSRow>
+        <p></p>
+        <BSRow>
+            <BSCol Column="9">
+                <BSLabel>Issue</BSLabel>
+                <BSInput InputType="InputType.Text" @bind-Value="Reuniondb.Rddisc" />
+            
+            </BSCol>
+        </BSRow>
 
-            <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.Idksf">
-
-                <option value="">Seleccione...</option>
-                @foreach (var d in APIReunionService.ksfs)
-                {
-                    <option value="@d.Idksf">@d.KsfNombre</option>
-                }
-
-            </BSInput>
-          
-        </BSCol>
-
-
-    </BSRow>
-    <p></p>
-    <BSRow>
-        <BSCol Column="9">
-            <BSLabel>Discrepancia</BSLabel>
-            <BSInput InputType="InputType.Text" @bind-Value="Reuniondb.Rddisc" />
-         
-        </BSCol>
-    </BSRow>
-
-    <p></p>
-
-    <BSRow>
         <p></p>
 
-        <BSCol Column="3">
-            <BSLabel>Responsable</BSLabel>
-            <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.IdResReu">
-                <option value="">Seleccione...</option>
+        <BSRow>
+            <p></p>
 
-                @foreach (var d in APIReunionService.resporeu)
-                {
-                    <option value="@d.IdResReu">@d.Rrnombre</option>
-                }
-            </BSInput>
-       
+            <BSCol Column="3">
+                <BSLabel>Responsible</BSLabel>
+                <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.IdResReu">
+                    <option value="">Select...</option>
+
+                    @foreach (var d in APIReunionService.resporeu)
+                    {
+                        <option value="@d.IdResReu">@d.Rrnombre</option>
+                    }
+                </BSInput>
+        
+            </BSCol>
+
+        </BSRow>
+
+
+        <p></p>
+        <p></p>
+
+        <BSCol Column="12">
+            <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled="isDesactivado" IsSubmit>  Save <span class="oi oi-check"></span></BSButton>
+            <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset>  New </BSButton>
         </BSCol>
+    </BSForm>
 
-    </BSRow>
-
+} else
+{
+    <h3>Discrepancias</h3>
 
     <p></p>
-    <p></p>
 
-    <BSCol Column="12">
-        <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled="isDesactivado" IsSubmit>  Guardar <span class="oi oi-check"></span></BSButton>
-        <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset>  Nuevo </BSButton>
-    </BSCol>
-</BSForm>
+    <BSForm Model="Reuniondb" Class="boxhome" IsRow="true" Gutters="Gutters.Medium" OnSubmit="Insert" OnReset="Reset">
+        <DataAnnotationsValidator />
+        <BSCol ColumnMedium="8">
+            @_message
+            <BSValidationSummary />
+        </BSCol>
+        <BSRow>
+
+        
+            <BSCol Column="3">
+                <BSLabel>Centro</BSLabel>
+                <BSInput InputType="InputType.Select" @bind-Value="IdCent">
+                    <option value="">Seleccione...</option>
+                    @foreach (var d in APIReunionService.centro)
+                    {
+                        <option value="@d.IdCentro">@d.Cnom</option>
+                    }
+                </BSInput>
+            </BSCol>
+
+
+
+            <BSCol Column="3">
+                <BSLabel>Division</BSLabel>
+                <BSInput InputType="InputType.Select" @onchange='cambio' @bind-Value="IdDiv">
+                    
+
+                    <option value="">Seleccione...</option>
+                    @foreach (var d in APIReunionService.centro)
+                    {
+                        @foreach (var e in d.Divisions.Where(di => di.IdCentro == IdCent))
+                        {
+
+                            <option value="@e.IdDivision">@e.Dnombre</option>
+
+                        }
+                    }
+                </BSInput>
+            
+            </BSCol>
+
+
+            <BSCol Column="3">
+                <BSLabel>Línea</BSLabel>
+                <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.Rdarea">
+                    <option value="">Seleccione...</option>
+                    @foreach (var d in APIReunionService.centro)
+                    {
+                        @foreach (var e in d.Lineas.Where(li => li.IdDivision == IdDiv && li.IdDivisionNavigation.IdCentro == IdCent))
+                        {
+                            <option value="@e.Lnom">@e.Lnom</option>
+                        }
+                    }
+                </BSInput>
+            
+            </BSCol>
+
+        </BSRow>
+        <p></p>
+        <BSRow>
+
+            <BSCol Column="2">
+                <BSRow>
+                    <BSLabel>Filtrar: </BSLabel>
+                </BSRow>
+
+
+                <BSInputRadio CheckedValue="@("0")" @bind-Value="tipoequipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+                    <span class="oi oi-list"></span>
+                </BSInputRadio>
+
+                <BSInputRadio CheckedValue="@("1")" @bind-Value="tipoequipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+                    <span class="oi oi-magnifying-glass"></span>
+                </BSInputRadio>
+
+
+            </BSCol>
+            @if (APIReunionService.centro.Count > 0 & tipoequipo == "0")
+            {
+            
+                @if (Reuniondb.Rdcentro != "Chempro")
+                {
+                    <BSCol Column="4">
+                        <BSLabel>C. Equipo</BSLabel>
+                        <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.RdcodEq">
+
+                            <option value="">Seleccione...</option>
+                            @foreach (var d in APIReunionService.equipos)
+                            {
+                                if (Reuniondb.Rdarea == d.IdLineaNavigation.Lnom)
+                                {
+                                    <option value="@d.EcodEquiEam">@d.EcodEquiEam - @d.EnombreEam</option>
+                                }
+                            }
+
+
+                        </BSInput>
+                
+                    </BSCol>
+
+                }
+                else
+                {
+                    <BSCol Column="4">
+                        <BSLabel>C. Equipo</BSLabel>
+                        <BSInput InputType="InputType.Text" @bind-Value="Reuniondb.RdcodEq" />
+                    
+                    </BSCol>
+                }
+            }
+            else if (APIReunionService.centro.Count > 0 & tipoequipo == "1")
+            {
+                <BSCol Column="4">
+                    <BSLabel>C. Equipo</BSLabel>
+                    <div class="autocomplete">
+                        <input @bind=selectedEquipoId @oninput=HandleInput class="form-control filter" />
+                        @if (equiposfiltro is not null)
+                        {
+                            <ul class="options">
+                                @if (equiposfiltro.Any())
+                                {
+
+                                    @foreach (var e in equiposfiltro)
+                                    {
+                                        if (Reuniondb.Rdarea == e.IdLineaNavigation.Lnom)
+                                        {
+                                            <li class="option" @onclick=@(_ => SelectEquipo(e.EcodEquiEam))>
+                                                <span class="option-text">@e.EcodEquiEam - @e.EnombreEam</span>
+                                            </li>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="disabled option">No results</li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(selectedEquipoId))
+                    {
+                        <p class="mt-4">
+                            @selectedEquipoName - <strong>@selectedEquipoId</strong>
+                        </p>
+                    }
+                
+                </BSCol>
+            }
+        
+
+
+            <BSCol Column="3">
+                <BSLabel>Ksf</BSLabel>
+
+                <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.Idksf">
+
+                    <option value="">Seleccione...</option>
+                    @foreach (var d in APIReunionService.ksfs)
+                    {
+                        <option value="@d.Idksf">@d.KsfNombre</option>
+                    }
+
+                </BSInput>
+            
+            </BSCol>
+
+
+        </BSRow>
+        <p></p>
+        <BSRow>
+            <BSCol Column="9">
+                <BSLabel>Discrepancia</BSLabel>
+                <BSInput InputType="InputType.Text" @bind-Value="Reuniondb.Rddisc" />
+            
+            </BSCol>
+        </BSRow>
+
+        <p></p>
+
+        <BSRow>
+            <p></p>
+
+            <BSCol Column="3">
+                <BSLabel>Responsable</BSLabel>
+                <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.IdResReu">
+                    <option value="">Seleccione...</option>
+
+                    @foreach (var d in APIReunionService.resporeu)
+                    {
+                        <option value="@d.IdResReu">@d.Rrnombre</option>
+                    }
+                </BSInput>
+        
+            </BSCol>
+
+        </BSRow>
+
+
+        <p></p>
+        <p></p>
+
+        <BSCol Column="12">
+            <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled="isDesactivado" IsSubmit>  Guardar <span class="oi oi-check"></span></BSButton>
+            <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset>  Nuevo </BSButton>
+        </BSCol>
+    </BSForm>
+
+}
 
 
 @code {
@@ -260,30 +479,52 @@
 
     private bool isDesactivado { get; set; } = false;
 
+    
+    private int idPais { get; set; }
+    private int TrinidadYTobago = 6;
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-
-        await CreateData();
-        await APIReunionService.Getksf();
-        await APIReunionService.GetResReu();
-        if (claims[1].Value == "Admin" | claims[1].Value == "SuperAdmin")
+        if (authenticationState is not null)
         {
+            AuthenticationState authState = await authenticationState;
+            ClaimsPrincipal? usuario = authState?.User;
 
-            await APIReunionService.GetCentrosxEmpresa("All" + claims[10].Value);
-            await APIReunionService.GetEquiposEAM("All" + claims[10].Value);
+            if (usuario?.Identity is not null && usuario.Identity.IsAuthenticated)
+            {
+                idPais = GetIdPais(usuario);
 
+
+                await CreateData();
+                await APIReunionService.Getksf();
+                await APIReunionService.GetResReu();
+                if (claims[1].Value == "Admin" | claims[1].Value == "SuperAdmin")
+                {
+
+                    await APIReunionService.GetCentrosxEmpresa("All" + claims[10].Value);
+                    await APIReunionService.GetEquiposEAM("All" + claims[10].Value);
+
+                }
+                else
+                {
+
+                    await APIReunionService.GetCentrosxEmpresa(claims[11].Value);      
+                    await APIReunionService.GetEquiposEAM(claims[11].Value.ToString());
+
+                }
+                // IdCent = int.Parse(claims.FirstOrDefault(c => c.Type.Contains("IdCentro"))?.Value);
+                // IdDiv = int.Parse(claims.FirstOrDefault(c => c.Type.Contains("IdDiv"))?.Value);
+
+                APIReunionService.resporeu=APIReunionService.resporeu.Where(a => a.Rrdesc == claims.FirstOrDefault(c => c.Type.Contains("Empresa"))?.Value | string.IsNullOrEmpty(a.Rrdesc)).ToList();
+            }
         }
-        else
-        {
+    }
 
-            await APIReunionService.GetCentrosxEmpresa(claims[11].Value);      
-            await APIReunionService.GetEquiposEAM(claims[11].Value.ToString());
-
-        }
-        // IdCent = int.Parse(claims.FirstOrDefault(c => c.Type.Contains("IdCentro"))?.Value);
-        // IdDiv = int.Parse(claims.FirstOrDefault(c => c.Type.Contains("IdDiv"))?.Value);
-
-        APIReunionService.resporeu=APIReunionService.resporeu.Where(a => a.Rrdesc == claims.FirstOrDefault(c => c.Type.Contains("Empresa"))?.Value | string.IsNullOrEmpty(a.Rrdesc)).ToList();
+    private int GetIdPais(ClaimsPrincipal user)
+    {
+        int _idPais = Int32.Parse(user.FindFirst(c => c.Type == "IdPais")?.Value ?? "0");
+        return _idPais;
     }
 
     protected async Task Insert(EditContext e)
