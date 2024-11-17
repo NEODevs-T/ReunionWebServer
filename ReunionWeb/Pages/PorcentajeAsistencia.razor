@@ -6,17 +6,14 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
 @inject NotificationService NotificationService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Admin, AdminChempro, SupIntendente, SupIntendenteGeneral, SuperAdmin, MttoAdmin,SeguridadAdmin, CalidadAdmin")]
 
+@if(idPais == TrinidadYTobago)
+{
 
-
-
-<h3>Porcentaje de Asistencia</h3>
+<h3>Attendance Percentage</h3>
 <p></p>
-
-
-
-
 
 <BSContainer>
 
@@ -31,9 +28,9 @@
         <BSRow>
             <BSCol Column="3">
 
-                <BSLabel>Centro</BSLabel>
+                <BSLabel>Center</BSLabel>
                 <BSInput InputType="InputType.Select" @bind-Value="Div">
-                    <option value="">Seleccione</option>
+                    <option value="">Select</option>
                     @foreach (var d in APIReunionService.centro)
                     {
                         <option value="@d.Cnom">@d.Cnom</option>
@@ -42,22 +39,22 @@
             </BSCol>
 
             <BSCol Column="2">
-                <BSLabel>Fecha Inicial</BSLabel>
+                <BSLabel>Starting Date</BSLabel>
                 <BSInput InputType="InputType.Date" @bind-Value="fecha1" />
             </BSCol>
 
             <BSCol Column="2">
-                <BSLabel>Fecha Final</BSLabel>
+                <BSLabel>End Date</BSLabel>
                 <BSInput InputType="InputType.Date" @bind-Value="fecha2" />
             </BSCol>
 
             <BSCol Column="2">
-                <BSLabel>Días Feriados/Libres</BSLabel>
+                <BSLabel>Holidays/Free Days</BSLabel>
                 <BSInput InputType="InputType.Number" @bind-Value="feriados" />
             </BSCol>
 
             <BSCol Column="3">
-                <BSRow><BSLabel> Buscar</BSLabel></BSRow>
+                <BSRow><BSLabel> Search</BSLabel></BSRow>
                 <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get">   Estadísticas  <span class="oi oi-check"></span></BSButton>
              </BSCol>
 
@@ -76,7 +73,7 @@
 
 @if (APIReunionService.StatsAsisDtos.Count() > 0 && dataIsLoaded == 2)
 {
-    <p><h5>@dias Días de reunión. </h5></p>
+    <p><h5>@dias Meeting days. </h5></p>
 
     <p></p>
     <BSRow>
@@ -84,12 +81,12 @@
 
 
             <BSInputRadio CheckedValue="@(0)" @bind-Value="Lista" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-                Porcentaje  %
+                Percentage  %
             </BSInputRadio>
 
 
             <BSInputRadio CheckedValue="@(1)" @bind-Value="Lista" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-                Lista Diaria
+                Daily List
                 <span class="oi oi-list"></span>
             </BSInputRadio>
 
@@ -100,7 +97,7 @@
         @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
         {
             <BSCol Column="4">
-                <BSLabel>Bloque: @bloque</BSLabel>
+                <BSLabel>Block: @bloque</BSLabel>
 
                     <BSInput InputType="InputType.Range" step="1" min="1" max="3" @bind-Value="bloque" /><BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Porcentaje">   Obtener Porcentajes  <span class="oi oi-check"></span></BSButton>
 
@@ -116,8 +113,8 @@
 
 
                         <BSTD>Personal</BSTD>
-                        <BSTD>Presencia</BSTD>
-                        <BSTD>% Asistencia</BSTD>
+                        <BSTD>Personal</BSTD>
+                        <BSTD>% Attendance</BSTD>
 
                     </BSTR>
                 </BSTHead>
@@ -168,7 +165,7 @@
         @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
         {
             <BSCol Column="4">
-                <BSLabel>Bloque: @bloque</BSLabel>
+                <BSLabel>Block: @bloque</BSLabel>
 
                     <BSInput InputType="InputType.Range" step="1" min="1" max="3" @bind-Value="bloque" />
                 </BSCol>
@@ -179,10 +176,10 @@
                     <BSTR>
 
 
-                        <BSTD>Fecha</BSTD>
-                        <BSTD>Personal</BSTD>
-                        <BSTD>Asitencia</BSTD>
-                        <BSTD>Asistencia Suplente</BSTD>
+                        <BSTD>Date</BSTD>
+                        <BSTD>Staff</BSTD>
+                        <BSTD>Attendance</BSTD>
+                        <BSTD>Substitute Attendance</BSTD>
 
                     </BSTR>
                 </BSTHead>
@@ -266,12 +263,277 @@
 
 else if (APIReunionService.cargoreus.Count() == 0 && dataIsLoaded == 2)
 {
-    <p>No se ha cargado personal a este centro.</p>
+    <p>No personnel have been charged to this center.</p>
 }
+@* TODO: REVISAR FUNCIONAMIENTO *@
 else if (dataIsLoaded == 1 && porasis.Count() == 0)
 {
     <div class="loader"></div>
 }
+
+}else
+{
+    <h3>Porcentaje de Asistencia</h3>
+    <p></p>
+
+    <BSContainer>
+
+        @if (APIReunionService.centro.Count() == 0)
+        {
+            <div class="loader"></div>
+        }
+        else
+        {
+
+
+            <BSRow>
+                <BSCol Column="3">
+
+                    <BSLabel>Centro</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="Div">
+                        <option value="">Seleccione</option>
+                        @foreach (var d in APIReunionService.centro)
+                        {
+                            <option value="@d.Cnom">@d.Cnom</option>
+                        }
+                    </BSInput>
+                </BSCol>
+
+                <BSCol Column="2">
+                    <BSLabel>Fecha Inicial</BSLabel>
+                    <BSInput InputType="InputType.Date" @bind-Value="fecha1" />
+                </BSCol>
+
+                <BSCol Column="2">
+                    <BSLabel>Fecha Final</BSLabel>
+                    <BSInput InputType="InputType.Date" @bind-Value="fecha2" />
+                </BSCol>
+
+                <BSCol Column="2">
+                    <BSLabel>Días Feriados/Libres</BSLabel>
+                    <BSInput InputType="InputType.Number" @bind-Value="feriados" />
+                </BSCol>
+
+                <BSCol Column="3">
+                    <BSRow><BSLabel> Buscar</BSLabel></BSRow>
+                    <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get">   Estadísticas  <span class="oi oi-check"></span></BSButton>
+                </BSCol>
+
+
+            </BSRow>
+
+        }
+
+    </BSContainer>
+
+    <p></p>
+
+
+
+
+
+    @if (APIReunionService.StatsAsisDtos.Count() > 0 && dataIsLoaded == 2)
+    {
+        <p><h5>@dias Días de reunión. </h5></p>
+
+        <p></p>
+        <BSRow>
+            <BSCol ColumnSmall="6" Column="3">
+
+
+                <BSInputRadio CheckedValue="@(0)" @bind-Value="Lista" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+                    Porcentaje  %
+                </BSInputRadio>
+
+
+                <BSInputRadio CheckedValue="@(1)" @bind-Value="Lista" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+                    Lista Diaria
+                    <span class="oi oi-list"></span>
+                </BSInputRadio>
+
+            </BSCol>
+        </BSRow>
+        <p></p>
+    
+            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+            {
+                <BSCol Column="4">
+                    <BSLabel>Bloque: @bloque</BSLabel>
+
+                        <BSInput InputType="InputType.Range" step="1" min="1" max="3" @bind-Value="bloque" /><BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Porcentaje">   Obtener Porcentajes  <span class="oi oi-check"></span></BSButton>
+
+                </BSCol>
+                <p></p>
+            } if (Lista == 0 && !carga)
+        {
+
+            <BSCol Column="6">
+                <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
+                    <BSTHead Class="cabecera">
+                        <BSTR>
+
+
+                            <BSTD>Personal</BSTD>
+                            <BSTD>Presencia</BSTD>
+                            <BSTD>% Asistencia</BSTD>
+
+                        </BSTR>
+                    </BSTHead>
+                    <BSTBody>
+
+
+                        @foreach (var d in porasis)
+                        {
+                            <BSTR>
+                                @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+                                {
+
+                                    @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.Crnombre == d.Cargo).AridCargoRNavigation.CRBloque) == bloque)
+                                    {
+
+                                        <BSTD>@d.Cargo</BSTD>
+                                        <BSTD>@d.Asistencias</BSTD>
+                                        <BSTD>@d.Total %</BSTD>
+                                    }
+
+                                }
+                                else
+                                {
+
+                                    <BSTD>@d.Cargo</BSTD>
+                                    <BSTD>@d.Asistencias</BSTD>
+                                    <BSTD>@d.Total %</BSTD>
+
+                                }
+
+                            </BSTR>
+                        }
+
+
+                    </BSTBody>
+                    <BSTR>
+                        <BSTD>Total</BSTD>
+                        <BSTD> </BSTD>
+                        <BSTD>@asistotal %</BSTD>
+                    </BSTR>
+                </BSTable>
+            </BSCol>
+
+
+        }
+        else if (Lista == 1)
+        {
+            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+            {
+                <BSCol Column="4">
+                    <BSLabel>Bloque: @bloque</BSLabel>
+
+                        <BSInput InputType="InputType.Range" step="1" min="1" max="3" @bind-Value="bloque" />
+                    </BSCol>
+            }
+            <BSCol Column="10">
+                <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
+                    <BSTHead Class="cabecera">
+                        <BSTR>
+
+
+                            <BSTD>Fecha</BSTD>
+                            <BSTD>Personal</BSTD>
+                            <BSTD>Asitencia</BSTD>
+                            <BSTD>Asistencia Suplente</BSTD>
+
+                        </BSTR>
+                    </BSTHead>
+                    <BSTBody>
+                        @foreach (var d in APIReunionService.asistenreus)
+                        {
+
+
+                            <BSTR>
+
+                                @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+                                {
+                                    @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoR == d.AridCargoR).AridCargoRNavigation.CRBloque) == bloque)
+                                    {
+                                        <BSTD>@d.Arfecha</BSTD>
+                                        <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
+
+                                        @if (@d.ArAsistente == 1)
+                                        {
+                                            <BSTD>Asistió </BSTD>
+                                        }
+                                        else
+                                        {
+                                            <BSTD>Ausente</BSTD>
+                                        }
+
+
+                                        @if (@d.ArSuplente == 1)
+                                        {
+                                            <BSTD>Suplencia</BSTD>
+                                        }
+                                        else
+                                        {
+                                            <BSTD>-</BSTD>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <BSTD>@d.Arfecha</BSTD>
+                                    <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
+
+                                    @if (@d.ArAsistente == 1)
+                                    {
+                                        <BSTD>Asistió </BSTD>
+                                    }
+                                    else
+                                    {
+                                        <BSTD>Ausente</BSTD>
+                                    }
+
+
+                                    @if (@d.ArSuplente == 1)
+                                    {
+                                        <BSTD>Suplencia</BSTD>
+                                    }
+                                    else
+                                    {
+                                        <BSTD>-</BSTD>
+                                    }
+                                }
+
+
+                            </BSTR>
+
+
+                        }
+
+
+                    </BSTBody>
+
+                </BSTable>
+            </BSCol>
+        }
+        else if (carga)
+        {
+            <div class="loader"></div>
+        }
+
+    }
+
+    else if (APIReunionService.cargoreus.Count() == 0 && dataIsLoaded == 2)
+    {
+        <p>No se ha cargado personal a este centro.</p>
+    }
+    else if (dataIsLoaded == 1 && porasis.Count() == 0)
+    {
+        <div class="loader"></div>
+    }
+
+}
+
+
 
 
 
@@ -297,7 +559,9 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
     int dias = 0;
 
     private List<Claim> claims { get; set; }
-
+    private int idPais { get; set; }
+    private int TrinidadYTobago = 6;
+    private Task<AuthenticationState>? authenticationState { get; set; }
     private async Task CreateData()
 
     {
@@ -310,22 +574,35 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
 
     protected override async Task OnInitializedAsync()
     {
+    
+        if (authenticationState is not null)
+        { 
+            AuthenticationState authState = await authenticationState;
+            ClaimsPrincipal? usuario = authState?.User;
 
-        await CreateData();
-        if (claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value == "Admin" | claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value == "SuperAdmin" | claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value == "MttoAdmin")
-        {
+            if (usuario?.Identity is not null && usuario.Identity.IsAuthenticated)
+            {
+                idPais = GetIdPais(usuario);
+                await CreateData();
+                if (claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value == "Admin" | claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value == "SuperAdmin" | claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value == "MttoAdmin")
+                {
 
-            await APIReunionService.GetCentrosxEmpresa("All" + claims.FirstOrDefault(c => c.Type.Contains("IdEmpresa"))?.Value);
+                    await APIReunionService.GetCentrosxEmpresa("All" + claims.FirstOrDefault(c => c.Type.Contains("IdEmpresa"))?.Value);
+                }
+                else
+                {
+
+                    await APIReunionService.GetCentrosxEmpresa(claims.FirstOrDefault(c => c.Type.Contains("IdCentro"))?.Value);
+                }
+                Div = claims.FirstOrDefault(c => c.Type.Contains("Centro"))?.Value;
+            }
         }
-        else
-        {
+    }
 
-            await APIReunionService.GetCentrosxEmpresa(claims.FirstOrDefault(c => c.Type.Contains("IdCentro"))?.Value);
-        }
-        Div = claims.FirstOrDefault(c => c.Type.Contains("Centro"))?.Value;
-
-
-
+    private int GetIdPais(ClaimsPrincipal user)
+    {
+        int _idPais = Int32.Parse(user.FindFirst(c => c.Type == "IdPais")?.Value ?? "0");
+        return _idPais;
     }
 
     protected int GetDias()
