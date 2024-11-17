@@ -5,73 +5,103 @@
 @inject IAPIReunionService APIReunionService
 @inject ILocalStorageService LocalStorage
 @inject NotificationService NotificationService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Admin, AdminChempro, SupIntendente, SupIntendenteGeneral, SuperAdmin")]
 
-<h3>Asistencia</h3>
-<p></p>
+@if(idPais == TrinidadYTobago){
+    <h3>Attendance</h3>
+    <p></p>
 
 
-<BSContainer>
+    <BSContainer>
 
-    @if (APIReunionService.centro.Count() == 0)
+        @if (APIReunionService.centro.Count() == 0)
+        {
+            <div class="loader"></div>
+        }
+        else
+        {
+
+            <BSRow>
+                <BSCol Column="4">
+
+                    <BSInput InputType="InputType.Select" @bind-Value="Div">
+                        @foreach (var d in APIReunionService.centro)
+                        {
+                        <option value="@d.Cnom">@d.Cnom</option>
+                        }
+                </BSInput>
+            </BSCol>
+
+            <BSCol ColumnSmall="3">
+                <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get">   Assistants  <span class="oi oi-check"></span></BSButton>
+            </BSCol>
+
+        </BSRow>
+
+        }
+
+    </BSContainer>
+
+    <p></p>
+
+
+    @if (APIReunionService.cargoreus.Count() > 0 && dataIsLoaded == 2)
     {
-        <div class="loader"></div>
-    }
-    else
-    {
-
-        <BSRow>
+        @if (listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+        {
             <BSCol Column="4">
+                <BSLabel>Block: @bloque</BSLabel>
+                <BSInput InputType="InputType.Range" step="1" min="1" max="3" @bind-Value="bloque" />
+            </BSCol>
+        }
 
-                <BSInput InputType="InputType.Select" @bind-Value="Div">
-                    @foreach (var d in APIReunionService.centro)
+        <BSCol Column="6">
+            <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
+                <BSTHead Class="cabecera">
+                    <BSTR>
+                        <BSTD>Personally</BSTD>
+                        <BSTD>Presence</BSTD>
+                        <BSTD>Substitution</BSTD>
+                    </BSTR>
+                </BSTHead>
+                <BSTBody>
+                    @if (listaAsistencia.Where(c=>c.AridCargoRNavigation.CRBloque ==1).Count()>0)
                     {
-                    <option value="@d.Cnom">@d.Cnom</option>
+                    
+                        @foreach (var d in listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == bloque))
+                        {
+
+
+                            <BSTR>
+
+                                <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
+                                <BSTD>
+                                    <div Class="@BS.Form_Check @BS.Form_Switch">
+                                        <BSInputCheckbox CheckedValue="@(1)" Color="BSColor.Success" @bind-Value="d.ArAsistente" />
+                                        <BSLabel IsCheckLabel="true">
+
+                                        </BSLabel>
+                                    </div>
+                                </BSTD>
+                                <BSTD>
+                                    <div Class="@BS.Form_Check">
+                                        <BSInputCheckbox CheckedValue="@(1)" @bind-Value="d.ArSuplente" />
+
+                                    </div>
+                                </BSTD>
+
+                            </BSTR>
+                        }
                     }
-            </BSInput>
-        </BSCol>
-
-        <BSCol ColumnSmall="3">
-            <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get">   Asistentes  <span class="oi oi-check"></span></BSButton>
-        </BSCol>
-
-    </BSRow>
-
-    }
-
-</BSContainer>
-
-<p></p>
-
-
-@if (APIReunionService.cargoreus.Count() > 0 && dataIsLoaded == 2)
-{
-    @if (listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
-    {
-        <BSCol Column="4">
-            <BSLabel>Bloque: @bloque</BSLabel>
-            <BSInput InputType="InputType.Range" step="1" min="1" max="3" @bind-Value="bloque" />
-        </BSCol>
-    }
-
-    <BSCol Column="6">
-        <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
-            <BSTHead Class="cabecera">
-                <BSTR>
-                    <BSTD>Personal</BSTD>
-                    <BSTD>Presencia</BSTD>
-                    <BSTD>Suplencia</BSTD>
-                </BSTR>
-            </BSTHead>
-            <BSTBody>
-                @if (listaAsistencia.Where(c=>c.AridCargoRNavigation.CRBloque ==1).Count()>0)
-                {
-                   
-                    @foreach (var d in listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == bloque))
+                    else
                     {
+                        @foreach (var d in listaAsistencia)
+                        {
 
 
-                        <BSTR>
+                            <BSTR>
 
                             <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
                             <BSTD>
@@ -84,57 +114,164 @@
                             </BSTD>
                             <BSTD>
                                 <div Class="@BS.Form_Check">
-                                    <BSInputCheckbox CheckedValue="@(1)" @bind-Value="d.ArSuplente" />
-
+                                    <BSInputCheckbox CheckedValue="@(1)"  @bind-Value="d.ArSuplente" />
+                                
                                 </div>
                             </BSTD>
 
                         </BSTR>
+                        }
+
                     }
-                }
-                else
-                {
-                    @foreach (var d in listaAsistencia)
-                    {
+                </BSTBody>
+
+            </BSTable>
+            <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Save">   Save  <span class="oi oi-check"></span></BSButton>
+        </BSCol>
 
 
-                        <BSTR>
+    }
+    else if (APIReunionService.cargoreus.Count() == 0 && dataIsLoaded == 2)
+    {
+        <p>No personnel have been charged at this center.</p>
+    }
+    else if (dataIsLoaded == 1 && APIReunionService.cargoreus.Count() == 0)
+    {
+        <div class="loader"></div>
+    }
 
-                        <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
-                        <BSTD>
-                            <div Class="@BS.Form_Check @BS.Form_Switch">
-                                <BSInputCheckbox CheckedValue="@(1)" Color="BSColor.Success" @bind-Value="d.ArAsistente" />
-                                <BSLabel IsCheckLabel="true">
+} else{
+        
+    <h3>Asistencia</h3>
+    <p></p>
 
-                                </BSLabel>
-                            </div>
-                        </BSTD>
-                        <BSTD>
-                            <div Class="@BS.Form_Check">
-                                <BSInputCheckbox CheckedValue="@(1)"  @bind-Value="d.ArSuplente" />
-                             
-                            </div>
-                        </BSTD>
 
+    <BSContainer>
+
+        @if (APIReunionService.centro.Count() == 0)
+        {
+            <div class="loader"></div>
+        }
+        else
+        {
+
+            <BSRow>
+                <BSCol Column="4">
+
+                    <BSInput InputType="InputType.Select" @bind-Value="Div">
+                        @foreach (var d in APIReunionService.centro)
+                        {
+                        <option value="@d.Cnom">@d.Cnom</option>
+                        }
+                </BSInput>
+            </BSCol>
+
+            <BSCol ColumnSmall="3">
+                <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get">   Asistentes  <span class="oi oi-check"></span></BSButton>
+            </BSCol>
+
+        </BSRow>
+
+        }
+
+    </BSContainer>
+
+    <p></p>
+
+
+    @if (APIReunionService.cargoreus.Count() > 0 && dataIsLoaded == 2)
+    {
+        @if (listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+        {
+            <BSCol Column="4">
+                <BSLabel>Bloque: @bloque</BSLabel>
+                <BSInput InputType="InputType.Range" step="1" min="1" max="3" @bind-Value="bloque" />
+            </BSCol>
+        }
+
+        <BSCol Column="6">
+            <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
+                <BSTHead Class="cabecera">
+                    <BSTR>
+                        <BSTD>Personal</BSTD>
+                        <BSTD>Presencia</BSTD>
+                        <BSTD>Suplencia</BSTD>
                     </BSTR>
+                </BSTHead>
+                <BSTBody>
+                    @if (listaAsistencia.Where(c=>c.AridCargoRNavigation.CRBloque ==1).Count()>0)
+                    {
+                    
+                        @foreach (var d in listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == bloque))
+                        {
+
+
+                            <BSTR>
+
+                                <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
+                                <BSTD>
+                                    <div Class="@BS.Form_Check @BS.Form_Switch">
+                                        <BSInputCheckbox CheckedValue="@(1)" Color="BSColor.Success" @bind-Value="d.ArAsistente" />
+                                        <BSLabel IsCheckLabel="true">
+
+                                        </BSLabel>
+                                    </div>
+                                </BSTD>
+                                <BSTD>
+                                    <div Class="@BS.Form_Check">
+                                        <BSInputCheckbox CheckedValue="@(1)" @bind-Value="d.ArSuplente" />
+
+                                    </div>
+                                </BSTD>
+
+                            </BSTR>
+                        }
                     }
-
-                }
-            </BSTBody>
-
-        </BSTable>
-        <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Save">   Guardar  <span class="oi oi-check"></span></BSButton>
-    </BSCol>
+                    else
+                    {
+                        @foreach (var d in listaAsistencia)
+                        {
 
 
-}
-else if (APIReunionService.cargoreus.Count() == 0 && dataIsLoaded == 2)
-{
-    <p>No se ha cargado personal a este centro.</p>
-}
-else if (dataIsLoaded == 1 && APIReunionService.cargoreus.Count() == 0)
-{
-    <div class="loader"></div>
+                            <BSTR>
+
+                            <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
+                            <BSTD>
+                                <div Class="@BS.Form_Check @BS.Form_Switch">
+                                    <BSInputCheckbox CheckedValue="@(1)" Color="BSColor.Success" @bind-Value="d.ArAsistente" />
+                                    <BSLabel IsCheckLabel="true">
+
+                                    </BSLabel>
+                                </div>
+                            </BSTD>
+                            <BSTD>
+                                <div Class="@BS.Form_Check">
+                                    <BSInputCheckbox CheckedValue="@(1)"  @bind-Value="d.ArSuplente" />
+                                
+                                </div>
+                            </BSTD>
+
+                        </BSTR>
+                        }
+
+                    }
+                </BSTBody>
+
+            </BSTable>
+            <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Save">   Guardar  <span class="oi oi-check"></span></BSButton>
+        </BSCol>
+
+
+    }
+    else if (APIReunionService.cargoreus.Count() == 0 && dataIsLoaded == 2)
+    {
+        <p>No se ha cargado personal a este centro.</p>
+    }
+    else if (dataIsLoaded == 1 && APIReunionService.cargoreus.Count() == 0)
+    {
+        <div class="loader"></div>
+    }
+
 }
 
 
@@ -163,6 +300,11 @@ else if (dataIsLoaded == 1 && APIReunionService.cargoreus.Count() == 0)
 
     private List<Claim> claims { get; set; }
 
+    private int idPais { get; set; }
+    private int TrinidadYTobago = 6;
+
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
     private async Task CreateData()
 
     {
@@ -176,23 +318,37 @@ else if (dataIsLoaded == 1 && APIReunionService.cargoreus.Count() == 0)
 
     protected override async Task OnInitializedAsync()
     {
-
-        await CreateData();
-        UsrRol = claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
-        if (UsrRol == "Admin" | UsrRol == "SuperAdmin")
+    if (authenticationState is not null)
         {
+            AuthenticationState authState = await authenticationState;
+            ClaimsPrincipal? usuario = authState?.User;
 
-            await APIReunionService.GetCentrosxEmpresa("All" + claims.FirstOrDefault(c => c.Type.Contains("IdEmpresa"))?.Value);
-        }
-        else
-        {
+            if (usuario?.Identity is not null && usuario.Identity.IsAuthenticated)
+            {
+                idPais = GetIdPais(usuario);
 
-            await APIReunionService.GetCentrosxEmpresa(claims.FirstOrDefault(c => c.Type.Equals("IdCentro"))?.Value);
-        }
-        Div = claims.FirstOrDefault(c => c.Type.Contains("Centro"))?.Value;
+                await CreateData();
+                UsrRol = claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
+                if (UsrRol == "Admin" | UsrRol == "SuperAdmin")
+                {
 
+                    await APIReunionService.GetCentrosxEmpresa("All" + claims.FirstOrDefault(c => c.Type.Contains("IdEmpresa"))?.Value);
+                }
+                else
+                {
 
+                    await APIReunionService.GetCentrosxEmpresa(claims.FirstOrDefault(c => c.Type.Equals("IdCentro"))?.Value);
+                }
+                Div = claims.FirstOrDefault(c => c.Type.Contains("Centro"))?.Value;
+            }
 
+        } 
+    }
+
+        private int GetIdPais(ClaimsPrincipal user)
+    {
+        int _idPais = Int32.Parse(user.FindFirst(c => c.Type == "IdPais")?.Value ?? "0");
+        return _idPais;
     }
 
     protected async Task Get()
