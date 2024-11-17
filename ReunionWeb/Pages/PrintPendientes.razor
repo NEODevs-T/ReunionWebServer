@@ -11,9 +11,9 @@
 {
         <BSRow>
         <BSCol ColumnSmall="1" Column="2">
-            <BSLabel>Código</BSLabel>
+            <BSLabel>Code</BSLabel>
             <BSInput InputType="InputType.Select" @bind-Value="Codigo">
-                <option value="Todo">Todo</option>
+                <option value="Todo">All</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -23,22 +23,22 @@
         </BSCol>
 
         <BSCol ColumnSmall="1" Column="2">
-            <BSLabel>Estado</BSLabel>
+            <BSLabel>Status</BSLabel>
             <BSInput InputType="InputType.Select" @bind-Value="Status">
-                <option value="Total Pendiente">Total Pendiente</option>
-                <option value="Todo">Todo</option>
-                <option value="Pendiente">Pendiente</option>
-                <option value="Pendiente/Responsable">Pendiente/Responsable</option>
-                <option value="Listo">Listo</option>
-                <option value="Cerrado">Cerrado</option>
-                <option value="Vencidos">Vencidos</option>
+                <option value="Total Pendiente">Total Pending</option>
+                <option value="Todo">All</option>
+                <option value="Pendiente">Pending</option>
+                <option value="Pendiente/Responsable">Pending/Responsible</option>
+                <option value="Listo">Ready</option>
+                <option value="Cerrado">Closed</option>
+                <option value="Vencidos">Past due</option>
             </BSInput>
         </BSCol>
 
         <BSCol Column="3">
-            <BSLabel>Responsable</BSLabel>
+            <BSLabel>Responsible</BSLabel>
             <BSInput InputType="InputType.Select" @bind-Value="idrespo">
-                <option value=0>Todo</option>
+                <option value=0>All</option>
                 @foreach (var d in APIReunionService.resporeu)
                 {
 
@@ -48,7 +48,7 @@
             </BSInput>
         </BSCol>
         <BSCol Column="3">
-            <BSLabel>Línea</BSLabel>
+            <BSLabel>Line</BSLabel>
             <BSInput InputType="InputType.Text" @bind-Value="linea"  IsReadonly=true/>
         </BSCol>
 
@@ -67,18 +67,18 @@
                         @*<BSTD>Id</BSTD>*@
                         @*Centro para validar el comedor*@
 
-                        <BSTD>Área</BSTD>
+                        <BSTD>Area</BSTD>
                         <BSTD>Ksf</BSTD>
-                        <BSTD>C. Equipo</BSTD>
-                        <BSTD ColSpan="4">Discrepancia</BSTD>
-                        <BSTD>Código</BSTD>
-                        <BSTD>Plan de Acción</BSTD>
-                        <BSTD>Tiempo</BSTD>
-                        <BSTD>Responsable</BSTD>
+                        <BSTD>Equipment C.</BSTD>
+                        <BSTD ColSpan="4">Issue</BSTD>
+                        <BSTD>Code</BSTD>
+                        <BSTD>Plan of action</BSTD>
+                        <BSTD>Time</BSTD>
+                        <BSTD>Responsible</BSTD>
                         <BSTD>Status</BSTD>
                         <BSTD>ODT</BSTD>
-                        <BSTD>Fecha de Reunión</BSTD> @*Fecha del dia de reunion*@
-                        <BSTD>Fecha del Trabajo</BSTD>@*Fecha de listo el trabajo*@
+                        <BSTD>Meeting date</BSTD> @*Fecha del dia de reunion*@
+                        <BSTD>Work Date</BSTD>@*Fecha de listo el trabajo*@
 
 
                     </BSTR>
