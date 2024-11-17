@@ -5,10 +5,139 @@
 @inject IDbReunionService DbReunionService
 @inject IAPIReunionService APIReunionService
 
-
-
-       
+@if(idPais == TrinidadYTobago)
+{
 <body>
+
+    @if (DbReunionService.reudiatablas.Count() > 0 && dataIsLoaded == 2)
+    {
+        
+
+            <BSTable IsStriped="true" IsBordered="true">
+                <BSTHead Class="cabecera">
+                    <BSTR>
+
+                        @*<BSTD>Id</BSTD>*@
+                        @*Centro para validar el comedor*@
+                        @if (CentroComedor == 11)
+                        {
+                            <BSTD>N. Equipo</BSTD>
+                        }
+                        else
+                        {
+
+                            @*  <BSTD>División</BSTD>*@
+                            <BSTD>Área</BSTD>
+                            <BSTD>Ksf</BSTD>
+
+                        }
+
+                        <BSTD>Equipment Code</BSTD>
+                        <BSTD ColSpan="4">Issue</BSTD>
+                        <BSTD>Code</BSTD>
+                        <BSTD>Plan of action</BSTD>
+                        <BSTD>Time</BSTD>
+                        <BSTD ColSpan="1">Responsible</BSTD>
+                        <BSTD>Status</BSTD>
+                        <BSTD>ODT</BSTD>
+                        <BSTD>Work Date</BSTD>@*Fecha de listo el trabajo*@
+
+
+                    </BSTR>
+                </BSTHead>
+                <BSTBody>
+                    @foreach (var d in DbReunionService.reudiatablas)
+                    {
+                        @if (d.Rdstatus != "Listo" & d.RdfecTra <= DateTime.Now | (d.Rdstatus != "Listo" & (d.Rdodt == "" | d.Rdodt is null)))
+                        //@if (d.Rdstatus != "Listo")
+                        {
+
+
+                            <BSTR>
+
+                                @*<BSTD>@d.IdReuDia</BSTD>*@
+                                @*Centro para validar el comedor*@
+                                @if (CentroComedor == 11)
+                                {
+                                    @if (APIReunionService.equiposlinea.Any(e => e.EcodEquiEam == d.RdcodEq) is true)
+                                    {
+
+
+                                        @foreach (var eq in APIReunionService.equiposlinea)
+                                        {
+
+                                            if (eq.EcodEquiEam == d.RdcodEq)
+                                            {
+                                                <BSTD>@eq.EnombreEam</BSTD>
+
+                                            }
+
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <BSTD>There is no description.</BSTD>
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    @*  <BSTD>@d.Rddiv</BSTD>*@
+                                    <BSTD>@d.Rdarea</BSTD>
+                                    <BSTD>@d.IdksfNavigation.KsfNombre</BSTD>
+                                }
+
+
+                                <BSTD>@d.RdcodEq</BSTD>
+                                <BSTD ColSpan="4">@d.Rddisc.ToUpper()</BSTD>
+                                <BSTD>@d.RdcodDis</BSTD>
+                                @if (@d.RdplanAcc is not null)
+                                {
+                                    <BSTD Class="textotabla listo">@d.RdplanAcc</BSTD>
+                                }
+                                else
+                                {
+                                    <BSTD Class="textotabla ">@d.RdplanAcc</BSTD>
+                                }
+                                <BSTD>@d.Rdtiempo</BSTD>
+                                @if (@d.IdResReuNavigation.Rrnombre == "Por Definir")
+                                {
+                                    <BSTD Class="Definir">@d.IdResReuNavigation.Rrnombre </BSTD>
+                                }
+                                else
+                                {
+                                    <BSTD ColSpan="1">@d.IdResReuNavigation.Rrnombre</BSTD>
+                                }
+
+                                @if (@d.Rdstatus == "Revisar")
+                                {
+                                    <BSTD Class="cabecera">@d.Rdstatus</BSTD>
+                                }
+                                else
+                                {
+                                    <BSTD Class="">@d.Rdstatus</BSTD>
+                                }
+                                <BSTD>@d.Rdodt</BSTD>
+                                <BSTD>@d.RdfecTra.ToString("dd/MM/yyyy") </BSTD>
+
+
+                            </BSTR>
+
+                        }
+                    }
+
+
+                </BSTBody>
+
+            </BSTable>
+     
+    }
+     <button type="button" onclick="window.print()" class="btn btn-success"><span class="oi oi-print"></span></button>
+</body>
+} else{
+    <body>
 
     @if (DbReunionService.reudiatablas.Count() > 0 && dataIsLoaded == 2)
     {
@@ -137,6 +266,8 @@
     }
      <button type="button" onclick="window.print()" class="btn btn-success"><span class="oi oi-print"></span></button>
 </body>
+}
+
 
 
 
@@ -155,15 +286,33 @@
 
     int dataIsLoaded = 0;
     int CentroComedor = 0;
+    private int idPais { get; set; }
+    private int TrinidadYTobago = 6;
+    private Task<AuthenticationState>? authenticationState { get; set; }
 
     protected override async Task OnParametersSetAsync()
-    {
-        if (accion != null)
+    {   
+        if (authenticationState is not null)
         {
-            dataIsLoaded = 1;
-            await DbReunionService.GetPendientes(accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo,"Reunion");
-            dataIsLoaded = 2;
-        }
+            AuthenticationState authState = await authenticationState;
+            ClaimsPrincipal? usuario = authState?.User;
 
+            if (usuario?.Identity is not null && usuario.Identity.IsAuthenticated)
+            {
+                idPais = GetIdPais(usuario);
+                if (accion != null)
+                {
+                    dataIsLoaded = 1;
+                    await DbReunionService.GetPendientes(accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo,"Reunion");
+                    dataIsLoaded = 2;
+                }
+            }       
+        }
+    }
+
+    private int GetIdPais(ClaimsPrincipal user)
+    {
+        int _idPais = Int32.Parse(user.FindFirst(c => c.Type == "IdPais")?.Value ?? "0");
+        return _idPais;
     }
 }
