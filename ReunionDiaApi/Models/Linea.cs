@@ -11,6 +11,10 @@ namespace ReunionDiaApi.Models
         public Linea()
         {
             EquipoEams = new HashSet<EquipoEam>();
+            LibroNoves = new HashSet<LibroNove>();
+            LinAres = new HashSet<LinAre>();
+            Montos = new HashSet<Monto>();
+            ProNoCons = new HashSet<ProNoCon>();
         }
 
         /// <summary>
@@ -40,5 +44,9 @@ namespace ReunionDiaApi.Models
         public virtual Centro IdCentroNavigation { get; set; } = null!;
         public virtual Division? IdDivisionNavigation { get; set; }
         public virtual ICollection<EquipoEam> EquipoEams { get; set; }
+        public virtual ICollection<LibroNove> LibroNoves { get; set; }
+        public virtual ICollection<LinAre> LinAres { get; set; }
+        public virtual ICollection<Monto> Montos { get; set; }
+        public virtual ICollection<ProNoCon> ProNoCons { get; set; }
     }
 }
