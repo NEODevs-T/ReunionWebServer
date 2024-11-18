@@ -15,7 +15,7 @@ namespace ReunionWeb.NeoDbs
         public bool Cresta { get; set; }
         public string Crempresa { get; set; } = null!;
         public string? Crarea { get; set; }
-        public int CRBloque { get; set; }
+        public int? Crbloque { get; set; }
 
         public virtual ICollection<AsistenReu> AsistenReus { get; set; }
     }

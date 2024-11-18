@@ -49,7 +49,7 @@
 
     @if (APIReunionService.cargoreus.Count() > 0 && dataIsLoaded == 2)
     {
-        @if (listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+        @if (listaAsistencia.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
         {
             <BSCol Column="4">
                 <BSLabel>Block: @bloque</BSLabel>
@@ -67,10 +67,10 @@
                     </BSTR>
                 </BSTHead>
                 <BSTBody>
-                    @if (listaAsistencia.Where(c=>c.AridCargoRNavigation.CRBloque ==1).Count()>0)
+                    @if (listaAsistencia.Where(c=>c.AridCargoRNavigation.Crbloque ==1).Count()>0)
                     {
                     
-                        @foreach (var d in listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == bloque))
+                        @foreach (var d in listaAsistencia.Where(c => c.AridCargoRNavigation.Crbloque == bloque))
                         {
 
 
@@ -181,7 +181,7 @@
 
     @if (APIReunionService.cargoreus.Count() > 0 && dataIsLoaded == 2)
     {
-        @if (listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+        @if (listaAsistencia.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
         {
             <BSCol Column="4">
                 <BSLabel>Bloque: @bloque</BSLabel>
@@ -199,10 +199,10 @@
                     </BSTR>
                 </BSTHead>
                 <BSTBody>
-                    @if (listaAsistencia.Where(c=>c.AridCargoRNavigation.CRBloque ==1).Count()>0)
+                    @if (listaAsistencia.Where(c=>c.AridCargoRNavigation.Crbloque ==1).Count()>0)
                     {
                     
-                        @foreach (var d in listaAsistencia.Where(c => c.AridCargoRNavigation.CRBloque == bloque))
+                        @foreach (var d in listaAsistencia.Where(c => c.AridCargoRNavigation.Crbloque == bloque))
                         {
 
 
@@ -379,7 +379,7 @@
                 listaAsistencia[i].AridCargoR = APIReunionService.cargoreus[i].IdCargoR;
             }
 
-            if (listaAsistencia.Any(c => c.AridCargoRNavigation.CRBloque == 1))
+            if (listaAsistencia.Any(c => c.AridCargoRNavigation.Crbloque == 1))
             {
                 bloque = 1;
             }
@@ -414,7 +414,7 @@
             {
                 for (int i = listaAsistencia.Count - 1; i >= 0; i--)
                 {
-                    if (listaAsistencia[i].AridCargoRNavigation.CRBloque != bloque)
+                    if (listaAsistencia[i].AridCargoRNavigation.Crbloque != bloque)
                     {
                         listaAsistencia.RemoveAt(i);
                     }

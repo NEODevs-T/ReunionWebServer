@@ -102,7 +102,7 @@
                 @if (Reuniondb.Rdcentro != "Chempro")
                 {
                     <BSCol Column="4">
-                        <BSLabel>Equipment C.</BSLabel>
+                        <BSLabel>Equipment Code</BSLabel>
                         <BSInput InputType="InputType.Select" @bind-Value="Reuniondb.RdcodEq">
 
                             <option value="">Select...</option>
@@ -123,7 +123,7 @@
                 else
                 {
                     <BSCol Column="4">
-                        <BSLabel>Equipment C.</BSLabel>
+                        <BSLabel>Equipment Code</BSLabel>
                         <BSInput InputType="InputType.Text" @bind-Value="Reuniondb.RdcodEq" />
                     
                     </BSCol>
@@ -132,7 +132,7 @@
             else if (APIReunionService.centro.Count > 0 & tipoequipo == "1")
             {
                 <BSCol Column="4">
-                    <BSLabel>Equipment C.</BSLabel>
+                    <BSLabel>Equipment Code</BSLabel>
                     <div class="autocomplete">
                         <input @bind=selectedEquipoId @oninput=HandleInput class="form-control filter" />
                         @if (equiposfiltro is not null)
@@ -178,7 +178,7 @@
                     <option value="">Select...</option>
                     @foreach (var d in APIReunionService.ksfs)
                     {
-                        <option value="@d.Idksf">@d.KsfNombre</option>
+                        <option value="@d.Idksf">@d.KsfEnglish</option>
                     }
 
                 </BSInput>
@@ -208,7 +208,7 @@
 
                     @foreach (var d in APIReunionService.resporeu)
                     {
-                        <option value="@d.IdResReu">@d.Rrnombre</option>
+                        <option value="@d.IdResReu">@d.Rrenglish</option>
                     }
                 </BSInput>
         

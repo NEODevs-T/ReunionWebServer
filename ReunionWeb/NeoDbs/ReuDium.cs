@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace ReunionWeb.NeoDbs
 {
@@ -8,6 +7,7 @@ namespace ReunionWeb.NeoDbs
     {
         public ReuDium()
         {
+            CambFecs = new HashSet<CambFec>();
             CambStats = new HashSet<CambStat>();
         }
 
@@ -19,59 +19,47 @@ namespace ReunionWeb.NeoDbs
         /// Id del pais
         /// </summary>
         public int IdPais { get; set; }
-        public int IdEmpresa { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "El campo Responsable no es correcto.")]
-        [Required(ErrorMessage = "Campo Responsable Requerido.")]
+        public int? IdEmpresa { get; set; }
         public int IdResReu { get; set; }
         /// <summary>
         /// Id del afectado
         /// </summary>
-        [Required(ErrorMessage = "Campo KSF Requerido.")]
-        [Range(1, int.MaxValue, ErrorMessage = "El campo KSF no es correcto.")]
         public int Idksf { get; set; }
         /// <summary>
         /// centro o planta
         /// </summary>
-
         public string? Rdcentro { get; set; }
         /// <summary>
         /// Division
         /// </summary>
-
         public string? Rddiv { get; set; }
         /// <summary>
         /// Lineas o maquinas.
         /// </summary>
-     
         public string? Rdarea { get; set; }
         /// <summary>
         /// Codigo del equipo
         /// </summary>
-        [Required(ErrorMessage = "Campo C. Equipo Requerido.")]
         public string? RdcodEq { get; set; }
         /// <summary>
         /// Descripción de la discrepancia
         /// </summary>
-        [Required(ErrorMessage = "Campo Discrepancia Requerido.")]
-        [StringLength(250, ErrorMessage = "El campo discrepancia  no debe tener mas de {1} carácteres")]
         public string? Rddisc { get; set; }
         /// <summary>
         /// Codigo del estado de la discrepancia.
         /// </summary>
-       
         public string? RdcodDis { get; set; }
         /// <summary>
         /// Plan de acción.
         /// </summary>
-        public string? RdplanAcc { get; set; } = null!;
+        public string? RdplanAcc { get; set; }
         /// <summary>
         /// Tiempo de reparación de la discrepancia.
         /// </summary>
-        public string? Rdtiempo { get; set; } = null!;
+        public string? Rdtiempo { get; set; }
         /// <summary>
         /// Estado de las discrepancia
         /// </summary>
-        [Required(ErrorMessage = "Campo Estado Requerido.")]
         public string? Rdstatus { get; set; }
         /// <summary>
         /// orden de trabajo
@@ -94,11 +82,10 @@ namespace ReunionWeb.NeoDbs
         /// </summary>
         public string? Rdobs { get; set; }
 
-        //public virtual Pai IdPaisNavigation { get; set; } = null!;
-        public virtual Empresa IdEmpresaNavigation { get; set; } = null!;
+        public virtual Empresa? IdEmpresaNavigation { get; set; }
         public virtual RespoReu IdResReuNavigation { get; set; } = null!;
         public virtual Ksf IdksfNavigation { get; set; } = null!;
+        public virtual ICollection<CambFec> CambFecs { get; set; }
         public virtual ICollection<CambStat> CambStats { get; set; }
-        public virtual ICollection<CambFec> CambFec { get; set; }
     }
 }

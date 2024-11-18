@@ -56,7 +56,7 @@
                                 <option value="">Select...</option>
                                 @foreach (var d in APIReunionService.ksfs)
                                 {
-                                    <option value="@d.Idksf">@d.KsfNombre</option>
+                                    <option value="@d.Idksf">@d.KsfEnglish</option>
                                 }
 
                             </BSInput>
@@ -64,7 +64,7 @@
                         </BSCol>
 
                         <BSCol Column="3">
-                            <BSLabel>Equipment C.</BSLabel>
+                            <BSLabel>Equipment Code</BSLabel>
                             <BSInput InputType="InputType.Text" @bind-Value="DiscForm.RdcodEq" ValidateOnInput="true" />
                             <BSFeedback For="@(() => DiscForm.RdcodEq)" ValidMessage="Correcto." />
                         </BSCol>
@@ -139,10 +139,10 @@
                         <BSCol ColumnSmall="2">
                             <BSLabel>Responsible</BSLabel>
                             <BSInput InputType="InputType.Select" @bind-Value="DiscForm.IdResReu">
-                                <option value="">Seleccione...</option>
+                                <option value="">Select...</option>
                                 @foreach (var d in APIReunionService.resporeu)
                                 {
-                                    <option value="@d.IdResReu">@d.Rrnombre</option>
+                                    <option value="@d.IdResReu">@d.Rrenglish</option>
                                 }
 
                             </BSInput>
@@ -290,14 +290,14 @@
                             <option value="">Select...</option>
                             @foreach (var d in APIReunionService.ksfs)
                             {
-                                <option value="@d.Idksf">@d.KsfNombre</option>
+                                <option value="@d.Idksf">@d.KsfEnglish</option>
                             }
 
                         </BSInput>
 
 
                         <BSCol Column="2">
-                            <BSLabel>Equipment C.</BSLabel>
+                            <BSLabel>Equipment Code</BSLabel>
                             <BSInput InputType="InputType.Text" IsDisabled @bind-Value="DiscForm.RdcodEq" />
                         </BSCol>
 
@@ -350,7 +350,7 @@
                                 <option value="">Select...</option>
                                 @foreach (var d in APIReunionService.resporeu)
                                 {
-                                    <option value="@d.IdResReu">@d.Rrnombre</option>
+                                    <option value="@d.IdResReu">@d.Rrenglish</option>
                                 }
                             </BSInput>
 
@@ -1154,7 +1154,7 @@
                         CambFec.Cffec = DateTime.Now;
                         CambFec.CffecNew = DiscForm.RdfecTra;
                         CambFec.Cfuser = claims[2].Value + " " + claims[3].Value;
-                        DiscForm.CambFec.Add(CambFec);
+                        DiscForm.CambFecs.Add(CambFec);
                     }
                     cambio = await DbReunionService.UpdateDiscrepancia2(DiscForm, (int)Id, (int)tipo, f1, f2, est, linea);
 

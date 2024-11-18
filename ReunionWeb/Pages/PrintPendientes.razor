@@ -42,7 +42,7 @@
                 @foreach (var d in APIReunionService.resporeu)
                 {
 
-                    <option value="@d.IdResReu">@d.Rrnombre</option>
+                    <option value="@d.IdResReu">@d.Rrenglish</option>
 
                 }
             </BSInput>
@@ -69,7 +69,7 @@
 
                         <BSTD>Area</BSTD>
                         <BSTD>Ksf</BSTD>
-                        <BSTD>Equipment C.</BSTD>
+                        <BSTD>Equipment Code</BSTD>
                         <BSTD ColSpan="4">Issue</BSTD>
                         <BSTD>Code</BSTD>
                         <BSTD>Plan of action</BSTD>
@@ -88,7 +88,7 @@
                 @if (UsrRol == "Calidad" | UsrRol == "Seguridad" | UsrRol=="Mtto")*@
                     @if (UsrRol != "")
                     {
-                        listareu = DbReunionService.reudiatablas.Where(r => r.IdResReuNavigation.Rrnombre.StartsWith(UsrRol)).ToList();
+                        listareu = DbReunionService.reudiatablas.Where(r => r.IdResReuNavigation.Rrenglish.StartsWith(UsrRol)).ToList();
                     }
                     else
                     {
@@ -110,19 +110,19 @@
                                             @*<BSTD>@d.IdReuDia</BSTD>*@
 
                                             <BSTD>@d.Rdarea</BSTD>
-                                                <BSTD>@d.IdksfNavigation.KsfNombre</BSTD>
+                                                <BSTD>@d.IdksfNavigation.KsfEnglish</BSTD>
                                                 <BSTD>@d.RdcodEq</BSTD>
                                                 <BSTD ColSpan="4">@d.Rddisc.ToUpperInvariant()</BSTD>
                                                 <BSTD>@d.RdcodDis</BSTD>
                                                 <BSTD Class="textotabla">@d.RdplanAcc</BSTD>
                                                 <BSTD>@d.Rdtiempo</BSTD>
-                                                @if (@d.IdResReuNavigation.Rrnombre == "Por Definir")
+                                                @if (@d.IdResReuNavigation.Rrenglish == "To be defined")
                                             {
-                                                <BSTD Class="Definir">@d.IdResReuNavigation.Rrnombre </BSTD>
+                                                <BSTD Class="Definir">@d.IdResReuNavigation.Rrenglish </BSTD>
                                             }
                                             else
                                             {
-                                                <BSTD>@d.IdResReuNavigation.Rrnombre </BSTD>
+                                                <BSTD>@d.IdResReuNavigation.Rrenglish </BSTD>
                                             }
 
                                             @if (@d.Rdstatus == "Listo")

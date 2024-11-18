@@ -86,7 +86,7 @@
                                 {
                                     @*  <BSTD>@d.Rddiv</BSTD>*@
                                     <BSTD>@d.Rdarea</BSTD>
-                                    <BSTD>@d.IdksfNavigation.KsfNombre</BSTD>
+                                    <BSTD>@d.IdksfNavigation.KsfEnglish</BSTD>
                                 }
 
 
@@ -102,13 +102,13 @@
                                     <BSTD Class="textotabla ">@d.RdplanAcc</BSTD>
                                 }
                                 <BSTD>@d.Rdtiempo</BSTD>
-                                @if (@d.IdResReuNavigation.Rrnombre == "Por Definir")
+                                @if (@d.IdResReuNavigation.Rrenglish == "To be defined")
                                 {
-                                    <BSTD Class="Definir">@d.IdResReuNavigation.Rrnombre </BSTD>
+                                    <BSTD Class="Definir">@d.IdResReuNavigation.Rrenglish </BSTD>
                                 }
                                 else
                                 {
-                                    <BSTD ColSpan="1">@d.IdResReuNavigation.Rrnombre</BSTD>
+                                    <BSTD ColSpan="1">@d.IdResReuNavigation.Rrenglish</BSTD>
                                 }
 
                                 @if (@d.Rdstatus == "Revisar")

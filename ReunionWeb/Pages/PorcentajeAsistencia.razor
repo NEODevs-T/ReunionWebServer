@@ -94,7 +94,7 @@
     </BSRow>
     <p></p>
    
-        @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+        @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
         {
             <BSCol Column="4">
                 <BSLabel>Block: @bloque</BSLabel>
@@ -124,10 +124,10 @@
                     @foreach (var d in porasis)
                     {
                         <BSTR>
-                            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+                            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
                             {
 
-                                @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.Crnombre == d.Cargo).AridCargoRNavigation.CRBloque) == bloque)
+                                @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.Crnombre == d.Cargo).AridCargoRNavigation.Crbloque) == bloque)
                                 {
 
                                     <BSTD>@d.Cargo</BSTD>
@@ -162,7 +162,7 @@
     }
     else if (Lista == 1)
     {
-        @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+        @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
         {
             <BSCol Column="4">
                 <BSLabel>Block: @bloque</BSLabel>
@@ -190,9 +190,9 @@
 
                         <BSTR>
 
-                            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+                            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
                             {
-                                @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoR == d.AridCargoR).AridCargoRNavigation.CRBloque) == bloque)
+                                @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoR == d.AridCargoR).AridCargoRNavigation.Crbloque) == bloque)
                                 {
                                     <BSTD>@d.Arfecha</BSTD>
                                     <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
@@ -355,7 +355,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
         </BSRow>
         <p></p>
     
-            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
             {
                 <BSCol Column="4">
                     <BSLabel>Bloque: @bloque</BSLabel>
@@ -385,10 +385,10 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
                         @foreach (var d in porasis)
                         {
                             <BSTR>
-                                @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+                                @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
                                 {
 
-                                    @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.Crnombre == d.Cargo).AridCargoRNavigation.CRBloque) == bloque)
+                                    @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.Crnombre == d.Cargo).AridCargoRNavigation.Crbloque) == bloque)
                                     {
 
                                         <BSTD>@d.Cargo</BSTD>
@@ -423,7 +423,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
         }
         else if (Lista == 1)
         {
-            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+            @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
             {
                 <BSCol Column="4">
                     <BSLabel>Bloque: @bloque</BSLabel>
@@ -451,9 +451,9 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
 
                             <BSTR>
 
-                                @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.CRBloque == 1).Count() > 0)
+                                @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
                                 {
-                                    @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoR == d.AridCargoR).AridCargoRNavigation.CRBloque) == bloque)
+                                    @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoR == d.AridCargoR).AridCargoRNavigation.Crbloque) == bloque)
                                     {
                                         <BSTD>@d.Arfecha</BSTD>
                                         <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
@@ -651,7 +651,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
                 {
                     var elementosParaEliminar = listafiltradabloque
                         .Where((elemento, index) => listacargos.Any(lista =>
-                            lista.CRBloque != bloque &&
+                            lista.Crbloque != bloque &&
                             lista.Crnombre == elemento.Cargo))
                         .ToList();
 
@@ -712,7 +712,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
             dataIsLoaded = 2;
 
 
-            if (APIReunionService.asistenreus.Any(c => c.AridCargoRNavigation.CRBloque == bloque))
+            if (APIReunionService.asistenreus.Any(c => c.AridCargoRNavigation.Crbloque == bloque))
             {
 
                 await Porcentaje();
