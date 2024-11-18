@@ -426,6 +426,7 @@ Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
 
     private int idPais { get; set; }
     private int TrinidadYTobago = 6;
+    [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private async Task CreateData()

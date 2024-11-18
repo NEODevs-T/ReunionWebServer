@@ -78,7 +78,7 @@
                 </BSCol>
 
                 <BSCol ColumnSmall="2" Column="3">
-                    <BSLabel>Estatus</BSLabel>
+                    <BSLabel>Status</BSLabel>
                     <BSInput InputType="InputType.Select" @bind-Value="Status">
                         <option value="Total Pendiente">Total Pending</option>
                         <option value="Todo">All</option>
@@ -519,6 +519,7 @@ else
 
     private int idPais { get; set; }
     private int TrinidadYTobago = 6;
+    [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private async Task CreateData()

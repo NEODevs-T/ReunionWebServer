@@ -561,6 +561,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
     private List<Claim> claims { get; set; }
     private int idPais { get; set; }
     private int TrinidadYTobago = 6;
+    [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
     private async Task CreateData()
 

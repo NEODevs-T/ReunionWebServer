@@ -60,7 +60,7 @@
                         <BSLabel>Accept</BSLabel>
                     </BSRow>
                     <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="(() => Get(IdCentro,IdDiv))">
-                        Consultar <span class="oi oi-check"></span></BSButton>
+                        Search <span class="oi oi-check"></span></BSButton>
                 </BSCol>
 
             </BSRow>
@@ -75,12 +75,12 @@
     {
 
         <RadzenScheduler Data="@data" TItem="DataItem" StartProperty="Start" SelectedIndex="1" style="height: 630px;"
-            EndProperty="End" TodayText="Hoy" TextProperty="Text" AppointmentRender=@OnAppointmentRender>
-            <RadzenDayView Text="Día" />
-            <RadzenWeekView Text="Semana" />
-            <RadzenMonthView Text="Mes" />
-            <RadzenYearPlannerView Text="Planifcación" />
-            <RadzenYearView Text="Año" />
+            EndProperty="End" TodayText="Today" TextProperty="Text" AppointmentRender=@OnAppointmentRender>
+            <RadzenDayView Text="Day" />
+            <RadzenWeekView Text="Week" />
+            <RadzenMonthView Text="Month" />
+            <RadzenYearPlannerView Text="Planifcation" />
+            <RadzenYearView Text="Year" />
         </RadzenScheduler>
     }
 
@@ -193,6 +193,7 @@ else
 
     private int idPais { get; set; }
     private int TrinidadYTobago = 6;
+    [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
 

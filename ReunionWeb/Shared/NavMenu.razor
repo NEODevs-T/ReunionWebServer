@@ -1,4 +1,119 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@if(idPais == TrinidadYTobago)
+{
+    <div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <small class="text-muted"> Powered By  </small><img src="./images/LogoNeo.png" alt="PAVECA" width="60px" />
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+
+        <AuthorizeView Roles="Admin,AdminChempro, SupIntendente, SupIntendenteGeneral">
+
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true"></span> Home
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="discrepancia">
+                        <span class="oi oi-warning" aria-hidden="true"></span> Add Issue
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="pendientes">
+                        <span class="oi oi-tags" aria-hidden="true"></span> List of Issues
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="asistencia">
+                        <span class="oi oi-list" aria-hidden="true"></span> Attendance
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="reunion">
+                        <span class="oi oi-people" aria-hidden="true"></span> Meeting
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="historicos">
+                        <span class="oi oi-spreadsheet" aria-hidden="true"></span> Historical
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="calendario">
+                        <span class=" oi oi-calendar" aria-hidden="true"></span> Calendar
+                    </NavLink>
+                </div>
+
+            </Authorized>
+
+
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true"></span> Home
+                    </NavLink>
+                </div>
+
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="pendientes">
+                        <span class="oi oi-tags" aria-hidden="true"></span> list of issues
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="reunion">
+                        <span class="oi oi-people" aria-hidden="true"></span> Meeting
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="historicos">
+                        <span class="oi oi-spreadsheet" aria-hidden="true"></span> Históricos
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="calendario">
+                        <span class=" oi oi-calendar" aria-hidden="true"></span> Historical
+                    </NavLink>
+                </div>
+
+            </NotAuthorized>
+
+        </AuthorizeView>
+        <AuthorizeView Roles="Admin,AdminChempro, SupIntendente,SupIntendenteGeneral,MttoAdmin">
+            <Authorized>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="stats_asistencia">
+                        <span class="oi oi-graph" aria-hidden="true"></span> %Attendance
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="Admin,AdminChempro,SuperAdmin">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="addequipo">
+                        <span class="oi oi-wrench" aria-hidden="true"></span> Equipment
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </nav>
+</div>
+
+} else{
+        <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <small class="text-muted"> Powered By  </small><img src="./images/LogoNeo.png" alt="PAVECA" width="60px" />
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -110,11 +225,35 @@
     </nav>
 </div>
 
+}
 @code {
     private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;    
+    private int idPais { get; set; }
+    private int TrinidadYTobago = 6;
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+protected override async Task OnInitializedAsync()
+{
+    if (authenticationState is not null)
+    {
+        AuthenticationState authState = await authenticationState;
+        ClaimsPrincipal? usuario = authState?.User;
 
+        if (usuario?.Identity is not null && usuario.Identity.IsAuthenticated)
+        {
+            idPais = GetIdPais(usuario);
+        }
+            
+    }
+}
+
+private int GetIdPais(ClaimsPrincipal user)
+    {
+        int _idPais = Int32.Parse(user.FindFirst(c => c.Type == "IdPais")?.Value ?? "0");
+        return _idPais;
+    }
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
