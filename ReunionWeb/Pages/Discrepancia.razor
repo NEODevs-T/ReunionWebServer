@@ -565,27 +565,53 @@
 
                 if (Reuniondb.Rdarea is null)
                 {
-
+                    if(idPais == TrinidadYTobago)
+                    {
+                    mensaje = "Select the area.";
+                    }else
+                    {
                     mensaje = "Seleccione el area.";
+                    }
                     NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
 
                 }
                 else if (Reuniondb.Rddiv is null)
                 {
+                    if(idPais == TrinidadYTobago)
+                    {
+                    mensaje = "Select the division.";
+                    }
+                    else
+                    {
                     mensaje = "Seleccione la division.";
+                    }
                     NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
 
                 }
                 else if (Reuniondb.Rddisc is null)
                 {
+                    if(idPais == TrinidadYTobago)
+                    {
+                    mensaje = "Fill in the issue";
+                    }
+                    else
+                    {
                     mensaje = "Llene la discrepancia";
+                    }
                     NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
 
                 }
 
                 else if (Reuniondb.Rdstatus is null)
                 {
+                    if(idPais == TrinidadYTobago)
+                    {
+                    mensaje = "Select status";
+                    }
+                    else
+                    {
                     mensaje = "Seleccione status";
+                    }
                     NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
 
                 }
@@ -626,7 +652,14 @@
         }
         catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("advertencia", "Error de conexión", "Error de conexión de datos.Intente de nuevo "));
+            if(idPais == TrinidadYTobago)
+                {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Error de conexión", "Data connection error. Try again "));
+                }
+                else
+                {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Error de conexión", "Error de conexión de datos.Intente de nuevo "));
+                }
         }
         catch (Exception ex)
         {

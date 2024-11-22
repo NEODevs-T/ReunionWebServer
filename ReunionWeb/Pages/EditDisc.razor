@@ -1148,21 +1148,41 @@
 
             else
             {
-                NotificationService.Notify(Notificar.Notificacion("advertencia", "Revise los datos", "La fecha de trabajo no puede ser menor a la fecha de reunión."));
+                if(Pais == "Trinidad y Tobago")
+                {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Review the data", "The work date cannot be less than the meeting date."));        
+                }
+                else
+                {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Revise los datos", "La fecha de trabajo no puede ser menor a la fecha de reunión."));
+                }
 
             }
 
             if (cambio == false)
             {
-                NotificationService.Notify(Notificar.Notificacion("advertencia", "Falló el registro, intente de nuevo.", "Si el problema persiste,  recargue la página."));
+                if(Pais == "Trinidad y Tobago")
+                {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Registration failed, try again.", "If the problem persists, reload the page."));    
+                }
+                else
+                {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Falló el registro, intente de nuevo.", "Si el problema persiste,  recargue la página."));
+                }
+
 
             }
 
         }
         catch (Exception ex)
         {
-
-            NotificationService.Notify(Notificar.Notificacion("error", "Ocurrió un error inesperado.", "Por favor,  recargue la página."));//LLamar notificacion con el objeto de logic
+            if(Pais == "Trinidad y Tobago")
+            {
+                NotificationService.Notify(Notificar.Notificacion("error", "An unexpected error occurred.", "Please reload the page."));
+            }else
+            {
+                NotificationService.Notify(Notificar.Notificacion("error", "Ocurrió un error inesperado.", "Por favor,  recargue la página."));//LLamar notificacion con el objeto de logic
+            }
 
         }
 

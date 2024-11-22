@@ -35,6 +35,12 @@
 
 
         <div class="text-center fondo">
+                <div class="caja-idioma">
+                    <select class="idioma"  @bind="idioma">
+                        <option value=1>Español</option>
+                        <option value=2>English</option>
+                    </select>
+                </div>
 
             <div class="form-signin w-25 m-auto loginform ">
 @*                <div>
@@ -62,7 +68,14 @@
                 <p></p>
 
                 <img class="mb-4" src="./images/Neo.png" alt="" width="100" height="100">
-                <h1 class="h3 mb-3 fw-normal">Inicie Sesión</h1>
+                @if (idioma == 1)
+                {
+                    <h1 class="h3 mb-3 fw-normal">Inicie Sesión</h1>
+                }
+                else if(idioma == 2)
+                {
+                    <h1 class="h3 mb-3 fw-normal">Login</h1>
+                }
 
 
                 <BSForm Model="user" OnSubmit="HandleLogin">
@@ -87,7 +100,7 @@
                     <p></p>
                     @if (carga == true)
                     {
-                           <div class="loader"></div>
+                        <div class="loader"></div>
                     }
                     else if (carga == false)
                     {
@@ -124,6 +137,7 @@
     //private bool _buttonDisabled = true;
     //private BSAlert? _alertRef;
 
+    private int idioma  {get; set;} = 1;
 
     protected async Task HandleLogin(EditContext e)
     {
@@ -140,39 +154,70 @@
 
                 if (ValidarToken == "NotFoundUser")
                 {
+                    if(idioma == 1)
+                    {
                     mensaje = "Verifique el usuario.";
+                    }else if(idioma == 2)
+                    {
+                    mensaje = "Verify the user.";   
+                    }
                     NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención",mensaje));
 
                     carga = false;
                 }
                 else if (ValidarToken == "WrongPassword")
                 {
+                    if(idioma == 1){
                     mensaje = "Contraseña Incorrecta.";
+                    } else if(idioma == 2)
+                    {
+                    mensaje = "Wrong Password.";
+                    }
                     NotificationService.Notify(Notificar.Notificacion("error", "Atención", mensaje));
 
                     carga = false;
                 }else if(ValidarToken == "DeactivatedUser"){
+                    if(idioma == 1)
+                    {
                     mensaje = "El usuario esta desactivado en este proyecto";
+                    } else if(idioma == 2){
+                    mensaje = "The user is disabled in this project";
+                    }
                     NotificationService.Notify(Notificar.Notificacion("error", "Atención", mensaje));
 
                     carga = false;
 
                 }else if(ValidarToken == "DeactivatedUserAll"){
-                    mensaje = "El usuario esta desactivado";
+                    if(idioma == 1)
+                    {
+                        mensaje = "El usuario esta desactivado";
+                    } else if(idioma == 2)
+                    {
+                        mensaje = "The user is disabled";
+                    }
                     NotificationService.Notify(Notificar.Notificacion("error", "Atención", mensaje));
 
                     carga = false;
 
                 }else if (ValidarToken == "null")
                 {
-                    mensaje = "Este usuario no está registrado en este proyecto."; 
+                    if(idioma == 1)
+                    {
+                        mensaje = "Este usuario no está registrado en este proyecto.";
+                    } else if(idioma == 2)
+                    {
+                        mensaje = "This user is not registered in this project.";
+                    } 
                     NotificationService.Notify(Notificar.Notificacion("error", "Atención", mensaje));
                     carga = false;
                 }
                 else
                 {
-                    mensaje = "Accediendo...";
-                    
+                    if(idioma == 1){
+                        mensaje = "Cargando...";
+                    } else if(idioma == 2){
+                        mensaje = "Loading...";
+                    }
 
                     Console.WriteLine(ValidarToken);
                     await LocalStorage.SetItemAsync("ReunionWebToken", ValidarToken);
