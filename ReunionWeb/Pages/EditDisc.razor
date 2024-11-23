@@ -1087,15 +1087,33 @@
             {
                 if (CambiosFecha.Count() >= 3 & camFec != DiscForm.RdfecTra)
                 {
-                    NotificationService.Notify(Notificar.Notificacion("error", "Atención", "Alcanzó el límite de cambios de Fecha de Trabajo."));
+                    if(Pais == "Trinidad y Tobago")
+                    {
+                        NotificationService.Notify(Notificar.Notificacion("error", "Attention", "You have reached the Work Date change limit."));
+                    }else
+                    {
+                        NotificationService.Notify(Notificar.Notificacion("error", "Atención", "Alcanzó el límite de cambios de Fecha de Trabajo."));
+                    }
                 }
                 else if (String.IsNullOrEmpty(DiscForm.RdplanAcc) && DiscForm.Rdstatus == "Cerrado")
                 {
+                    if(Pais == "Trinidad y Tobago")
+                    {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Attention", "It cannot be closed without an Action Plan."));
+                    }else
+                    {
                     NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", "No se puede cerrar sin Plan de Acción."));
+                    }
                 }
                 else if (PlanOld != DiscForm.RdplanAcc && String.IsNullOrEmpty(DiscForm.RdplanAcc))
                 {
+                    if(Pais == "Trinidad y Tobago")
+                    {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Attention", "Do not save with an empty Action Plan."));
+                    }else
+                    {
                     NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", "No se guardar con Plan de Acción vacío."));
+                    }
                     DiscForm.RdplanAcc = PlanOld;
                 }
                 else

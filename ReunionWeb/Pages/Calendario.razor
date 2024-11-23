@@ -253,8 +253,7 @@ else
         string centro = "", division = "";
         if (IdCentro > 0)
         {
-            centro = APIReunionService.centro.Where(c => c.IdCentro == IdCentro).FirstOrDefault(c =>
-            c.IdCentro.Equals(IdCentro)).Cnom;
+            centro = APIReunionService.centro.Where(c => c.IdCentro == IdCentro).FirstOrDefault(c =>c.IdCentro.Equals(IdCentro)).Cnom;
             if (IdDiv == 0)
             {
                 division = "All";
