@@ -13,7 +13,7 @@
 Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
 
 
-@if(idPais == TrinidadYTobago)
+@if (idPais == TrinidadYTobago)
 {
     <h3>Meeting Format</h3>
 
@@ -127,7 +127,7 @@ Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
                     @foreach (var d in DbReunionService.reudiatablas)
                     {
                         @if (d.Rdstatus != "Listo" & d.RdfecTra <= DateTime.Now | (d.Rdstatus != "Listo" & (d.Rdodt == "" | d.Rdodt
-                    is null)))
+                       is null)))
                         //@if (d.Rdstatus != "Listo")
                         {
                             @if (Codigo == d.RdcodDis | Codigo == "Todo")
@@ -198,7 +198,9 @@ Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
         <p>There is no data for this date.</p>
     }
 
-}else{
+}
+else
+{
     <h3>Formato de Reunión</h3>
 
 
@@ -494,8 +496,14 @@ Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
         }
         else
         {
-
-            error = "Seleccione los valores en las listas*";
+            if (idPais == TrinidadYTobago)
+            {
+                error = "Select values ​​from lists*";
+            }
+            else
+            {
+                error = "Seleccione los valores en las listas*";
+            }
 
         }
     }
@@ -517,8 +525,11 @@ Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
     }
     public async Task PrintDocument()
     {
-    //NavigationManager.NavigateTo($"TablaReunion/{IdCentro.ToString()}/{IdDiv.ToString()}/{DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy")}/{DateTime.Now.ToString("dd-MM-yyyy")}/1",forceLoad: true);
-        await IJS.InvokeAsync<object>("open", new object[] {$"TablaReunion/{IdCentro.ToString()}/{IdDiv.ToString()}/{DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy")}/{DateTime.Now.ToString("dd-MM-yyyy")}/1","_blank" });
+        //NavigationManager.NavigateTo($"TablaReunion/{IdCentro.ToString()}/{IdDiv.ToString()}/{DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy")}/{DateTime.Now.ToString("dd-MM-yyyy")}/1",forceLoad:
+        true);
+        await IJS.InvokeAsync<object>("open", new object[]
+        {$"TablaReunion/{IdCentro.ToString()}/{IdDiv.ToString()}/{DateTime.Now.AddDays(-1).ToString("dd-MM-yyyy")}/{DateTime.Now.ToString("dd-MM-yyyy")}/1","_blank"
+        });
     }
 
 }
