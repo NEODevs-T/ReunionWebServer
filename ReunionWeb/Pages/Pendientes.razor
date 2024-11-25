@@ -1029,8 +1029,14 @@
         }
         else
         {
-
+            if(idPais == TrinidadYTobago)
+            {
+            NotificationService.Notify(Notificar.Notificacion("advertencia", "Attention", "Select values ​​in the lists"
+));
+            }else
+            {
             NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", "Seleccione los valores en las listas"));
+            }
         }
     }
 
@@ -1057,13 +1063,24 @@
             }
             else
             {
-
-                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", "Seleccione los valores en las listas"));
+                if(idPais == TrinidadYTobago)
+                {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Attention", "Select values ​​in the lists"));
+                }else
+                {
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", "Seleccione los valores en las listas"));
+                }
             }
         }
         else
         {
-            NotificationService.Notify(Notificar.Notificacion("advertencia", "Ingrese ODT", ""));
+            if(idPais == TrinidadYTobago)
+            {
+                NotificationService.Notify(Notificar.Notificacion("advertencia", "Add ODT", ""));
+            }else
+            {
+                NotificationService.Notify(Notificar.Notificacion("advertencia", "Ingrese ODT", ""));
+            }
         }
 
 
@@ -1166,8 +1183,13 @@
         }
         catch (Exception ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("error", "Ocurrió un error", "Por favor recargue la página."));
-
+            if(idPais == TrinidadYTobago)
+            {
+                NotificationService.Notify(Notificar.Notificacion("error", "Ocurrió un error", "Por favor recargue la página."));
+            }else
+            {
+                NotificationService.Notify(Notificar.Notificacion("error", "Ocurrió un error", "Por favor recargue la página."));
+            }
         }
 
     }

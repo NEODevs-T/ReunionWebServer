@@ -678,8 +678,13 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
         }
         catch (Exception ex)
         {
-
-            NotificationService.Notify(Notificar.Notificacion("error", "Ocurrió un error", "Por favor recargue la página." + ex.Message));
+            if(idPais == TrinidadYTobago)
+            {
+                NotificationService.Notify(Notificar.Notificacion("error", "An error occurred", "Please reload the page." + ex.Message));
+            }else
+            {
+                NotificationService.Notify(Notificar.Notificacion("error", "Ocurrió un error", "Por favor recargue la página." + ex.Message));
+            }
         }
 
     }
