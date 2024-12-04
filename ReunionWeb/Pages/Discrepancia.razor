@@ -633,7 +633,13 @@
                     var result = await DbReunionService.InsertarRegistros(CambFech, CambStata);
                     if (result )
                     {
+                        if(idPais == TrinidadYTobago)
+                        {
+                        mensaje = "Successful Registration";
+                        } else
+                        {
                         mensaje = "Registro Exitoso";
+                        }
                         Reuniondb = new ReuDium();
                         CambStata = new CambStat();
                         CambFech = new CambFec();

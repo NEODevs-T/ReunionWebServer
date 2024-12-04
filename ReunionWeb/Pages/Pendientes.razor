@@ -127,7 +127,7 @@
                 <BSRow>
                     <BSLabel>Search</BSLabel>
                 </BSRow>
-                <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled=@valueodt @onclick="Get" style="width:70%;">  Consultar <span class="oi oi-check"></span></BSButton>
+                <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled=@valueodt @onclick="Get" style="width:70%;">  Search <span class="oi oi-check"></span></BSButton>
             </BSCol>
 
 
@@ -251,15 +251,15 @@
 
                                             @if (@d.Rdstatus == "Listo")
                                             {
-                                                <BSTD Class="listo">@d.Rdstatus</BSTD>
+                                                <BSTD Class="listo">Ready</BSTD>
                                             }
                                             else if (@d.Rdstatus == "Cerrado")
                                             {
-                                                <BSTD Class="Cerrado">@d.Rdstatus</BSTD>
+                                                <BSTD Class="Cerrado">Closed</BSTD>
                                             }
                                             else
                                             {
-                                                <BSTD Class="pendiente">@d.Rdstatus</BSTD>
+                                                <BSTD Class="pendiente">Pending</BSTD>
                                             }
                                             <BSTD>@d.Rdodt</BSTD>
                                                 <BSTD>@d.RdfecReu.ToString("dd/MM/yyyy")</BSTD>

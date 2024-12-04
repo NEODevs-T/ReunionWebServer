@@ -169,7 +169,7 @@
 
 
 
-                <RadzenDataGridColumn TItem="ReuDium" Title="Equipo" Frozen="true" Property="RdcodEq" Width="80px">
+                <RadzenDataGridColumn TItem="ReuDium" Title="Equipment" Frozen="true" Property="RdcodEq" Width="80px">
                     <Template>
                         @context.RdcodEq
                     </Template>
@@ -181,31 +181,31 @@
                     </Template>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="ReuDium" Title="Discrepancia" Property="Rddisc" Width="220px">
+                <RadzenDataGridColumn TItem="ReuDium" Title="Issue" Property="Rddisc" Width="220px">
                     <Template>
                         @context.Rddisc
                     </Template>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="ReuDium" Title="Código" Property="RdcodDis" Width="60px">
+                <RadzenDataGridColumn TItem="ReuDium" Title="Code" Property="RdcodDis" Width="60px">
                     <Template>
                         @context.RdcodDis
                     </Template>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="ReuDium" Title="Acción" Property="RdplanAcc" Width="200px">
+                <RadzenDataGridColumn TItem="ReuDium" Title="Action" Property="RdplanAcc" Width="200px">
                     <Template>
                         @context.RdplanAcc
                     </Template>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="ReuDium" Title="Tiempo" Property="Rdtiempo" Width="60px">
+                <RadzenDataGridColumn TItem="ReuDium" Title="Time" Property="Rdtiempo" Width="60px">
                     <Template>
                         @context.Rdtiempo
                     </Template>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="ReuDium" Title="Responsable" Property="IdResReuNavigation.Rrenglish" Width="100px">
+                <RadzenDataGridColumn TItem="ReuDium" Title="Responsible" Property="IdResReuNavigation.Rrenglish" Width="100px">
                     <Template>
                         @context.IdResReuNavigation.Rrenglish
                     </Template>
@@ -217,19 +217,26 @@
                     </Template>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="ReuDium" Title="Estado" Property="Rdstatus" Width="90px">
-                    <Template>
-                        @context.Rdstatus
-                    </Template>
+                <RadzenDataGridColumn TItem="ReuDium" Title="Status" Property="Rdstatus" Width="90px"> 
+                    <Template Context="context"> 
+                        @if (context.Rdstatus == "Listo") 
+                            { <text>Ready</text> } 
+                        else if (context.Rdstatus == "Cerrado") 
+                            { <text>Closed</text> } 
+                        else if (context.Rdstatus == "Pendiente/Responsable") 
+                            { <text>Pending/Responsible</text> } 
+                        else 
+                            { <text>Pending</text> } 
+                    </Template> 
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="ReuDium" Title="F. Reunión" Property="RdfecReu" Width="90px">
+                <RadzenDataGridColumn TItem="ReuDium" Title="D. Meeting" Property="RdfecReu" Width="90px">
                     <Template>
                         @context.RdfecReu.ToString("yyyy/MM/dd")
                     </Template>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="ReuDium" Title="F. Trabajo" Property="RdfecTra" Width="90px">
+                <RadzenDataGridColumn TItem="ReuDium" Title="D. Work" Property="RdfecTra" Width="90px">
                     <Template>
                         @context.RdfecTra.ToString("yyyy/MM/dd")
                     </Template>

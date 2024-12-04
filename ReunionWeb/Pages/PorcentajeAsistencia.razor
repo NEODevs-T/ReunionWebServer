@@ -557,7 +557,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
     private NotifiRadzen Notificar = new NotifiRadzen();//Logic para crear las noyificaciones radzen
 
     int dias = 0;
-
+    private string empresa;
     private List<Claim> claims { get; set; }
     private int idPais { get; set; }
     private int TrinidadYTobago = 6;
@@ -585,6 +585,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
             {
                 idPais = GetIdPais(usuario);
                 await CreateData();
+                getEmpresa(usuario);
                 if (claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value == "Admin" | claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value == "SuperAdmin" | claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value == "MttoAdmin")
                 {
 
@@ -600,6 +601,12 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
         }
     }
 
+    private string getEmpresa(ClaimsPrincipal user)
+    {
+            empresa = claims.FirstOrDefault(c => c.Type.Equals("Empresa"))?.Value;
+            return empresa;
+            
+    }
     private int GetIdPais(ClaimsPrincipal user)
     {
         int _idPais = Int32.Parse(user.FindFirst(c => c.Type == "IdPais")?.Value ?? "0");
@@ -638,9 +645,9 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
             if (dataIsLoaded != 1)
             {
                 dataIsLoaded = 1;
-                await APIReunionService.GetListaAsist(Div, claims[5].Value, f1, f2);
-                await APIReunionService.GetStatsAsist(Div, claims[5].Value, f1, f2);
-                await APIReunionService.GetAsistencia(Div, claims.FirstOrDefault(c => c.Type.Equals("Empresa"))?.Value);
+                await APIReunionService.GetListaAsist(Div, empresa, f1, f2);
+                await APIReunionService.GetStatsAsist(Div, empresa, f1, f2);
+                await APIReunionService.GetAsistencia(Div, empresa);
 
                 listacargos = APIReunionService.cargoreus;
                 listafiltradabloque = APIReunionService.StatsAsisDtos;
@@ -702,8 +709,8 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
         if (dataIsLoaded != 1)
         {
             dataIsLoaded = 1;
-            await APIReunionService.GetListaAsist(Div, claims[5].Value, f1, f2);
-            await APIReunionService.GetStatsAsist(Div, claims[5].Value, f1, f2);
+            await APIReunionService.GetListaAsist(Div, empresa, f1, f2);
+            await APIReunionService.GetStatsAsist(Div, empresa, f1, f2);
             porasis = APIReunionService.StatsAsisDtos;
             dias = dias - feriados;
 

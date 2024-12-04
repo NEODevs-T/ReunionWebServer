@@ -73,7 +73,7 @@ Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
                     <BSRow>
                         <BSLabel>Accept</BSLabel>
                     </BSRow>
-                    <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get"> Reunión <span
+                    <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="Get"> Meeting <span
                             class="oi oi-check"></span></BSButton>
                 </BSCol>
                 @if (DbReunionService.reudiatablas.Count() > 0 && dataIsLoaded == 2)
@@ -159,14 +159,17 @@ Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
                                     {
                                         <BSTD ColSpan="1">@d.IdResReuNavigation.Rrenglish</BSTD>
                                     }
-
                                     @if (@d.Rdstatus == "Revisar")
                                     {
-                                        <BSTD Class="cabecera">@d.Rdstatus</BSTD>
+                                        <BSTD Class="cabecera">Checking</BSTD>
+                                    }
+                                    else if (@d.Rdstatus == "Pendiente/Responsable")
+                                    {
+                                        <BSTD Class="">Pending/Responsible</BSTD>
                                     }
                                     else
                                     {
-                                        <BSTD Class="">@d.Rdstatus</BSTD>
+                                        <BSTD Class="">Pending</BSTD>
                                     }
                                     <BSTD>@d.Rdodt</BSTD>
                                     <BSTD>@d.RdfecTra.ToString("dd/MM/yyyy") </BSTD>
