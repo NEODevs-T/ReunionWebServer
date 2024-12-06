@@ -8,6 +8,7 @@ namespace ReunionWeb.NeoDbs
         public Division()
         {
             Lineas = new HashSet<Linea>();
+            Nivels = new HashSet<Nivel>();
         }
 
         public int IdDivision { get; set; }
@@ -16,8 +17,8 @@ namespace ReunionWeb.NeoDbs
         public string? Ddetalle { get; set; }
         public bool? Destado { get; set; }
 
-
         public virtual Centro? IdCentroNavigation { get; set; }
         public virtual ICollection<Linea> Lineas { get; set; }
+        public virtual ICollection<Nivel> Nivels { get; set; }
     }
 }

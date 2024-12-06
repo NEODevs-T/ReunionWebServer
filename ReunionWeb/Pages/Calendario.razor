@@ -7,89 +7,178 @@
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (idPais == TrinidadYTobago)
+{
+    <BSContainer>
+
+        @if (APIReunionService.centro.Count() == 0)
+        {
+            <div class="loader"></div>
+        }
+        else
+        {
+            <BSRow>
+                <BSCol Column="3" ColumnSmall="2">
+                    <BSLabel>Center</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="IdCentro">
+                        <option value="">Select</option>
+                        @foreach (var d in APIReunionService.centro)
+                        {
+                            <option value="@d.IdCentro">@d.Cnom</option>
+                        }
+                    </BSInput>
+                    <BSValidationSummary />
+                    <BSFeedback For="@(() => IdCentro)" ValidMessage="Correcto." />
+                </BSCol>
 
 
-<BSContainer>
 
-    @if (APIReunionService.centro.Count() == 0)
+                <BSCol Column="3" ColumnSmall="2">
+                    <BSLabel>Division</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="IdDiv">
+                        <option>Select</option>
+                        @foreach (var d in APIReunionService.centro)
+                        {
+                            @foreach (var e in d.Divisions)
+                            {
+                                if (IdCentro == d.IdCentro)
+                                {
+                                    <option value="@e.IdDivision">@e.Dnombre</option>
+                                }
+                            }
+                        }
+                        <option value="0">All</option>
+                    </BSInput>
+                    <BSFeedback For="@(() => IdDiv)" ValidMessage="Correcto." />
+                </BSCol>
+
+
+                <BSCol ColumnSmall="2">
+                    <BSRow>
+                        <BSLabel>Accept</BSLabel>
+                    </BSRow>
+                    <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="(() => Get(IdCentro,IdDiv))">
+                        Search <span class="oi oi-check"></span></BSButton>
+                </BSCol>
+
+            </BSRow>
+        }
+
+    </BSContainer>
+
+    <p>
+
+    </p>
+    @if (APIReunionService.calentrabajo.Count() > 0 && dataIsLoaded == 2)
+    {
+
+        <RadzenScheduler Data="@data" TItem="DataItem" StartProperty="Start" SelectedIndex="1" style="height: 630px;"
+            EndProperty="End" TodayText="Today" TextProperty="Text" AppointmentRender=@OnAppointmentRender>
+            <RadzenDayView Text="Day" />
+            <RadzenWeekView Text="Week" />
+            <RadzenMonthView Text="Month" />
+            <RadzenYearPlannerView Text="Planifcation" />
+            <RadzenYearView Text="Year" />
+        </RadzenScheduler>
+    }
+
+    else if (dataIsLoaded == 1 && APIReunionService.calentrabajo.Count() == 0)
     {
         <div class="loader"></div>
     }
-    else
+    else if (dataIsLoaded == 2 && APIReunionService.calentrabajo.Count() == 0)
     {
-        <BSRow>
-            <BSCol Column="3" ColumnSmall="2">
-                <BSLabel>Centro</BSLabel>
-                <BSInput InputType="InputType.Select" @bind-Value="IdCentro">
-                    <option value="">Seleccione</option>
-                    @foreach (var d in APIReunionService.centro)
-                    {
-                        <option value="@d.IdCentro">@d.Cnom</option>
-                    }
-                </BSInput>
-                <BSValidationSummary />
-                 <BSFeedback For="@(() => IdCentro)" ValidMessage="Correcto." />
-            </BSCol>
-
-
-
-            <BSCol Column="3" ColumnSmall="2">
-                <BSLabel>División</BSLabel>
-                <BSInput InputType="InputType.Select" @bind-Value="IdDiv">
-                    <option>Seleccione</option>
-                    @foreach (var d in APIReunionService.centro)
-                    {
-                        @foreach (var e in d.Divisions)
-                        {
-                            if (IdCentro == d.IdCentro)
-                            {
-                                <option value="@e.IdDivision">@e.Dnombre</option>
-                            }
-                        }
-                    }
-                    <option value="0">Todo</option>
-                </BSInput>
-                 <BSFeedback For="@(() => IdDiv)" ValidMessage="Correcto." />
-            </BSCol>
-
-
-            <BSCol ColumnSmall="2">
-                <BSRow>
-                    <BSLabel>Aceptar</BSLabel>
-                </BSRow>
-                <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="(() => Get(IdCentro,IdDiv))"> Consultar <span class="oi oi-check"></span></BSButton>
-                </BSCol>
-
-                </BSRow>
+        <p>There is no data for this date.</p>
     }
 
-</BSContainer>
-
-<p>
-
-</p>
-@if (APIReunionService.calentrabajo.Count() > 0 && dataIsLoaded == 2)
-{
-
-    <RadzenScheduler Data="@data" TItem="DataItem"  StartProperty ="Start" SelectedIndex="1" style="height: 630px;" EndProperty="End" TodayText="Hoy" TextProperty="Text" AppointmentRender=@OnAppointmentRender>
-        <RadzenDayView  Text="Día"  />
-        <RadzenWeekView Text="Semana" />
-        <RadzenMonthView Text="Mes" />
-        <RadzenYearPlannerView Text="Planifcación"/>
-        <RadzenYearView Text="Año" />
-    </RadzenScheduler>
 }
-
-else if (dataIsLoaded == 1 && APIReunionService.calentrabajo.Count() == 0)
+else
 {
-    <div class="loader"></div>
-}
-else if (dataIsLoaded == 2 && APIReunionService.calentrabajo.Count() == 0)
-{
-    <p>No hay datos para esta fecha.</p>
-}
+    <BSContainer>
+
+        @if (APIReunionService.centro.Count() == 0)
+        {
+            <div class="loader"></div>
+        }
+        else
+        {
+            <BSRow>
+                <BSCol Column="3" ColumnSmall="2">
+                    <BSLabel>Centro</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="IdCentro">
+                        <option value="">Seleccione</option>
+                        @foreach (var d in APIReunionService.centro)
+                        {
+                            <option value="@d.IdCentro">@d.Cnom</option>
+                        }
+                    </BSInput>
+                    <BSValidationSummary />
+                    <BSFeedback For="@(() => IdCentro)" ValidMessage="Correcto." />
+                </BSCol>
 
 
+
+                <BSCol Column="3" ColumnSmall="2">
+                    <BSLabel>División</BSLabel>
+                    <BSInput InputType="InputType.Select" @bind-Value="IdDiv">
+                        <option>Seleccione</option>
+                        @foreach (var d in APIReunionService.centro)
+                        {
+                            @foreach (var e in d.Divisions)
+                            {
+                                if (IdCentro == d.IdCentro)
+                                {
+                                    <option value="@e.IdDivision">@e.Dnombre</option>
+                                }
+                            }
+                        }
+                        <option value="0">Todo</option>
+                    </BSInput>
+                    <BSFeedback For="@(() => IdDiv)" ValidMessage="Correcto." />
+                </BSCol>
+
+
+                <BSCol ColumnSmall="2">
+                    <BSRow>
+                        <BSLabel>Aceptar</BSLabel>
+                    </BSRow>
+                    <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="(() => Get(IdCentro,IdDiv))">
+                        Consultar <span class="oi oi-check"></span></BSButton>
+                </BSCol>
+
+            </BSRow>
+        }
+
+    </BSContainer>
+
+    <p>
+
+    </p>
+    @if (APIReunionService.calentrabajo.Count() > 0 && dataIsLoaded == 2)
+    {
+
+        <RadzenScheduler Data="@data" TItem="DataItem" StartProperty="Start" SelectedIndex="1" style="height: 630px;"
+            EndProperty="End" TodayText="Hoy" TextProperty="Text" AppointmentRender=@OnAppointmentRender>
+            <RadzenDayView Text="Día" />
+            <RadzenWeekView Text="Semana" />
+            <RadzenMonthView Text="Mes" />
+            <RadzenYearPlannerView Text="Planifcación" />
+            <RadzenYearView Text="Año" />
+        </RadzenScheduler>
+    }
+
+    else if (dataIsLoaded == 1 && APIReunionService.calentrabajo.Count() == 0)
+    {
+        <div class="loader"></div>
+    }
+    else if (dataIsLoaded == 2 && APIReunionService.calentrabajo.Count() == 0)
+    {
+        <p>No hay datos para esta fecha.</p>
+    }
+
+}
 
 @code {
     private List<Claim> claims { get; set; }
@@ -100,8 +189,13 @@ else if (dataIsLoaded == 2 && APIReunionService.calentrabajo.Count() == 0)
     [Required(ErrorMessage = "Seleccione la división.")]
     private int IdDiv { get; set; } //id de la division
     private int dataIsLoaded { get; set; } //verificar si cargo la lista
-
     DataItem[] data;
+
+    private int idPais { get; set; }
+    private int TrinidadYTobago = 6;
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
 
     private async Task CreateData()
 
@@ -113,35 +207,53 @@ else if (dataIsLoaded == 2 && APIReunionService.calentrabajo.Count() == 0)
     }
     protected override async Task OnInitializedAsync()
     {
-
-        await CreateData();
-        
-        var rol = claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
-
-        if (rol == "Admin" || rol == "SuperAdmin" || rol == "MttoAdmin" || rol == "SeguridadAdmin" || rol == "Auditores" || rol == "CalidadAdmin" )
+        if (authenticationState is not null)
         {
+            AuthenticationState authState = await authenticationState;
+            ClaimsPrincipal? usuario = authState?.User;
 
-            await APIReunionService.GetCentrosxEmpresa("All" + claims[10].Value);
+            if (usuario?.Identity is not null && usuario.Identity.IsAuthenticated)
+            {
+                idPais = GetIdPais(usuario);
 
+
+                await CreateData();
+
+                var rol = claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
+
+                if (rol == "Admin" || rol == "SuperAdmin" || rol == "MttoAdmin" || rol == "SeguridadAdmin" || rol == "Auditores" || rol
+                == "CalidadAdmin")
+                {
+
+                    await APIReunionService.GetCentrosxEmpresa("All" + claims[10].Value);
+
+                }
+                else
+                {
+
+                    await APIReunionService.GetCentrosxEmpresa(claims[11].Value);
+
+                }
+
+                await APIReunionService.Getksf();
+                await APIReunionService.GetResReu();
+
+            }
         }
-        else
-        {
+    }
 
-            await APIReunionService.GetCentrosxEmpresa(claims[11].Value);
-
-        }
-
-        await APIReunionService.Getksf();
-        await APIReunionService.GetResReu();
-
+    private int GetIdPais(ClaimsPrincipal user)
+    {
+        int _idPais = Int32.Parse(user.FindFirst(c => c.Type == "IdPais")?.Value ?? "0");
+        return _idPais;
     }
 
     protected async Task Get(int IdCentro, int IdDiv)
     {
         string centro = "", division = "";
-        if (IdCentro>0)
+        if (IdCentro > 0)
         {
-            centro = APIReunionService.centro.Where(c => c.IdCentro == IdCentro).FirstOrDefault(c => c.IdCentro.Equals(IdCentro)).Cnom;
+            centro = APIReunionService.centro.Where(c => c.IdCentro == IdCentro).FirstOrDefault(c =>c.IdCentro.Equals(IdCentro)).Cnom;
             if (IdDiv == 0)
             {
                 division = "All";
@@ -168,17 +280,21 @@ else if (dataIsLoaded == 2 && APIReunionService.calentrabajo.Count() == 0)
 
                 for (int i = 0; i < data.Count(); i++)
                 {
-                    DateTime Inicio = new DateTime(APIReunionService.calentrabajo[i].RdfecTra.Year, APIReunionService.calentrabajo[i].RdfecTra.Month, APIReunionService.calentrabajo[i].RdfecTra.Day, 08, 00, 00);
-                    DateTime Final = Inicio.AddHours((APIReunionService.calentrabajo[i].Rdtiempo is null) ? 0 : (double.Parse(APIReunionService.calentrabajo[i].Rdtiempo)));
+                    DateTime Inicio = new DateTime(APIReunionService.calentrabajo[i].RdfecTra.Year,
+                    APIReunionService.calentrabajo[i].RdfecTra.Month, APIReunionService.calentrabajo[i].RdfecTra.Day, 08, 00, 00);
+                    DateTime Final = Inicio.AddHours((APIReunionService.calentrabajo[i].Rdtiempo is null) ? 0 :
+                    (double.Parse(APIReunionService.calentrabajo[i].Rdtiempo)));
                     data[i] = new DataItem
-                {
+                        {
 
-                        Start= Inicio,
-                        End=Final,
-                            Text = APIReunionService.calentrabajo[i].Linea + " - " + APIReunionService.calentrabajo[i].Responsable + " - " + ((APIReunionService.calentrabajo[i].Rddisc.Length < 30) ? APIReunionService.calentrabajo[i].Rddisc : APIReunionService.calentrabajo[i].Rddisc.Substring(0,30)+"...") + " - " + APIReunionService.calentrabajo[i].RdcodEq
+                            Start = Inicio,
+                            End = Final,
+                            Text = APIReunionService.calentrabajo[i].Linea + " - " + APIReunionService.calentrabajo[i].Responsable + " - " +
+                        ((APIReunionService.calentrabajo[i].Rddisc.Length < 30) ? APIReunionService.calentrabajo[i].Rddisc :
+                        APIReunionService.calentrabajo[i].Rddisc.Substring(0, 30) + "...") + " - " + APIReunionService.calentrabajo[i].RdcodEq
 
-                };
-                    if(data[i].End<DateTime.Today)
+                        };
+                    if (data[i].End < DateTime.Today)
                     {
                         data[i].Text = "Vencido " + data[i].Text;
                     }
@@ -190,18 +306,18 @@ else if (dataIsLoaded == 2 && APIReunionService.calentrabajo.Count() == 0)
             }
         }
     }
-  
+
     void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<DataItem> args)
     {
         // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
         //for (int i = 0; i < data.Count(); i++)
         //{
-            if (args.Data.Text.Substring(0, 7) == "Vencido")
-            {
-                args.Attributes["style"] = "background: red !important";
-            }
+        if (args.Data.Text.Substring(0, 7) == "Vencido")
+        {
+            args.Attributes["style"] = "background: red !important";
+        }
         //}
-        
+
     }
 
     class DataItem
@@ -213,21 +329,21 @@ else if (dataIsLoaded == 2 && APIReunionService.calentrabajo.Count() == 0)
 
 
     //DataItem[] data = new DataItem[]
-    //      {
+    // {
 
 
-    //  new DataItem
-    //  {
-    //    Start = DateTime.Today,
-    //    End = DateTime.Today.AddDays(1),
-    //    Text = "Birthday"
-    //  },
-    //   new DataItem
-    //  {
-    //    Start = DateTime.Today,
-    //    End = DateTime.Today.AddDays(1),
-    //    Text = "Birthday"
-    //  }
-    //      };
+    // new DataItem
+    // {
+    // Start = DateTime.Today,
+    // End = DateTime.Today.AddDays(1),
+    // Text = "Birthday"
+    // },
+    // new DataItem
+    // {
+    // Start = DateTime.Today,
+    // End = DateTime.Today.AddDays(1),
+    // Text = "Birthday"
+    // }
+    // };
 
 }

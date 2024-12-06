@@ -96,7 +96,7 @@ namespace ReunionWeb.Services
         public async Task Getksf()
         {
             var result = await _http.GetFromJsonAsync<List<Ksf>>($"http://neo.paveca.com.ve/ReunionApi/Lineas/Ksf");
-            //var result = await _http.GetFromJsonAsync<List<Ksf>>($"http://localhost:5258/Lineas/Ksf");
+            // var result = await _http.GetFromJsonAsync<List<Ksf>>($"http://localhost:5258/Lineas/Ksf");
             if (result != null)
                 ksfs = result;
 
@@ -104,7 +104,7 @@ namespace ReunionWeb.Services
         public async Task GetResReu()
         {
             var result = await _http.GetFromJsonAsync<List<RespoReu>>($"http://neo.paveca.com.ve/ReunionApi/Lineas/Responsables");
-            //var result = await _http.GetFromJsonAsync<List<RespoReu>>($"http://localhost:5258/Lineas/Responsables");
+            // var result = await _http.GetFromJsonAsync<List<RespoReu>>($"http://localhost:5258/Lineas/Responsables");
             if (result != null)
                 resporeu = result;
 
