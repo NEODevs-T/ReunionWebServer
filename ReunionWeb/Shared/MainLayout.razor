@@ -104,8 +104,14 @@
                     }
                     else if (carga == false)
                     {
+                @if (idioma == 1)
+                {
                         <BSButton Class="w-100 btn btn-lg" Color="BSColor.Success" Size="Size.ExtraExtraLarge" IsSubmit>  Iniciar</BSButton>
-
+                }
+                else if(idioma == 2)
+                {
+                        <BSButton Class="w-100 btn btn-lg" Color="BSColor.Success" Size="Size.ExtraExtraLarge" IsSubmit>  Entry</BSButton>
+                }
                     }
                     <p class="mt-5 mb-3 text-muted">Neo 2022</p>
 
