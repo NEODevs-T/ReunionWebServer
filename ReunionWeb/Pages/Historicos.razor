@@ -40,6 +40,7 @@
                 <BSCol Column="3" ColumnSmall="2">
                     <BSLabel>Division</BSLabel>
                     <BSInput InputType="InputType.Select" @bind-Value="IdDiv">
+                        <option value="0">Select</option>
                         @foreach (var d in APIReunionService.centro)
                         {
                             @foreach (var e in d.Divisions)
