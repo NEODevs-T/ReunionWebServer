@@ -345,6 +345,7 @@
             Reuniondb.Rdstatus = "Pendiente";
             Reuniondb.IdTipReu = reunionDia;
             Reuniondb.IdCausaCal = 1;
+            Reuniondb.RdfecCrea = DateTime.Now;
             Reuniondb.IdPais = int.Parse(claims.FirstOrDefault(c => c.Type == "IdPais")?.Value);
             Reuniondb.IdEmpresa = int.Parse(claims.FirstOrDefault(c => c.Type == "IdEmpresa")?.Value);
 
