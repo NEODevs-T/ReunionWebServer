@@ -13,7 +13,6 @@
 @inject NotificationService NotificationService
 
 @attribute [Authorize(Roles = "Admin, AdminChempro, SupIntendente, SupIntendenteGeneral,SuperAdmin")]
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -60,6 +59,10 @@
         </div>
         @if(band == true){
 
+            @if (PizarraData.reudiatablas.Count() == 0)
+            {
+                <div class="loader"></div>
+            }
             @if(PizarraData.reudiatablas.Count() > 0)
             {
             <RadzenDataGrid @ref="reunion" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="10" AllowSorting="true" 

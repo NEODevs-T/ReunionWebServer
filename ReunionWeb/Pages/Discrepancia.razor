@@ -254,6 +254,7 @@
     private List<AsistenReuDTO> listaAsistencia { get; set; } = new List<AsistenReuDTO>();
 
     int reunionDia = 1;
+    int reunionQuincenal = 2;
     protected override async Task OnInitializedAsync()
     {
 
@@ -343,11 +344,18 @@
             Reuniondb.IdMaster = MaestraData.maestra.Where(x => x.IdLinea == idLin).FirstOrDefault().IdMaster;
             Reuniondb.Rdarea = MaestraData.lineas.Where(x => x.IdLinea == idLin).FirstOrDefault().Linea;
             Reuniondb.Rdstatus = "Pendiente";
-            Reuniondb.IdTipReu = reunionDia;
+            if(Reuniondb.Idksf == 6)
+            {
+                Reuniondb.IdTipReu = reunionQuincenal;
+            }else
+            {
+                Reuniondb.IdTipReu = reunionDia;
+            }
             Reuniondb.IdCausaCal = 1;
             Reuniondb.RdfecCrea = DateTime.Now;
             Reuniondb.IdPais = int.Parse(claims.FirstOrDefault(c => c.Type == "IdPais")?.Value);
             Reuniondb.IdEmpresa = int.Parse(claims.FirstOrDefault(c => c.Type == "IdEmpresa")?.Value);
+            Reuniondb.Ksf = KsfData.ksfs.Where(k => k.Idksf == Reuniondb.Idksf).FirstOrDefault().KsfNombre;
 
             //Guara cod equipo si es por la lista
             if (tipoequipo == "1")

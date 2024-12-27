@@ -515,6 +515,7 @@
     public string? f2 { get; set; }
     [Parameter]
     public string? est { get; set; }
+    public int reunionQuincenal = 3;
 
     string _message = "";
     bool cambio = true;
@@ -593,7 +594,10 @@
         try
         {
 
-
+            if(DiscForm.RdcodDis == "3")
+            {
+                DiscForm.IdTipReu = reunionQuincenal;
+            }
             if (DiscForm.RdfecTra  >= DiscForm.RdfecReu && (int)tipo == 1 || (int)tipo == 0 || (int)tipo == 2)
             {
                 if (CambiosFecha.Count() >= 3 & camFec != DiscForm.RdfecTra)
