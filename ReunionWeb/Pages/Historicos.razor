@@ -10,6 +10,7 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
+@inject NotificationService NotificationService
 @inject ILocalStorageService LocalStorage
 <h3>Históricos</h3>
 
@@ -246,6 +247,7 @@ else if (dataIsLoaded == 2 && tabla.Count() == 0)
 @code {
     RadzenDataGrid<ReunionDTO> ReuTabla;
     List<ReunionDTO> tabla = new List<ReunionDTO>();
+    private NotifiRadzen Notificar = new NotifiRadzen();
 
     int dataIsLoaded = 0;
     string ayer = DateTime.Now.AddDays(-1).ToString("yyyyMMdd"), error;
@@ -403,11 +405,25 @@ else if (dataIsLoaded == 2 && tabla.Count() == 0)
     }
     protected async Task Get()
     {
-        if (dataIsLoaded != 1)
+        if (IdCentro != 0 & IdDiv != 0)
         {
-            dataIsLoaded = 1;
-            tabla = await PizarraData.GetHistoricos(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, Status);
-            dataIsLoaded = 2;
+            if (dataIsLoaded != 1)
+            {
+                dataIsLoaded = 1;
+                tabla = await PizarraData.GetHistoricos(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, Status);
+                foreach(var d in tabla)
+                {
+                    d.Ksf = KsfData.ksfs.Where(x => x.Idksf == d.Idksf).FirstOrDefault().KsfNombre;
+                    d.Responsable = RespoReuData.resporeus.Where(x => x.IdResReu == d.IdResReu).FirstOrDefault().Rrnombre;
+                }
+                
+                dataIsLoaded = 2;
+            }
+        }
+        else
+        {
+            mensaje = "Verifique todos los campos";
+            NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
         }
     }
 }
