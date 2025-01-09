@@ -1,0 +1,615 @@
+@page "/mantenimiento"
+@inject IAsistenciaReuData AsistenciaReuData
+@inject IAvisadorData AvisadorData
+@inject ICargoReuData CargoReuData
+@inject IKsfData KsfData
+@inject IPizarraData PizarraData
+@inject IRespoReuData RespoReuData
+@inject IMaestraData MaestraData
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@inject NotificationService NotificationService
+
+
+@attribute [Authorize(Roles = "Admin, AdminChempro,SuperAdmi, Planificador")]
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Fechas Programadas</h2>
+    @if(tipo == 1)
+    {
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+            <br>
+            <h3>Agregar Fecha</h3>
+
+       <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+            Volver
+            <span class="oi oi-arrow-circle-left"></span>
+        </BSInputRadio>
+        <p></p>
+        <p></p>
+        <div class="contenedor">
+            <BSForm Model="@fechaProg" Class="boxhome" IsRow="true" Gutters="Gutters.Medium" OnSubmit="SaveFT" OnReset="Reset">
+                <DataAnnotationsValidator />
+                <BSCol ColumnMedium="12">
+                    @mensaje
+                    <BSValidationSummary />
+                </BSCol>
+                <BSRow>
+                    <BSCol Column="4" ColumnSmall="2">
+                        <BSLabel>Centro</BSLabel>
+                        <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="idCent">
+                            <option value="0">Seleccione</option>
+                            @foreach (var d in MaestraData.centro)
+                            {
+                                <option value="@d.IdCentro">@d.Centro</option>
+                            }
+                        </BSInput>
+                        <BSFeedback For="@(() =>idCent)" ValidMessage="Correcto." />
+                    </BSCol>
+
+                    <BSCol Column="4" ColumnSmall="2">
+                        <BSLabel>División</BSLabel>
+                        <BSInput InputType="InputType.Select" @onchange='BuscarLinea' @bind-Value="idDiv">
+                            <option value="0">Seleccione</option>
+                            @foreach (var d in MaestraData.divisions)
+                            {
+                                    <option value="@d.IdDivision">@d.Ndivision</option>                           
+                            }
+                        </BSInput>
+                        <BSFeedback For="@(() =>idDiv)" ValidMessage="Correcto." />
+                    </BSCol>
+
+
+                    <BSCol Column="4">
+                        <BSLabel>Línea</BSLabel>
+                        <BSInput InputType="InputType.Select" @bind-Value="idLin">
+                            <option value="0">Seleccione...</option>
+                            @foreach (var d in MaestraData.lineas)
+                            {
+                                    <option value="@d.IdLinea">@d.Linea</option>                         
+                            }
+                        </BSInput>
+                        <BSFeedback For="@(() =>idLin)" ValidMessage="Correcto." />
+
+                    </BSCol>
+                </BSRow>
+
+
+
+                <p></p>
+                 <BSRow>
+                    <BSCol Column="3">
+                        <BSLabel>Fecha Programada</BSLabel>
+                        <BSInput InputType="InputType.Date" @bind-Value="@fecha" />
+                        <BSFeedback For="@(() => fechaProg.Fpprogra)" ValidMessage="Correcto." />
+                    </BSCol>
+                </BSRow>
+                <p></p>
+                <BSRow>
+                    <BSCol Column="12">
+                        <BSLabel>descriccion</BSLabel>
+                        <BSInput InputType="InputType.Text" @bind-Value="@fechaProg.Fpdesc" />
+                        <BSFeedback For="@(() => fechaProg.Fpdesc)" ValidMessage="Correcto." />
+                    </BSCol>
+                    <BSRow>
+                    </BSRow>
+                    <p></p>
+                </BSRow>
+                <BSCol Column="12">
+                    <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit >  Guardar Fecha <span class="oi oi-check"></span></BSButton>
+
+                <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset >  Nuevo</BSButton>
+
+            </BSCol>
+        </BSForm>
+    </div>
+
+    </body>
+    </html>
+    } else if (tipo == 2)
+    {
+
+
+        <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+            Volver
+            <span class="oi oi-arrow-circle-left"></span>
+        </BSInputRadio>
+        <p></p>
+        <p></p>
+        <BSRow>
+            <BSCol Column="3">
+                <BSLabel>Centro</BSLabel>
+                <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="idCent" >
+                    <option value="0">Seleccione</option>
+                    @foreach (var d in MaestraData.centro)
+                    {
+                        <option value="@d.IdCentro">@d.Centro</option>
+                    }
+                </BSInput>
+                <BSFeedback For="@(() =>idCent)" ValidMessage="Correcto." />
+            </BSCol>
+
+            <BSCol Column="3" >
+                <BSLabel>División</BSLabel>
+                <BSInput InputType="InputType.Select" @onchange='BuscarLinea' @bind-Value="idDiv" >
+                    <option value="0">Seleccione</option>
+                  
+                    {
+                    @foreach (var d in MaestraData.divisions)
+                    {
+                              <option value="@d.IdDivision">@d.Ndivision</option>                           
+                    }
+                    
+                </BSInput>
+                <BSFeedback For="@(() =>idDiv)" ValidMessage="Correcto." />
+            </BSCol>
+
+
+            <BSCol Column="3">
+                <BSLabel>Línea</BSLabel>
+                <BSInput InputType="InputType.Select" @bind-Value="idLin">
+                    <option value="0">Seleccione...</option>
+                    @foreach (var d in MaestraData.lineas)
+                    {
+                                <option value="@d.IdLinea">@d.Linea</option>                         
+                    }
+                </BSInput>
+                <BSFeedback For="@(() =>idLin)" ValidMessage="Correcto." />
+            </BSCol Colum="3">
+            <BSCol>
+
+
+                <BSRow>
+                <BSLabel>Buscar</BSLabel>
+                </BSRow>
+                <button onclick="@Get" class="btn btn-success"><i class="oi oi-magnifying-glass"></i></button>
+            </BSCol>
+            </BSRow>
+            <p></p>
+                <div class="box">
+                <div class="box_flex">
+            <BSCol Column="2" class="box_date date--from">
+                <BSLabel>Desde</BSLabel>
+                <BSInput InputType="InputType.Date" @bind-Value="fecha1" >       
+                </BSInput>
+            </BSCol Colum="2">
+            <BSCol Column="2" class="box_date date--to">
+                <BSLabel>Hasta</BSLabel>
+                <BSInput InputType="InputType.Date" @bind-Value="fecha2" >       
+                </BSInput>
+            </BSCol Colum="2">
+                </div>
+                </div>
+            <p></p>
+
+        @if (MaestraData.fechaProg.Count() > 0 && dataIsLoaded == 2)
+        {
+        
+        <p></p>
+            <BSContainer>
+
+
+                <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
+                    <BSTHead Class="cabecera">
+                        <BSTR>
+
+                            @* <BSTD>ID</BSTD> *@
+                            <BSTD>Línea</BSTD>
+                            <BSTD>Fecha Programada</BSTD>
+                            <BSTD>Descripcion</BSTD>
+                            <BSTD>Estado</BSTD>
+                            <BSTD>Editar</BSTD>
+
+
+
+                        </BSTR>
+                    </BSTHead>
+                    <BSTBody>
+                        
+                            
+                            
+                            
+                                @foreach (var d in MaestraData.fechaProg)
+                                {
+                                  <BSTR>
+                                <BSTD>@MaestraData.maestra.Where(m => m.IdLinea == idLin).FirstOrDefault().Linea</BSTD>
+                                            @if(idFechaPro==d.IdFechaPr)
+                                            {
+                                                <BSTD>
+                                                    
+                                                      <BSInput InputType="InputType.Date" @bind-Value="d.Fpprogra" />
+                                                      <BSFeedback For="@(() => d.Fpprogra)" ValidMessage="Correcto." />
+
+                                                </BSTD> 
+                                                
+                                                <BSTD>
+                                                    
+                                                      <BSInput InputType="InputType.Text" @bind-Value="d.Fpdesc" />
+                                                      <BSFeedback For="@(() => d.Fpdesc)" ValidMessage="Correcto." />
+
+                                                </BSTD>
+
+                                                <BSTD>
+                                                    
+                                                      <BSInput InputType="InputType.Select" @bind-Value="d.Fpestado">
+                                                            <option value="true">Activar</option>  
+                                                            <option value="false">Desactivar</option> 
+                                                       </BSInput>
+                                                      <BSFeedback For="@(() => d.Fpestado)" ValidMessage="Correcto." />
+
+                                                </BSTD>
+                                                <BSTD>                                                                            
+                                                 <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))" Target="History"><i class="oi oi-circle-check"></i></BSButton>
+                                                 <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar" Target="History"><i class="oi oi-circle-x"></i></BSButton>
+                                            </BSTD>
+                                        
+                                            }
+                                             else
+                                            {
+                                                <BSTD>
+                                                    @d.Fpprogra                                   
+                                                </BSTD>
+                                            
+                                        
+                                            <BSTD>
+                                                    @d.Fpdesc
+                                            </BSTD>
+
+                                            <BSTD>
+                                                @if(d.Fpestado == true)
+                                                {
+                                                    <p>Activo</p>
+                                                }
+                                                else
+                                                {
+                                                    <p>Inactivo</p>
+                                                }
+                                            </BSTD>
+                                            
+                                            <BSTD>                                               
+                                                 <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdFechaPr))" Target="History"><i class="oi oi-pencil"></i></BSButton>
+                                            </BSTD>
+                                            }
+                                            </BSTR> 
+                            
+                        }
+
+                    </BSTBody>
+
+                </BSTable>
+            </BSContainer>
+        }
+
+        @* else if (MaestraData.fechaProg == null)
+        {
+            <p> lista es nula</p>
+        }
+        else if (MaestraData.fechaProg.Count() == 0)
+        {
+            <p> lista no hay datos</p>
+        }
+        else if (MaestraData.fechaProg.Count() < 0)
+        {
+            <p> lista no hay datos</p>
+        }
+        else if (MaestraData.fechaProg.Count() > 0)
+        {
+            <table>
+                <tr>
+                    @foreach(var p in MaestraData.fechaProg)
+                    {
+
+                    <th>@p.Fpcrea</th>
+                    <th>@p.Fpdesc</th>
+                    <th>@p.Fpestado</th>
+                    <th>@p.Fpmodic</th>
+                    <th>@p.Fpprogra</th>
+                    <th>@p.IdFechaPr</th>
+                    <th>@p.IdMaster</th>
+
+                    }
+                </tr>
+            </table>
+
+        }  
+        else if (MaestraData.fechaProg.Count() > 0 && punto == 1 && dataIsLoaded == 1)
+        {
+            <p>hay datos pero no loader muestra Programada mrc</p>
+        }
+        else if (MaestraData.fechaProg.Count() > 0 && punto == 1)
+        {
+            <p>guevo</p>
+            <table>
+                <tr>
+                    @foreach(var p in MaestraData.fechaProg)
+                    {
+
+                    <th>@p.Fpcrea</th>
+                    <th>@p.Fpdesc</th>
+                    <th>@p.Fpestado</th>
+                    <th>@p.Fpmodic</th>
+                    <th>@p.Fpprogra</th>
+                    <th>@p.IdFechaPr</th>
+                    <th>@p.IdMaster</th>
+
+                    }
+                </tr>
+            </table>
+        } *@
+        else if (dataIsLoaded == 1 && MaestraData.fechaProg.Count() == 0)
+        {
+            <div class="loader"></div>
+        }
+        else if (dataIsLoaded == 2 && MaestraData.fechaProg.Count() == 0)
+        {
+            <p>No hay Fechas.</p>
+        }
+
+
+
+
+    } else 
+    {
+        <AuthorizeView Roles="Admin,Planificador">
+            <Authorized>
+                <BSInputRadio CheckedValue="@(1)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+                    Agregar Fecha Programada
+                    <span class="oi oi-plus"></span>
+                </BSInputRadio>
+            </Authorized>
+        </AuthorizeView>
+        <BSInputRadio @bind-Value="tipo" CheckedValue="@(2)" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+            Consultar Fecha Programada
+            <span class="oi oi-magnifying-glass"></span>
+        </BSInputRadio>    
+    }
+</body>
+<style>
+    .box{
+        position: relative;
+    }
+    .box_flex{
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: start;
+        margin: 0;
+        left: 0;
+    }
+
+    .box_date{
+        margin: 10px;
+        margin: 5px;
+    }
+    .date--from
+    {
+        margin-left: 0;
+        }
+</style>
+</html>
+
+@code{
+
+    private List<Claim> claims { get; set; }
+    private int tipo { get; set; } = 0;
+    private int idCent { get; set; } = 0;
+    private int idDiv { get; set; } = 0;
+    private int idLin { get; set; } = 0;
+    private DateTime fecha { get; set; } = DateTime.Now;
+    private DateTime? fecha1 { get; set; } = null;
+    private DateTime? fecha2 { get; set; } = null;
+    private DateTime _fecha1 { get; set; }
+    private DateTime _fecha2 { get; set; }
+    private string mensaje { get; set; }
+    int dataIsLoaded = 0;
+    int punto = 0;
+    FechaProgDTO fechaProg { get; set; } = new FechaProgDTO();
+    List <FechaProgDTO> lisFechaProg { get; set; } = new List <FechaProgDTO>();
+    private int idFechaPro { get; set; } = 0;//id para mostar los campos de edicion
+    private NotifiRadzen Notificar = new NotifiRadzen();//Logic para crear las noyificaciones radzen
+    private string FechProFiltro { get; set; } = "";
+
+        
+    protected override async Task OnInitializedAsync()
+    {
+
+        await CreateData();
+        await KsfData.Getksf();
+        await RespoReuData.GetResReu();
+
+        if (claims != null && claims.Count > 1 && (claims[1]?.Value == "Admin" || claims[1]?.Value == "SuperAdmin"))
+        {
+
+            await MaestraData.GetCentrosxEmpresa("All" + claims[10].Value);
+        }
+        else
+        {
+            await MaestraData.GetCentrosxEmpresa(claims[11].Value);
+        }
+
+        idCent = 0;
+        idDiv = 0;
+        idLin = 0;;
+
+        RespoReuData.resporeus = RespoReuData.resporeus.Where(a => a.Rrdesc == claims.FirstOrDefault(c => c.Type.Contains("Empresa"))?.Value || string.IsNullOrEmpty(a.Rrdesc)).ToList();
+    }
+
+    private async Task CreateData()
+
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        claims = Enumerable.ToList(user.Claims);
+
+    }
+
+            protected async Task BuscarDivision(ChangeEventArgs e){
+            idCent = int.Parse(e.Value.ToString());
+            idDiv = 0;
+            idLin = 0;
+            try{
+                if(idCent != 0){
+                    MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(idCent);
+                }
+            }catch(Exception ex){
+                mensaje = "Error: " + ex.Message;
+            }
+        }
+
+        protected async Task BuscarLinea(ChangeEventArgs e){
+            idDiv = int.Parse(e.Value.ToString());
+            idLin = 0;
+
+            try{
+                if(idCent != 0){
+                    MaestraData.lineas = await MaestraData.ObtenerLasLineasPorDivision(idDiv);
+                }
+            }catch(Exception ex){
+                mensaje = "Error: " + ex.Message;
+            }
+        }
+
+        protected async Task SaveFT(EditContext e){
+                if(idCent != 0 && idDiv != 0 && idLin != 0)
+                {
+                    if (e.Validate())
+                    { 
+                        try
+                        {   
+                            List<FechaProgDTO> listaFechaProg = new List<FechaProgDTO>();
+                            fechaProg.Fpcrea = DateTime.Now;
+                            fechaProg.Fpprogra = fecha;
+                            fechaProg.Fpestado = true;
+                            fechaProg.Fpmodic = DateTime.Now;
+                            await MaestraData.GetMaestraXLinea(idLin);
+                            fechaProg.IdMaster = MaestraData.maestra.Where(m => m.IdLinea == idLin).FirstOrDefault().IdMaster; 
+                            listaFechaProg.Add(fechaProg);
+
+                            bool band = await MaestraData.AddFechaTrabajo(listaFechaProg);
+
+                            if (band == true)
+                            {
+                                mensaje = "Se aguardado con exito la nueva fecha";
+                                NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
+                            }
+                            else
+                            {
+                                mensaje = "Ha ocurrido un error inesperado";
+                                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+                            }
+                            Reset();
+                        }
+                        catch (Exception ex)
+                        {
+                            NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo",
+                            ex.Message));
+
+                        }
+                    }
+                } else 
+                {
+                    mensaje = "Llene todos los campos";
+                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+                }
+            } 
+
+    protected async Task Reset()
+    {
+        fechaProg = new FechaProgDTO();
+        idCent = 0;
+    }
+
+    protected async Task Get()
+    {
+        if(idCent != 0 && idDiv != 0 && idLin !=0)
+        {
+            if(fecha1 > fecha2)
+            {
+                mensaje = "la segunda fecha no puede ser menor que la primera";
+                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+            }
+            else if(fecha1 != null && fecha2 != null)
+            {
+                await MaestraData.GetMaestraXLinea(idLin);
+                _fecha1 = (DateTime)fecha1;
+                _fecha2 = (DateTime)fecha2;
+                dataIsLoaded = 1;
+                MaestraData.fechaProg = await MaestraData.GetFechaTrabajoXFecha(_fecha1, _fecha2);
+                dataIsLoaded = 2;
+            }
+            else if(fecha1 != null && fecha2 == null || fecha1 == null && fecha2 != null)
+            {
+                mensaje = "debe colocar las dos fechas";
+                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+            }
+            else{
+                await MaestraData.GetMaestraXLinea(idLin);
+                int idBusqueda = MaestraData.maestra.Where(m => m.IdLinea == idLin).FirstOrDefault().IdMaster;
+                dataIsLoaded = 1;
+                await MaestraData.GetFechaTrabajoXIdMaster(idBusqueda);
+                dataIsLoaded = 2;
+            }
+        }else{
+            mensaje = "por favor ingrese los campos necesarios";
+            NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+        }
+        tipo = 2;
+    }
+
+    async Task Habilitar(int id)
+    {
+        idFechaPro = id;
+    }
+    async Task Cancelar()
+    {
+        idFechaPro = 0;
+    }
+    async Task Editar(FechaProgDTO fechaP)
+    {
+        try
+        {
+            List<FechaProgDTO> listFechaProgDTO = new List<FechaProgDTO>();
+            fechaProg.IdFechaPr = fechaP.IdFechaPr;
+            fechaProg.IdMaster = fechaP.IdMaster;
+            fechaProg.Fpdesc = fechaP.Fpdesc;
+            fechaProg.Fpestado = fechaP.Fpestado;
+            fechaProg.Fpprogra = fechaP.Fpprogra;
+            fechaProg.Fpmodic = fechaP.Fpmodic;
+            fechaProg.Fpcrea = fechaP.Fpcrea;
+            listFechaProgDTO.Add(fechaProg);
+
+            bool band = await MaestraData.UpdateFechaTrabajo(fechaProg, fechaP.IdFechaPr);
+
+            if (band == true)
+            {
+                NotificationService.Notify(Notificar.Notificacion("exito", mensaje, "Se logro modificar con exito"));
+            }
+            else
+            {
+                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+            }
+
+            idFechaPro = 0;
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo",
+            ex.Message));
+        }
+    }
+
+}
