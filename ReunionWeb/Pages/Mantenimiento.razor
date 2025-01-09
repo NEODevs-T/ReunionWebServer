@@ -213,7 +213,10 @@
                             <BSTD>Fecha Programada</BSTD>
                             <BSTD>Descripcion</BSTD>
                             <BSTD>Estado</BSTD>
+                            @if(UsrRol == "Admin" || UsrRol == "SuperAdmin" || UsrRol == "Planificador")
+                            {
                             <BSTD>Editar</BSTD>
+                            }
 
 
 
@@ -254,8 +257,8 @@
 
                                                 </BSTD>
                                                 <BSTD>                                                                            
-                                                 <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))" Target="History"><i class="oi oi-circle-check"></i></BSButton>
-                                                 <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar" Target="History"><i class="oi oi-circle-x"></i></BSButton>
+                                                    <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))" Target="History"><i class="oi oi-circle-check"></i></BSButton>
+                                                    <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar" Target="History"><i class="oi oi-circle-x"></i></BSButton>
                                             </BSTD>
                                         
                                             }
@@ -280,10 +283,13 @@
                                                     <p>Inactivo</p>
                                                 }
                                             </BSTD>
+                                            @if(UsrRol == "Admin" || UsrRol == "SuperAdmin" || UsrRol == "Planificador")
+                                            {
+                                                <BSTD>                                               
+                                                    <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdFechaPr))" Target="History"><i class="oi oi-pencil"></i></BSButton>
+                                                </BSTD>
+                                            }
                                             
-                                            <BSTD>                                               
-                                                 <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdFechaPr))" Target="History"><i class="oi oi-pencil"></i></BSButton>
-                                            </BSTD>
                                             }
                                             </BSTR> 
                             
@@ -294,63 +300,6 @@
                 </BSTable>
             </BSContainer>
         }
-
-        @* else if (MaestraData.fechaProg == null)
-        {
-            <p> lista es nula</p>
-        }
-        else if (MaestraData.fechaProg.Count() == 0)
-        {
-            <p> lista no hay datos</p>
-        }
-        else if (MaestraData.fechaProg.Count() < 0)
-        {
-            <p> lista no hay datos</p>
-        }
-        else if (MaestraData.fechaProg.Count() > 0)
-        {
-            <table>
-                <tr>
-                    @foreach(var p in MaestraData.fechaProg)
-                    {
-
-                    <th>@p.Fpcrea</th>
-                    <th>@p.Fpdesc</th>
-                    <th>@p.Fpestado</th>
-                    <th>@p.Fpmodic</th>
-                    <th>@p.Fpprogra</th>
-                    <th>@p.IdFechaPr</th>
-                    <th>@p.IdMaster</th>
-
-                    }
-                </tr>
-            </table>
-
-        }  
-        else if (MaestraData.fechaProg.Count() > 0 && punto == 1 && dataIsLoaded == 1)
-        {
-            <p>hay datos pero no loader muestra Programada mrc</p>
-        }
-        else if (MaestraData.fechaProg.Count() > 0 && punto == 1)
-        {
-            <p>guevo</p>
-            <table>
-                <tr>
-                    @foreach(var p in MaestraData.fechaProg)
-                    {
-
-                    <th>@p.Fpcrea</th>
-                    <th>@p.Fpdesc</th>
-                    <th>@p.Fpestado</th>
-                    <th>@p.Fpmodic</th>
-                    <th>@p.Fpprogra</th>
-                    <th>@p.IdFechaPr</th>
-                    <th>@p.IdMaster</th>
-
-                    }
-                </tr>
-            </table>
-        } *@
         else if (dataIsLoaded == 1 && MaestraData.fechaProg.Count() == 0)
         {
             <div class="loader"></div>
@@ -415,6 +364,7 @@
     private DateTime _fecha1 { get; set; }
     private DateTime _fecha2 { get; set; }
     private string mensaje { get; set; }
+    private string UsrRol { get; set; }
     int dataIsLoaded = 0;
     int punto = 0;
     FechaProgDTO fechaProg { get; set; } = new FechaProgDTO();
@@ -454,6 +404,7 @@
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         claims = Enumerable.ToList(user.Claims);
+        UsrRol = claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
 
     }
 
