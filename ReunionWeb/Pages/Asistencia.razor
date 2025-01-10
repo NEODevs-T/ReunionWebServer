@@ -79,7 +79,7 @@
                                 <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
                                 <BSTD>
                                     <div Class="@BS.Form_Check @BS.Form_Switch">
-                                        <BSInputCheckbox CheckedValue="@(1)" Color="BSColor.Success" @bind-Value="d.ArAsistente" />
+                                        <BSInputCheckbox CheckedValue="@(1)" UnCheckedValue="@(0)"  Color="BSColor.Success" @bind-Value="d.ArAsistente" />
                                         <BSLabel IsCheckLabel="true">
 
                                         </BSLabel>
@@ -87,7 +87,7 @@
                                 </BSTD>
                                 <BSTD>
                                     <div Class="@BS.Form_Check">
-                                        <BSInputCheckbox CheckedValue="@(1)" @bind-Value="d.ArSuplente" />
+                                        <BSInputCheckbox CheckedValue="@(1)" UnCheckedValue="@(0)"  @bind-Value="d.ArSuplente" />
 
                                     </div>
                                 </BSTD>
@@ -106,7 +106,7 @@
                             <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
                             <BSTD>
                                 <div Class="@BS.Form_Check @BS.Form_Switch">
-                                    <BSInputCheckbox CheckedValue="@(1)" Color="BSColor.Success" @bind-Value="d.ArAsistente" />
+                                    <BSInputCheckbox CheckedValue="@(1)"  UnCheckedValue="@(0)"  Color="BSColor.Success" @bind-Value="d.ArAsistente" />
                                     <BSLabel IsCheckLabel="true">
 
                                     </BSLabel>
@@ -114,7 +114,7 @@
                             </BSTD>
                             <BSTD>
                                 <div Class="@BS.Form_Check">
-                                    <BSInputCheckbox CheckedValue="@(1)"  @bind-Value="d.ArSuplente" />
+                                    <BSInputCheckbox CheckedValue="@(1)" UnCheckedValue="@(0)"  @bind-Value="d.ArSuplente" />
                                 
                                 </div>
                             </BSTD>
@@ -140,7 +140,7 @@
         <div class="loader"></div>
     }
 
-} else{
+}else{
         
     <h3>Asistencia</h3>
     <p></p>
@@ -211,7 +211,7 @@
                                 <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
                                 <BSTD>
                                     <div Class="@BS.Form_Check @BS.Form_Switch">
-                                        <BSInputCheckbox CheckedValue="@(1)" Color="BSColor.Success" @bind-Value="d.ArAsistente" />
+                                        <BSInputCheckbox CheckedValue="@(1)" UnCheckedValue="@(0)" Color="BSColor.Success" @bind-Value="d.ArAsistente" />
                                         <BSLabel IsCheckLabel="true">
 
                                         </BSLabel>
@@ -219,7 +219,7 @@
                                 </BSTD>
                                 <BSTD>
                                     <div Class="@BS.Form_Check">
-                                        <BSInputCheckbox CheckedValue="@(1)" @bind-Value="d.ArSuplente" />
+                                        <BSInputCheckbox CheckedValue="@(1)" UnCheckedValue="@(0)"  @bind-Value="d.ArSuplente" />
 
                                     </div>
                                 </BSTD>
@@ -238,7 +238,7 @@
                             <BSTD>@d.AridCargoRNavigation.Crnombre</BSTD>
                             <BSTD>
                                 <div Class="@BS.Form_Check @BS.Form_Switch">
-                                    <BSInputCheckbox CheckedValue="@(1)" Color="BSColor.Success" @bind-Value="d.ArAsistente" />
+                                    <BSInputCheckbox CheckedValue="@(1)"  UnCheckedValue="@(0)"  Color="BSColor.Success" @bind-Value="d.ArAsistente" />
                                     <BSLabel IsCheckLabel="true">
 
                                     </BSLabel>
@@ -246,7 +246,7 @@
                             </BSTD>
                             <BSTD>
                                 <div Class="@BS.Form_Check">
-                                    <BSInputCheckbox CheckedValue="@(1)"  @bind-Value="d.ArSuplente" />
+                                    <BSInputCheckbox CheckedValue="@(1)" UnCheckedValue="@(0)"   @bind-Value="d.ArSuplente" />
                                 
                                 </div>
                             </BSTD>
@@ -368,6 +368,8 @@
                 reuform = new AsistenReu();
                 reuform.Ararea = Div;
                 reuform.Arfecha = DateTime.Now;
+                reuform.ArSuplente = 0;
+                reuform.ArAsistente = 0;
                 reuform.AridCargoRNavigation = cr[i];
                 listaAsistencia.Add(reuform);
             }
