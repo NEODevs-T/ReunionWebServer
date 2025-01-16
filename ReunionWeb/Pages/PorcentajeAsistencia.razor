@@ -71,7 +71,8 @@
 
 
 
-@if (APIReunionService.StatsAsisDtos.Count() > 0 && dataIsLoaded == 2)
+@* @if (APIReunionService.StatsAsisDtos.Count() > 0 && dataIsLoaded == 2) *@
+@if (listaIngles.Count() > 0 && dataIsLoaded == 2)
 {
     <p><h5>@dias Meeting days. </h5></p>
 
@@ -555,7 +556,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
     private DateTime fecha2 = DateTime.Now;
     public double asistotal { get; set; } = 0;
     private NotifiRadzen Notificar = new NotifiRadzen();//Logic para crear las noyificaciones radzen
-
+    private List<StatsAsisDto> listaIngles = new List<StatsAsisDto>();
     int dias = 0;
     private string empresa;
     private List<Claim> claims { get; set; }
@@ -667,14 +668,28 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
                         listafiltradabloque.Remove(elemento);
                     }
                 }
-                porasis = listafiltradabloque;
-                foreach (var a in porasis)
+                if(idPais == TrinidadYTobago)
                 {
+                    porasis = listaIngles;
+                    foreach (var a in porasis)
+                    {
 
-                    filtrocount++;
-                    a.Total = Math.Round((a.Asistencias / dias) * 100);
-                    asistotal = asistotal + a.Total;
+                        filtrocount++;
+                        a.Total = Math.Round((a.Asistencias / dias) * 100);
+                        asistotal = asistotal + a.Total;
 
+                    }
+                } else
+                {
+                    porasis = listafiltradabloque;
+                    foreach (var a in porasis)
+                    {
+
+                        filtrocount++;
+                        a.Total = Math.Round((a.Asistencias / dias) * 100);
+                        asistotal = asistotal + a.Total;
+
+                    }
                 }
 
                 asistotal = Math.Round(asistotal / porasis.Count);
@@ -712,6 +727,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
             await APIReunionService.GetListaAsist(Div, empresa, f1, f2);
             await APIReunionService.GetStatsAsist(Div, empresa, f1, f2);
             porasis = APIReunionService.StatsAsisDtos;
+            listaIngles = APIReunionService.StatsAsisDtos;
             dias = dias - feriados;
 
             foreach (var a in porasis)
