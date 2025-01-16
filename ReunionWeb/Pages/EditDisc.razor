@@ -72,22 +72,24 @@
                         <BSInput InputType="InputType.Text" @bind-Value="DiscForm.RdcodEq" ValidateOnInput="true" />
                         <BSFeedback For="@(() => DiscForm.RdcodEq)" ValidMessage="Correcto." />
                     </BSCol>
-
-                    @if (DiscForm.RdcodDis == "2")
+                    @if ((int)tipo == 1)
                     {
-                        <div class="box__absolute">
-                        <RadzenDataGrid Data="@MaestraData.fechaProg" TItem="FechaProgDTO" Class="w-100">
-                            <Columns>
-                                <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="Proxima Fecha" />
-                                <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpcrea" Title="Descriccion" />
-                                <RadzenDataGridColumn TItem="FechaProgDTO" Title="Acciones">
-                                    <Template Context="data">
-                                        <RadzenButton Icon="add_circle" Text="Agregar" Click="@(() => AgregarFecha(data))" />
-                                    </Template>
-                                </RadzenDataGridColumn>
-                            </Columns>
-                        </RadzenDataGrid>
-                        </div>
+                        @if (DiscForm.RdcodDis == "2")
+                        {
+                            <div class="box__absolute">
+                            <RadzenDataGrid Data="@MaestraData.fechaProg" TItem="FechaProgDTO" Class="w-100">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="Proxima Fecha" />
+                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpcrea" Title="Descriccion" />
+                                    <RadzenDataGridColumn TItem="FechaProgDTO" Title="Acciones">
+                                        <Template Context="data">
+                                            <RadzenButton Icon="add_circle" Text="Agregar" Click="@(() => AgregarFecha(data))" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                            </div>
+                        }
                     }
 
                 </BSRow>
@@ -322,22 +324,24 @@
                         <BSInput InputType="InputType.Text" IsDisabled @bind-Value="DiscForm.RdcodEq" />
                      </BSCol>
                     <br>
-                    @if (DiscForm.RdcodDis == "2")
+                    @if ((int)tipo == 1)
                     {
-                        @getFecha()
-                        <div class="box__absolute">
-                        <RadzenDataGrid Data="@MaestraData.fechaProg" TItem="FechaProgDTO" Class="w-100">
-                            <Columns>
-                                <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="Proxima Fecha" />
-                                <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpcrea" Title="Descriccion" />
-                                <RadzenDataGridColumn TItem="FechaProgDTO" Title="Acciones">
-                                    <Template Context="data">
-                                        <RadzenButton Icon="add_circle" Text="Agregar" Click="@(() => AgregarFecha(data))" />
-                                    </Template>
-                                </RadzenDataGridColumn>
-                            </Columns>
-                        </RadzenDataGrid>
-                        </div>
+                        @if (DiscForm.RdcodDis == "2")
+                        {
+                            <div class="box__absolute">
+                            <RadzenDataGrid Data="@MaestraData.fechaProg" TItem="FechaProgDTO" Class="w-100">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="Proxima Fecha" />
+                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpcrea" Title="Descriccion" />
+                                    <RadzenDataGridColumn TItem="FechaProgDTO" Title="Acciones">
+                                        <Template Context="data">
+                                            <RadzenButton Icon="add_circle" Text="Agregar" Click="@(() => AgregarFecha(data))" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                            </div>
+                        }
                     }
 
                  </BSRow>
