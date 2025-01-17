@@ -369,7 +369,7 @@
                 Reuniondb.RdfecReu = (fechahoy = DateTime.Now);
                 Reuniondb.RdfecTra = fechatrabajo;
                 Reuniondb.RdfecCrea = DateTime.Now;
-                Reuniondb.OrigenCal = "Diaria";
+                Reuniondb.OrigenCal = "N/A";
                 Reuniondb.Rdcentro = MaestraData.centro.Where(c => c.IdCentro == idCent).FirstOrDefault(c => c.IdCentro.Equals(idCent)).Centro;
                 //Asigno el id de la division al form
                 foreach (var e in MaestraData.divisions)
