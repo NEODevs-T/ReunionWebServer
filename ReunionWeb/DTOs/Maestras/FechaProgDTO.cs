@@ -18,5 +18,6 @@ public partial class FechaProgDTO
     public string? Fpdesc { get; set; }
 
     public int IdMaster { get; set; }
+    public string? linea { get; set; }
 
 }

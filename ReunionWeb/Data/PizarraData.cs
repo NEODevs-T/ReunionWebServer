@@ -6,6 +6,7 @@ using ReunionWeb.ReunionDiaria.DTOs;
 using static System.Net.WebRequestMethods;
 using ReunionWeb.DTOs.Maestra;
 using ReunionWeb.Interface;
+using System.Globalization;
 
 namespace ReunionWeb.Data;
 
@@ -65,7 +66,9 @@ public class PizarraData : IPizarraData
     public async Task<List<ReunionDTO>> GetPendientesTurno(string idcentro, string iddiv)
     {
         url = $"{BaseUrl}/GetPendientesTurno/{idcentro}/{iddiv}";
-        return reudiatablas = await _http.GetFromJsonAsync<List<ReunionDTO>>(url) ?? new List<ReunionDTO>();
+        reudiatablas = await _http.GetFromJsonAsync<List<ReunionDTO>>(url) ?? new List<ReunionDTO>();
+        reudiatablas.OrderByDescending(fecha => fecha.RdfecReu).ToList();
+        return reudiatablas;
 
     }
 
@@ -185,21 +188,22 @@ public class PizarraData : IPizarraData
             return false;
         }
     }
-    
-        public async Task<bool> UpdateDiscrepancia3(ReunionDTO d, int id)
+
+    public async Task<bool> UpdateDiscrepancia3(ReunionDTO d, int id)
     {
         bool band = false;
         url = $"{BaseUrl}/UpdateDiscrepancia2/{id}";
         cliente = _clientFactory.CreateClient();
         mensaje = await cliente.PutAsJsonAsync(url, d);
-            if (mensaje.IsSuccessStatusCode)
-            {
-                band = await mensaje.Content.ReadFromJsonAsync<bool>();
-                return band;
-            } else
-            {
-                return band;
-            }
+        if (mensaje.IsSuccessStatusCode)
+        {
+            band = await mensaje.Content.ReadFromJsonAsync<bool>();
+            return band;
+        }
+        else
+        {
+            return band;
+        }
     }
     public async Task<ReunionDTO> GetDiscrepantacia(int id)
     {
