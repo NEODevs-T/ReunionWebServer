@@ -209,12 +209,16 @@
                                 <option value="3">3- Falta Repuesto</option>
                                 <option value="4">4- Falta de Personal</option>
                                 <option value="5">5- Eq. no Disponible</option>
-
-
                             </BSInput>
                         </BSCol>
                     }
-
+                        @if(DiscForm.RdcodDis == "3" && tipo == 1)
+                        {  
+                        <BSCol Column="2">
+                            <BSLabel>Requesicion</BSLabel>
+                            <BSInput InputType="InputType.Text" @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
+                        </BSCol>
+                        } 
 
 
                     <BSCol ColumnSmall="2">
@@ -661,10 +665,10 @@
         try
         {
 
-            if(DiscForm.RdcodDis == "3")
+            @* if(DiscForm.RdcodDis == "3")
             {
                 DiscForm.IdTipReu = reunionQuincenal;
-            }
+            } *@
             if (DiscForm.RdfecTra  >= DiscForm.RdfecReu && (int)tipo == 1 || (int)tipo == 0 || (int)tipo == 2)
             {
                 if (CambiosFecha.Count() >= 3 & camFec != DiscForm.RdfecTra)
