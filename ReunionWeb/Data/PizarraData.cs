@@ -67,7 +67,7 @@ public class PizarraData : IPizarraData
     {
         url = $"{BaseUrl}/GetPendientesTurno/{idcentro}/{iddiv}";
         reudiatablas = await _http.GetFromJsonAsync<List<ReunionDTO>>(url) ?? new List<ReunionDTO>();
-        reudiatablas.OrderByDescending(fecha => fecha.RdfecReu).ToList();
+        reudiatablas = reudiatablas.OrderByDescending(fecha => fecha.RdfecReu).ToList();
         return reudiatablas;
 
     }
