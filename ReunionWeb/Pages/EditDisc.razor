@@ -624,7 +624,7 @@
 
         await KsfData.Getksf();
         await RespoReuData.GetResReu();
-        await MaestraData.GetFechaTrabajo();
+        await MaestraData.GetFechaTrabajoXIdMaster((int)DiscForm.IdMaster);
         await getFecha();
         RespoReuData.resporeus = RespoReuData.resporeus.Where(a => a.Rrdesc == claims.FirstOrDefault(c => c.Type.Contains("Empresa"))?.Value || string.IsNullOrEmpty(a.Rrdesc)).ToList();
         loader = false;

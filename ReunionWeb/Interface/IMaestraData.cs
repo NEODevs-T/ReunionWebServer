@@ -36,8 +36,8 @@ interface IMaestraData
     Task<List<FechaProgDTO>> GetFechaTrabajo();
     Task<List<FechaProgDTO>> GetFechaTrabajoXId(int idFechaPr);
     Task<List<FechaProgDTO>> GetFechaTrabajoXIdMaster(int IdMaster);
-    Task<List<FechaProgDTO>>  GetFechaTrabajoXFecha(DateTime f1, DateTime f2);
-    Task<bool>  AddFechaTrabajo(List<FechaProgDTO> newFecha);
+    Task<List<FechaProgDTO>> GetFechaTrabajoXFecha(DateTime f1, DateTime f2, int idMaster);
+    Task<bool> AddFechaTrabajo(List<FechaProgDTO> newFecha);
     Task<bool> UpdateFechaTrabajo(FechaProgDTO d, int id);
 
 }

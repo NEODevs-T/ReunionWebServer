@@ -49,7 +49,7 @@ public class MaestraData : IMaestraData
 
         url = $"{BaseUrl}/GetEquipos/{cent}";
         cliente = _clientFactory.CreateClient();
-        return equipos = await _http.GetFromJsonAsync<List<EquipoEamDTO>>(url) ?? new List<EquipoEamDTO>(); 
+        return equipos = await _http.GetFromJsonAsync<List<EquipoEamDTO>>(url) ?? new List<EquipoEamDTO>();
 
     }
     public async Task<List<EquipoEamDTO>> GetEquiposID(string idCentro)
@@ -124,69 +124,69 @@ public class MaestraData : IMaestraData
         return divicent = await _http.GetFromJsonAsync<CentroDivisionDTO>(url) ?? new CentroDivisionDTO();
     }
 
-        public async Task<List<EquipoEamDTO>> GetEquiposEAMPorLinea(int idLinea)
-        {
+    public async Task<List<EquipoEamDTO>> GetEquiposEAMPorLinea(int idLinea)
+    {
         url = $"{BaseUrl}/GetEquiposEAMPorLinea/{idLinea}";
         cliente = _clientFactory.CreateClient();
         return equipos = await cliente.GetFromJsonAsync<List<EquipoEamDTO>>(url) ?? new List<EquipoEamDTO>();
-        }
+    }
 
-        public async Task<List<FechaProgDTO>> GetFechaTrabajo() 
-        {
-            url = $"{BaseUrl}/GetFechaTrabajo";
-            cliente = _clientFactory.CreateClient();
-            return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
-        }
-        
-        public async Task<List<FechaProgDTO>> GetFechaTrabajoXId(int idFechaPr) 
-        {
-            url = $"{BaseUrl}/GetFechaTrabajoXId/{idFechaPr}";
-            cliente = _clientFactory.CreateClient();
-            return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
-        }
+    public async Task<List<FechaProgDTO>> GetFechaTrabajo()
+    {
+        url = $"{BaseUrl}/GetFechaTrabajo";
+        cliente = _clientFactory.CreateClient();
+        return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
+    }
 
-        public async Task<List<FechaProgDTO>> GetFechaTrabajoXIdMaster(int IdMaster) 
-        {
-            url = $"{BaseUrl}/GetFechaTrabajoXIdMaster/{IdMaster}";
-            cliente = _clientFactory.CreateClient();
-            return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
+    public async Task<List<FechaProgDTO>> GetFechaTrabajoXId(int idFechaPr)
+    {
+        url = $"{BaseUrl}/GetFechaTrabajoXId/{idFechaPr}";
+        cliente = _clientFactory.CreateClient();
+        return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
+    }
 
-        }
+    public async Task<List<FechaProgDTO>> GetFechaTrabajoXIdMaster(int IdMaster)
+    {
+        url = $"{BaseUrl}/GetFechaTrabajoXIdMaster/{IdMaster}";
+        cliente = _clientFactory.CreateClient();
+        return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
 
-        public async Task<List<FechaProgDTO>> GetFechaTrabajoXFecha(DateTime f1, DateTime f2) 
-        {
-            string f1Formatiado = f1.ToString("yyyy-MM-dd");
-            string f2Formatiado = f2.ToString("yyyy-MM-dd");
-            url = $"{BaseUrl}/GetFechaTrabajoXFecha/{f1Formatiado}/{f2Formatiado}";
-            cliente = _clientFactory.CreateClient();
-            return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
-        }
+    }
 
-        public async Task<bool>  AddFechaTrabajo(List<FechaProgDTO> newFecha)
-        {
-            bool band = false;
-            url = $"{BaseUrl}/AddFechaTrabajo";
-            cliente = _clientFactory.CreateClient();
-            mensaje = await cliente.PostAsJsonAsync(url, newFecha);
-            if (mensaje.IsSuccessStatusCode)
-            {
-                band = true;
-            }
-            return band;
-        }
+    public async Task<List<FechaProgDTO>> GetFechaTrabajoXFecha(DateTime f1, DateTime f2, int idMaster)
+    {
+        string f1Formatiado = f1.ToString("yyyy-MM-dd");
+        string f2Formatiado = f2.ToString("yyyy-MM-dd");
+        url = $"{BaseUrl}/GetFechaTrabajoXFecha/{f1Formatiado}/{f2Formatiado}";
+        cliente = _clientFactory.CreateClient();
+        return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
+    }
 
-        public async Task<bool> UpdateFechaTrabajo(FechaProgDTO d, int id)
+    public async Task<bool> AddFechaTrabajo(List<FechaProgDTO> newFecha)
+    {
+        bool band = false;
+        url = $"{BaseUrl}/AddFechaTrabajo";
+        cliente = _clientFactory.CreateClient();
+        mensaje = await cliente.PostAsJsonAsync(url, newFecha);
+        if (mensaje.IsSuccessStatusCode)
         {
-            bool band = false;
-            url = $"{BaseUrl}/UpdateFechaTrabajo/{id}";
-            cliente = _clientFactory.CreateClient();
-            mensaje = await cliente.PutAsJsonAsync(url, d);
-            if (mensaje.IsSuccessStatusCode)
-            {
-                band = true;
-            }
-            return band;
+            band = true;
         }
+        return band;
+    }
+
+    public async Task<bool> UpdateFechaTrabajo(FechaProgDTO d, int id)
+    {
+        bool band = false;
+        url = $"{BaseUrl}/UpdateFechaTrabajo/{id}";
+        cliente = _clientFactory.CreateClient();
+        mensaje = await cliente.PutAsJsonAsync(url, d);
+        if (mensaje.IsSuccessStatusCode)
+        {
+            band = true;
+        }
+        return band;
+    }
 
 }
 
