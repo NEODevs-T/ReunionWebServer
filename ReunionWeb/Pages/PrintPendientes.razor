@@ -229,9 +229,7 @@
     {
         await base.OnInitializedAsync();
         await RespoReuData.GetResReu();
-
-
-
+        await KsfData.Getksf();
     }
 
     protected override async Task OnParametersSetAsync()
@@ -298,6 +296,12 @@
             dataIsLoaded = 1;
             await PizarraData.GetPendientes(accion, division, date1, date2, tipo, est);
             dataIsLoaded = 2;
+            foreach (var e in PizarraData.reudiatablas)
+            {
+                e.Ksf = KsfData.ksfs.Where(x => x.Idksf == e.Idksf).FirstOrDefault().KsfNombre;
+                e.Responsable = RespoReuData.resporeus.Where(x => x.IdResReu == e.IdResReu).FirstOrDefault().Rrnombre;
+
+            }
 
         }
 

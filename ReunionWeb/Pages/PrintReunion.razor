@@ -185,7 +185,11 @@
 
     int dataIsLoaded = 0;
     int CentroComedor = 0;
-
+    protected override async Task OnInitializedAsync()
+    {
+        await KsfData.Getksf();
+        await RespoReuData.GetResReu();
+    }
     protected override async Task OnParametersSetAsync()
     {
         if (accion != null)
@@ -193,6 +197,12 @@
             dataIsLoaded = 1;
             await PizarraData.GetPendientes(accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo, "Reunion");
             dataIsLoaded = 2;
+            foreach (var e in PizarraData.reudiatablas)
+            {
+                e.Ksf = KsfData.ksfs.Where(x => x.Idksf == e.Idksf).FirstOrDefault().KsfNombre;
+                e.Responsable = RespoReuData.resporeus.Where(x => x.IdResReu == e.IdResReu).FirstOrDefault().Rrnombre;
+
+            }
         }
 
     }
