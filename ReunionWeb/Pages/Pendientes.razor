@@ -802,11 +802,15 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
 
         }
 
-    }
+    }   
     public void ObtenerReunionesPorRol()
     {
         if (!string.IsNullOrEmpty(UsrRol))
         {
+            foreach (var e in PizarraData.reudiatablas)
+                {
+                    e.Responsable = RespoReuData.resporeus.Where(x => x.IdResReu == e.IdResReu).FirstOrDefault().Rrnombre;
+                }
             listareu = PizarraData.reudiatablas.Where(r => r.Responsable.StartsWith(UsrRol)).ToList();
 
         }
