@@ -79,8 +79,8 @@
                             <div class="box__absolute">
                             <RadzenDataGrid Data="@MaestraData.fechaProg" TItem="FechaProgDTO" Class="w-100">
                                 <Columns>
-                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="Proxima Fecha" />
-                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpcrea" Title="Descriccion" />
+                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="Proxima Fecha" FormatString="{0:dd/MM/yyyy}" />
+                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpdesc" Title="Descriccion" />
                                     <RadzenDataGridColumn TItem="FechaProgDTO" Title="Acciones">
                                         <Template Context="data">
                                             <RadzenButton Icon="add_circle" Text="Agregar" Click="@(() => AgregarFecha(data))" />
@@ -213,11 +213,22 @@
                         </BSCol>
                     }
                         @if(DiscForm.RdcodDis == "3")
-                        {  
-                        <BSCol Column="2">
-                            <BSLabel>Requesicion</BSLabel>
-                            <BSInput InputType="InputType.Text" @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
-                        </BSCol>
+                        {
+                            if (planificador == "Admin" || planificador == "Planificador" || planificador == "SuperAdmin")
+                            {
+                                <BSCol Column="2">
+                                    <BSLabel>Requisición</BSLabel>
+                                    <BSInput InputType="InputType.Text" @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
+                                </BSCol>
+
+                            }  
+                            else{
+
+                                <BSCol Column="2">
+                                    <BSLabel>Requisición</BSLabel>
+                                    <BSInput InputType="InputType.Text" IsDisabled @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
+                                </BSCol>
+                            }
                         } 
 
 
@@ -335,7 +346,7 @@
                             <div class="box__absolute">
                             <RadzenDataGrid Data="@MaestraData.fechaProg" TItem="FechaProgDTO" Class="w-100">
                                 <Columns>
-                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="Proxima Fecha" />
+                                    <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="Proxima Fecha" FormatString="{0:dd/MM/yyyy}" />
                                     <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpcrea" Title="Descriccion" />
                                     <RadzenDataGridColumn TItem="FechaProgDTO" Title="Acciones">
                                         <Template Context="data">
@@ -576,7 +587,7 @@
     [Parameter]
     public string? est { get; set; }
     public int reunionQuincenal = 3;
-
+    List<DateTime>fechaf = new List<DateTime>();
     string _message = "";
     bool cambio = true;
     bool loader = true;

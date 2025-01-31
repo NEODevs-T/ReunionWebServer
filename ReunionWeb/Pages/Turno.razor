@@ -304,7 +304,7 @@
         bool validacion = await PizarraData.UpdateDiscrepancia3(e, e.IdReuDia);
         if (validacion == true)
         {
-            mensaje = "La reunion a sido rechazada";
+            mensaje = "La discrepancia a sido rechazada";
             NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
             await buscar();
 

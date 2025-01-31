@@ -159,7 +159,8 @@ public class MaestraData : IMaestraData
         string f2Formatiado = f2.ToString("yyyy-MM-dd");
         url = $"{BaseUrl}/GetFechaTrabajoXFecha/{f1Formatiado}/{f2Formatiado}";
         cliente = _clientFactory.CreateClient();
-        return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
+        fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
+        return fechaProg;
     }
 
     public async Task<bool> AddFechaTrabajo(List<FechaProgDTO> newFecha)
