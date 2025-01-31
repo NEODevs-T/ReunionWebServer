@@ -80,6 +80,7 @@
                     <BSTD>Tiempo</BSTD>
                     <BSTD>Responsable</BSTD>
                     <BSTD>Status</BSTD>
+                    <BSTD>Requisición</BSTD>
                     <BSTD>ODT</BSTD>
                     <BSTD>Fecha de Reunión</BSTD> @*Fecha del dia de reunion*@
                     <BSTD>Fecha del Trabajo</BSTD>@*Fecha de listo el trabajo*@
@@ -141,6 +142,14 @@
                                         else
                                         {
                                             <BSTD Class="pendiente">@d.Rdstatus</BSTD>
+                                        }
+                                        @if (d.RdcodRequi == null)
+                                        {
+                                            <BSTD>N/A</BSTD>
+                                        }
+                                        else
+                                        {
+                                            <BSTD>@d.RdcodRequi</BSTD>
                                         }
                                         <BSTD>@d.Rdodt</BSTD>
                                         <BSTD>@d.RdfecReu.ToString("dd/MM/yyyy")</BSTD>

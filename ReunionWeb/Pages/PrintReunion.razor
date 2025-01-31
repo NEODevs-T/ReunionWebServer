@@ -47,6 +47,7 @@
                     <BSTD>Tiempo</BSTD>
                     <BSTD ColSpan="1">Responsable</BSTD>
                     <BSTD>Status</BSTD>
+                    <BSTD>Requisición</BSTD>
                     <BSTD>ODT</BSTD>
                     <BSTD>Fecha del Trabajo</BSTD>@*Fecha de listo el trabajo*@
 
@@ -127,6 +128,14 @@
                             else
                             {
                                 <BSTD Class="">@d.Rdstatus</BSTD>
+                            }
+                            @if (d.RdcodRequi == null)
+                            {
+                                <BSTD>N/A</BSTD>
+                            }
+                            else
+                            {
+                                <BSTD>@d.RdcodRequi</BSTD>
                             }
                             <BSTD>@d.Rdodt</BSTD>
                             <BSTD>@d.RdfecTra.ToString("dd/MM/yyyy") </BSTD>

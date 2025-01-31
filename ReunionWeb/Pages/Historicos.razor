@@ -137,19 +137,6 @@
         LogicalFilterOperator="LogicalFilterOperator.Or" OrOperatorText="O" AndOperatorText="Y" EqualsText="Igual a"
         EditMode="DataGridEditMode.Single" ColumnWidth="200px">
         <Columns>
-            @*
-        <RadzenDataGridColumn TItem="ReunionDTO" Title="Centro" Frozen="true" Property="Rdcentro" Width="80px">
-        <Template>
-        @context.Rdcentro
-        </Template>
-
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn TItem="ReunionDTO" Title="División" Frozen="true" Property="Rddiv" Width="80px">
-        <Template>
-        @context.Rddiv
-        </Template>
-        </RadzenDataGridColumn>*@
 
             <RadzenDataGridColumn TItem="ReunionDTO" Title="#" Frozen="true" Width="35px" Filterable=false>
                 <Template>
@@ -207,6 +194,21 @@
                 </Template>
             </RadzenDataGridColumn>
 
+
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="Requisición" Property="Rdodt" Width="100px">
+
+                <Template>
+                    @if (context.RdcodRequi == null)
+                    {
+                        <span>N/A</span>
+                    }
+                    else
+                    {
+                        <span>@context.RdcodRequi</span>
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+
             <RadzenDataGridColumn TItem="ReunionDTO" Title="ODT" Property="Rdodt" Width="100px">
                 <Template>
                     @context.Rdodt
@@ -230,11 +232,9 @@
                     @context.RdfecTra.ToString("yyyy/MM/dd")
                 </Template>
             </RadzenDataGridColumn>
-
-
-
         </Columns>
     </RadzenDataGrid>
+
 }
 else if (dataIsLoaded == 1 && tabla.Count() == 0)
 {
@@ -393,15 +393,19 @@ else if (dataIsLoaded == 2 && tabla.Count() == 0)
     }
     protected async Task BuscarDivision(ChangeEventArgs e)
     {
-            IdCentro = int.Parse(e.Value.ToString());
-            IdDiv = 0;
-            try{
-                if(IdCentro != 0){
-                    MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(IdCentro);
-                }
-            }catch(Exception ex){
-                mensaje = "Error: " + ex.Message;
+        IdCentro = int.Parse(e.Value.ToString());
+        IdDiv = 0;
+        try
+        {
+            if (IdCentro != 0)
+            {
+                MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(IdCentro);
             }
+        }
+        catch (Exception ex)
+        {
+            mensaje = "Error: " + ex.Message;
+        }
     }
     protected async Task Get()
     {
@@ -411,12 +415,12 @@ else if (dataIsLoaded == 2 && tabla.Count() == 0)
             {
                 dataIsLoaded = 1;
                 tabla = await PizarraData.GetHistoricos(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, Status);
-                foreach(var d in tabla)
+                foreach (var d in tabla)
                 {
                     d.Ksf = KsfData.ksfs.Where(x => x.Idksf == d.Idksf).FirstOrDefault().KsfNombre;
                     d.Responsable = RespoReuData.resporeus.Where(x => x.IdResReu == d.IdResReu).FirstOrDefault().Rrnombre;
                 }
-                
+
                 dataIsLoaded = 2;
             }
         }
