@@ -144,7 +144,6 @@ public class PizarraData : IPizarraData
     {
         bool band = false;
         url = $"{BaseUrl}/UpdateDiscrepancia2/{id}";
-        cliente.Timeout = TimeSpan.FromMinutes(5);
         cliente = _clientFactory.CreateClient();
         mensaje = await cliente.PutAsJsonAsync(url, d);
 

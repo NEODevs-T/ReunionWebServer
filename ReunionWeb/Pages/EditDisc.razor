@@ -714,9 +714,12 @@
                         CambFec.Cfuser = claims[2].Value + " " + claims[3].Value;
                     }
 
+                    cambio = await PizarraData.UpdateDiscrepancia2(DiscForm, (int)Id, (int)tipo, f1, f2, est, linea);
+                    if(cambio == true)
+                    {
                     await AvisadorData.InsertCambioStatus(CambStat);
                     await AvisadorData.InsertCambioFec(CambFec);
-                    cambio = await PizarraData.UpdateDiscrepancia2(DiscForm, (int)Id, (int)tipo, f1, f2, est, linea);
+                    }
 
 
                 }
