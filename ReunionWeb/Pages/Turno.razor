@@ -285,7 +285,8 @@
     {
         ReunionDTO registro = e;
         registro.IdTipReu = 1;
-        bool validacion = await PizarraData.UpdateDiscrepancia3(e, e.IdReuDia);
+        registro.RdfecReu = DateTime.Now;
+        bool validacion = await PizarraData.UpdateDiscrepancia3(registro, registro.IdReuDia);
         if (validacion == true)
         {
             mensaje = "Se agrego correctamente a la Reunion diaria";
@@ -304,7 +305,7 @@
         ReunionDTO registro = e;
         registro.IdTipReu = 1;
         registro.Rdstatus = "Rechazada";
-        bool validacion = await PizarraData.UpdateDiscrepancia3(e, e.IdReuDia);
+        bool validacion = await PizarraData.UpdateDiscrepancia3(registro, registro.IdReuDia);
         if (validacion == true)
         {
             mensaje = "La discrepancia a sido rechazada";
