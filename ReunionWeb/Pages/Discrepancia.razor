@@ -411,6 +411,9 @@
                     CambStata = new CambStatDTO();
                     CambFech = new CambFecDTO();
                     regisReuDia = Reuniondb;
+                    regisReuDia.RdfecCrea = DateTime.Now.Date;
+                    regisReuDia.RdfecReu = DateTime.Now.Date;
+                    regisReuDia.RdfecTra = DateTime.Now.Date;
 
                     CambStata.Cbfecha = DateTime.Now;
                     CambStata.Cbstat = "Pendiente";
