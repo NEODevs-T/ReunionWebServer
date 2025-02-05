@@ -140,7 +140,7 @@ public class PizarraData : IPizarraData
 
     }
 
-    public async Task<bool> UpdateDiscrepancia2(ReunionDTO d, int id, int tipo, string f1, string f2, string estado, string linea)
+    public async Task<bool> UpdateDiscrepancia2(ReunionDTO d, int id, int tipo, string f1, string f2, string estado, string linea, string codigo, int responsable, int KsfF)
     {
         bool band = false;
         url = $"{BaseUrl}/UpdateDiscrepancia2/{id}";
@@ -163,7 +163,7 @@ public class PizarraData : IPizarraData
             {
                 if (tipo == 0)
                 {
-                    _navigationManager.NavigateTo($"pendientes/{centro}/{div}/{linea}/{f1}/{f2}/{tipo}/{estado}", forceLoad: true);
+                    _navigationManager.NavigateTo($"pendientes/{centro}/{div}/{linea}/{f1}/{f2}/{tipo}/{estado}/{codigo}/{responsable}/{KsfF}", forceLoad: true);
                 }
                 else if (tipo == 1)
                 {
@@ -171,7 +171,7 @@ public class PizarraData : IPizarraData
                 }
                 else if (tipo == 2)
                 {
-                    _navigationManager.NavigateTo($"pendientes/{centro}/{div}/{linea}/{f1}/{f2}/{tipo}/{estado}", forceLoad: true);
+                    _navigationManager.NavigateTo($"pendientes/{centro}/{div}/{linea}/{f1}/{f2}/{tipo}/{estado}/{codigo}/{responsable}/{KsfF}", forceLoad: true);
                 }
 
                 return true;
