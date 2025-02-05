@@ -285,7 +285,8 @@
     {
         ReunionDTO registro = e;
         registro.IdTipReu = 1;
-        registro.RdfecReu = DateTime.Now;
+        registro.RdfecReu = DateTime.Now.Date;
+        registro.RdfecTra = DateTime.Now.Date;
         bool validacion = await PizarraData.UpdateDiscrepancia3(registro, registro.IdReuDia);
         if (validacion == true)
         {
