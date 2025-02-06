@@ -24,7 +24,7 @@
 
 <body>
     <h3>Consolidacion de Discrepancia</h3>
-@* ccc *@
+    @* ccc *@
     <div class="box-reuform">
         <div class="box-reuCent">
             <label for="">Centro
@@ -53,6 +53,19 @@
                             <option value="@d.IdDivision">@d.Ndivision</option>
 
                         }
+                    }
+                </BSInput>
+            </label>
+        </div>
+        <div class="box-reutipo">
+            <label for="">Busqueda
+                <BSInput InputType="InputType.Select" class="Form-imput linea" @bind-Value="tipo">
+                    <option value="0">Selecione que Buscar</option>
+                    @if (MaestraData.centro != null)
+                    {
+                        <option value="1">Vencidas Turno</option>
+                        <option value="2">Pendientes Libro</option>
+
                     }
                 </BSInput>
             </label>
@@ -108,7 +121,10 @@
                     <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="Acciones" Filterable="false" Sortable="false"
                         TextAlign="TextAlign.Center">
                         <Template Context="data">
-                            <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@(() => Add(data))" />
+                            @if (libro == 0)
+                            {
+                                <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@(() => Add(data))" />
+                            }
                             <RadzenButton Icon="delete" Size="ButtonSize.Small" Click="@(() => Rechazada(data))" />
                         </Template>
                     </RadzenDataGridColumn>
@@ -147,12 +163,16 @@
 
     .box-reuDiv {
         margin: 10px;
-    @* position: relative; *@
+        @* position: relative; *@
         /* o absolute, dependiendo de tus necesidades */
         bottom: 10px;
         /* Ajusta según sea necesario */
         left: 20px;
         /* Ajusta según sea necesario */
+    }
+
+    .box-reutipo {
+        margin: 10px;
     }
 
     .botton-Disc {
@@ -214,6 +234,8 @@
     public RadzenDataGrid<ReunionDTO> reunion { get; set; } = new RadzenDataGrid<ReunionDTO>();
     private NotifiRadzen Notificar = new NotifiRadzen();
     bool confirmacion;
+    int tipo = 1;
+    int libro = 0;
 
     private async Task CreateData()
 
@@ -264,14 +286,30 @@
     {
         if (idCent != 0 && idDiv != 0)
         {
-            band = true;
-            PizarraData.reudiatablas = new List<ReunionDTO>();
-            confirmacion = false;
-            string idCentro = idCent.ToString();
-            string IdDivision = idDiv.ToString();
-            PizarraData.reudiatablas = await PizarraData.GetPendientesTurno(idCentro, IdDivision);
-            PizarraData.reudiatablas.Select(x => x.RdfecReu.ToString("dd/MM/yyyy")).ToList();
-            confirmacion = true;
+            if (tipo == 1)
+            {
+                band = true;
+                PizarraData.reudiatablas = new List<ReunionDTO>();
+                confirmacion = false;
+                string idCentro = idCent.ToString();
+                string IdDivision = idDiv.ToString();
+                PizarraData.reudiatablas = await PizarraData.GetPendientesTurno(idCentro, IdDivision);
+                PizarraData.reudiatablas.Select(x => x.RdfecReu.ToString("dd/MM/yyyy")).ToList();
+                confirmacion = true;
+                libro = 0;
+            }
+            else if (tipo == 2)
+            {
+                band = true;
+                PizarraData.reudiatablas = new List<ReunionDTO>();
+                confirmacion = false;
+                string idCentro = idCent.ToString();
+                string IdDivision = idDiv.ToString();
+                PizarraData.reudiatablas = await PizarraData.GetPendienteslibro(idCentro, IdDivision);
+                PizarraData.reudiatablas.Select(x => x.RdfecReu.ToString("dd/MM/yyyy")).ToList();
+                confirmacion = true;
+                libro = 1;
+            }
         }
         else
         {

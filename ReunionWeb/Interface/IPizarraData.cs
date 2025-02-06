@@ -26,5 +26,5 @@ interface IPizarraData
     Task<CentroDivisionDTO> GetCentroDivi(string centro, string division, int tipo);
     Task<List<ReunionDTO>> GetPendientesTurno(string idcentro, string iddiv);
 
-
+    Task<List<ReunionDTO>> GetPendienteslibro(string idcentro, string iddiv);
 }
