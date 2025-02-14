@@ -24,7 +24,6 @@ Mantenimiento,Calidad,Seguridad,Efluentes, PendientesChempro, MttoAdmin")]*@
         {
 
 
-            <div class="loader"></div>
         }
         else
         {
@@ -212,8 +211,6 @@ else
         @if (APIReunionService.centro.Count() == 0)
         {
 
-
-            <div class="loader"></div>
         }
         else
         {
@@ -518,11 +515,16 @@ else
     {
         if (accion != null)
         {
-            dataIsLoaded = 1;
-            IdCentro = int.Parse(accion);
-            IdDiv = int.Parse(division);
-            await DbReunionService.GetPendientes(accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo, "Reunion");
-            dataIsLoaded = 2;
+            try{
+                dataIsLoaded = 1;
+                IdCentro = int.Parse(accion);
+                accion = null;
+                IdDiv = int.Parse(division);
+                await DbReunionService.GetPendientes(accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo, "Reunion");
+                dataIsLoaded = 2;
+            }catch(Exception e){
+                throw e;
+            }
         }
 
     }

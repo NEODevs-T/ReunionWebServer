@@ -242,7 +242,7 @@
                     <p></p>
                     <p></p>
                     <BSCol Column="12">
-                        <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit>  Save <span class="oi oi-check"></span></BSButton>
+                        <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled="@band" IsSubmit>  Save <span class="oi oi-check"></span></BSButton>
                     <BSButton Color="BSColor.Danger" Size="Size.ExtraSmall" OnClick=Back>  Back <span class="oi oi-arrow-left"></span></BSButton>
 
                 </BSCol>
@@ -454,7 +454,7 @@
                     <p></p>
                     <p></p>
                     <BSCol Column="12">
-                        <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit>  Save <span class="oi oi-check"></span></BSButton>
+                        <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled="@band" IsSubmit>  Save <span class="oi oi-check"></span></BSButton>
                     <BSButton Color="BSColor.Danger" Size="Size.ExtraSmall" OnClick=Back>  Back <span class="oi oi-arrow-left"></span></BSButton>
                 </BSCol>
             </BSForm>
@@ -732,7 +732,7 @@
                     <p></p>
                     <p></p>
                     <BSCol Column="12">
-                        <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit>  Guardar <span class="oi oi-check"></span></BSButton>
+                        <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled="@band" IsSubmit>  Guardar <span class="oi oi-check"></span></BSButton>
                     <BSButton Color="BSColor.Danger" Size="Size.ExtraSmall" OnClick=Back>  Atras <span class="oi oi-arrow-left"></span></BSButton>
 
                 </BSCol>
@@ -944,7 +944,7 @@
                     <p></p>
                     <p></p>
                     <BSCol Column="12">
-                        <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit>  Guardar <span class="oi oi-check"></span></BSButton>
+                        <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled="@band" IsSubmit>  Guardar <span class="oi oi-check"></span></BSButton>
                     <BSButton Color="BSColor.Danger" Size="Size.ExtraSmall" OnClick=Back>  Atras <span class="oi oi-arrow-left"></span></BSButton>
                 </BSCol>
             </BSForm>
@@ -1024,6 +1024,7 @@
 
     private List<Claim> claims { get; set; }//obtener datos del token
     private string Pais { get; set; } = "";
+    private bool band { get; set; } = false;
 
 
     private async Task CreateData()
@@ -1032,6 +1033,7 @@
         var user = authState.User;
         claims = Enumerable.ToList(user.Claims);
         Pais = claims.FirstOrDefault(c => c.Type.Contains("Pais"))?.Value;
+        loader = false;
 
     }
 
@@ -1079,10 +1081,9 @@
     }
     async Task Editar()
     {
+        band = true;
         try
         {
-
-
             if (DiscForm.RdfecTra.Date >= DiscForm.RdfecReu.Date && (int)tipo == 1 || (int)tipo == 0 || (int)tipo == 2)
             {
                 if (CambiosFecha.Count() >= 3 & camFec != DiscForm.RdfecTra)
@@ -1202,5 +1203,6 @@
                 NotificationService.Notify(Notificar.Notificacion("error", "Ocurrió un error inesperado.", "Por favor,  recargue la página."));//LLamar notificacion con el objeto de logic
             }
         }
+        band = false;
     }
 }
