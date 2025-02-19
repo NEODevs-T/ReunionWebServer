@@ -71,14 +71,23 @@ public class PizarraData : IPizarraData
         return reudiatablas;
 
     }
-    public async Task<List<ReunionDTO>> GetPendienteslibro(string idcentro, string iddiv)
+    public async Task<List<ReunionDTO>> GetPendienteslibros(string idcentro, string iddiv)
     {
-        url = $"{BaseUrl}/GetPendienteslibro/{idcentro}/{iddiv}";
+        url = $"{BaseUrl}/GetPendienteslibros/{idcentro}/{iddiv}";
         reudiatablas = await _http.GetFromJsonAsync<List<ReunionDTO>>(url) ?? new List<ReunionDTO>();
         // reudiatablas = reudiatablas.OrderByDescending(fecha => fecha.RdfecReu).ToList();
         return reudiatablas;
 
     }
+        public async Task<List<ReunionDTO>> GetPendientesdeTurnoADiaria(string idcentro, string iddiv)
+    {
+        url = $"{BaseUrl}/GetPendientesdeTurnoADiaria/{idcentro}/{iddiv}";
+        reudiatablas = await _http.GetFromJsonAsync<List<ReunionDTO>>(url) ?? new List<ReunionDTO>();
+        // reudiatablas = reudiatablas.OrderByDescending(fecha => fecha.RdfecReu).ToList();
+        return reudiatablas;
+
+    }
+    
 
     //historicos
     public async Task<List<ReunionDTO>> GetHistoricos(string idcentro, string iddiv, DateTime f1, DateTime f2, string tipo, string estado)

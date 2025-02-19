@@ -65,6 +65,7 @@
                     {
                         <option value="1">Vencidas Turno</option>
                         <option value="2">Pendientes Libro</option>
+                        <option value="3">Ksf Reunion Diaria</option>
 
                     }
                 </BSInput>
@@ -133,9 +134,9 @@
         }
         else if (PizarraData.reudiatablas.Count() == 0 && confirmacion == true)
         {
-            <p>
-                No hay registros vencidos
-            </p>
+<div style="text-align: center; padding: 20px; font-size: 18px; color: gray;">
+    <p>No hay registros disponibles</p>
+</div>
         }
 
     }
@@ -305,10 +306,22 @@
                 confirmacion = false;
                 string idCentro = idCent.ToString();
                 string IdDivision = idDiv.ToString();
-                PizarraData.reudiatablas = await PizarraData.GetPendienteslibro(idCentro, IdDivision);
+                PizarraData.reudiatablas = await PizarraData.GetPendienteslibros(idCentro, IdDivision);
                 PizarraData.reudiatablas.Select(x => x.RdfecReu.ToString("dd/MM/yyyy")).ToList();
                 confirmacion = true;
-                libro = 1;
+                libro = 0;
+            }
+            else if (tipo == 3)
+            {
+                band = true;
+                PizarraData.reudiatablas = new List<ReunionDTO>();
+                confirmacion = false;
+                string idCentro = idCent.ToString();
+                string IdDivision = idDiv.ToString();
+                PizarraData.reudiatablas = await PizarraData.GetPendientesdeTurnoADiaria(idCentro, IdDivision);
+                PizarraData.reudiatablas.Select(x => x.RdfecReu.ToString("dd/MM/yyyy")).ToList();
+                confirmacion = true;
+                libro = 0;
             }
         }
         else
@@ -319,26 +332,36 @@
         }
     }
 
-    protected async Task Add(ReunionDTO e)
-    {
-        ReunionDTO registro = e;
-        registro.IdTipReu = 1;
-        registro.RdfecReu = DateTime.Now.Date;
-        registro.RdfecTra = DateTime.Now.Date;
-        bool validacion = await PizarraData.UpdateDiscrepancia3(registro, registro.IdReuDia);
-        if (validacion == true)
-        {
-            mensaje = "Se agrego correctamente a la Reunion diaria";
-            NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
-            await buscar();
-        }
-        else
-        {
-            mensaje = "No pudo ser Agregada";
-            NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
+    
 
-        }
+
+    protected async Task Add(ReunionDTO e)
+{
+    ReunionDTO registro = e;
+    registro.IdTipReu = 1;
+    registro.RdfecReu = DateTime.Now.Date;
+
+    if (tipo == 2)
+    {
+        registro.Rdstatus = "Pendiente";
     }
+
+    bool validacion = await PizarraData.UpdateDiscrepancia3(registro, registro.IdReuDia);
+
+    if (validacion == true)
+    {
+        mensaje = "Se agregó correctamente a la Reunión diaria";
+        NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
+        await buscar();
+    }
+    else
+    {
+        mensaje = "No pudo ser Agregada";
+        NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
+    }
+}
+
+    
     protected async Task Rechazada(ReunionDTO e)
     {
         ReunionDTO registro = e;
