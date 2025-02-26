@@ -344,13 +344,7 @@
             Reuniondb.IdMaster = MaestraData.maestra.Where(x => x.IdLinea == idLin).FirstOrDefault().IdMaster;
             Reuniondb.Rdarea = MaestraData.lineas.Where(x => x.IdLinea == idLin).FirstOrDefault().Linea;
             Reuniondb.Rdstatus = "Pendiente";
-            if(Reuniondb.Idksf == 6)
-            {
-                Reuniondb.IdTipReu = reunionQuincenal;
-            }else
-            {
-                Reuniondb.IdTipReu = reunionDia;
-            }
+            Reuniondb.IdTipReu = reunionDia;
             Reuniondb.IdCausaCal = 1;
             Reuniondb.RdfecCrea = DateTime.Now;
             Reuniondb.IdPais = int.Parse(claims.FirstOrDefault(c => c.Type == "IdPais")?.Value);
