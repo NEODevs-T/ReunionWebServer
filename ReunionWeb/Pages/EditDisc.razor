@@ -61,7 +61,7 @@
                          <BSInput InputType="InputType.Select" @bind-Value="DiscForm.Idksf">
 
                              <option value="">Seleccione...</option>
-                             @foreach (var d in KsfData.ksfs)
+                             @foreach (var d in KsfData.ksfs.Where(x => x.Idksf != 29))
                             {
                                 <option value="@d.Idksf">@d.KsfNombre</option>
                             }
@@ -337,7 +337,7 @@
                      <BSInput InputType="InputType.Select" hidden @bind-Value="DiscForm.Idksf">
 
                          <option value="">Seleccione...</option>
-                         @foreach (var d in KsfData.ksfs)
+                         @foreach (var d in KsfData.ksfs.Where(x => x.Idksf != 29))
                         {
                             <option value="@d.Idksf">@d.KsfNombre</option>
                         }
