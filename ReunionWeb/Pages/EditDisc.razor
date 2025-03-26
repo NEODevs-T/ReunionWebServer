@@ -11,6 +11,8 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 
  <div class="box__relative">
 <h3>Editar Discrepancia</h3>
@@ -144,18 +146,26 @@
                     }
 
 
-                    @if (tipo == 0 || tipo == 2)
+                    @if (tipo == 0 || tipo == 1)
                     {
                         <BSCol Column="2">
                             <BSLabel>Fecha del Trabajo</BSLabel>
-                            <BSInput InputType="InputType.Date" IsDisabled @bind-Value="DiscForm.RdfecTra" />
-                     </BSCol>
+
+                            @if (tipo == 1 && EsSupIntendente)
+                            {
+                                <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
+                            }
+                            else
+                            {
+                                <BSInput InputType="InputType.Date" IsDisabled @bind-Value="DiscForm.RdfecTra" />
+                            }
+                        </BSCol>
                     }
                     else
                     {
                         <BSCol Column="2">
                             <BSLabel>Fecha del Trabajo</BSLabel>
-                            <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
+                            <BSInput InputType="InputType.Date" IsDisabled @bind-Value="DiscForm.RdfecTra" />
                         </BSCol>
                     }
 
@@ -613,10 +623,17 @@
     private string camStat;//Variable para verificar si es el usuario cambio el Status;
     private string PlanOld;//Variable para verificar si es el usuario cambio el plan de accion;
     private DateTime? camFec;//Variable para verificar si es el usuario cambio la Fecha;
+    private bool EsSupIntendente; //Variable para verificar que el usuario sea SuperIntendente
+
 
     private List<Claim> claims { get; set; }//obtener datos del token
 
-
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        EsSupIntendente = user.IsInRole("SupIntendente");
+    }
 
     private async Task CreateData()
     {
