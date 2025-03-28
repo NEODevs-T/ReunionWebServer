@@ -146,28 +146,29 @@
                     }
 
 
-                    @if (tipo == 0 || tipo == 1)
-                    {
-                        <BSCol Column="2">
-                            <BSLabel>Fecha del Trabajo</BSLabel>
+                                            @if (tipo == 1)
+                        {
+                            <BSCol Column="2">
+                                <BSLabel>Fecha del Trabajo</BSLabel>
 
-                            @if (tipo == 1 && EsSupIntendente)
-                            {
-                                <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
-                            }
-                            else
-                            {
+                                @if (EsSupIntendente)
+                                {
+                                    <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
+                                }
+                                else
+                                {
+                                    <BSInput InputType="InputType.Date" IsDisabled @bind-Value="DiscForm.RdfecTra" />
+                                }
+                            </BSCol>
+                        }
+                        else
+                        {
+                            <BSCol Column="2">
+                                <BSLabel>Fecha del Trabajo</BSLabel>
                                 <BSInput InputType="InputType.Date" IsDisabled @bind-Value="DiscForm.RdfecTra" />
-                            }
-                        </BSCol>
-                    }
-                    else
-                    {
-                        <BSCol Column="2">
-                            <BSLabel>Fecha del Trabajo</BSLabel>
-                            <BSInput InputType="InputType.Date" IsDisabled @bind-Value="DiscForm.RdfecTra" />
-                        </BSCol>
-                    }
+                            </BSCol>
+                        }
+
 
                     <BSCol ColumnSmall="2">
                         <BSLabel>Responsable</BSLabel>
@@ -395,21 +396,21 @@
 
                      <BSInput InputType="InputType.Text" hidden @bind-Value="DiscForm.Rdtiempo" />
 
-                     @if (planificador == "Admin" || planificador == "Planificador" || planificador == "SuperAdmin")
+                    @if (tipo == 1 && (planificador == "Admin" || planificador == "Planificador" || planificador == "SuperAdmin"))
                     {
                         <BSCol Column="2">
                             <BSLabel>Fecha del Trabajo</BSLabel>
                             <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
                         </BSCol>
-
                     }
                     else
                     {
                         <BSCol Column="2">
                             <BSLabel>Fecha del Trabajo</BSLabel>
-                            <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
+                            <BSInput InputType="InputType.Date" IsDisabled @bind-Value="DiscForm.RdfecTra" />
                         </BSCol>
                     }
+
 
 
                     <BSCol ColumnSmall="2">
@@ -542,7 +543,7 @@
 
 @if (CambiosFecha.Count() > 0)
 {
-    <p> Cambios de  Fecha de Trabajo Restantes: @(4 - CambiosFecha.Count()) </p>
+    <p> Cambios de  Fecha de Trabajo Restantes: @(3 - CambiosFecha.Count()) </p>
     <div style="width: 40vw;">
         <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
             <BSTHead Class="cabecera">
