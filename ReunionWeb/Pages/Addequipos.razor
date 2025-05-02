@@ -197,7 +197,7 @@ else
                     <BSTHead Class="cabecera">
                         <BSTR>
 
-                            @*<BSTD>Id</BSTD>*@
+                            @* <BSTD>Id</BSTD> *@
                             <BSTD>Centro</BSTD>
                             <BSTD>División</BSTD>
                             <BSTD>Línea</BSTD>
@@ -227,7 +227,7 @@ else
                                         {
                                             <BSTR>
                                             @*<BSTD>@d.IdEquipo</BSTD>*@
-                                            @* <BSTD>@d.centro</BSTD> *@
+                                            @* <BSTD>@d.MaestraData.centro</BSTD> *@
                                             <BSTD>@d.EdescriEam</BSTD>
                                             <BSTD>@d.Linea</BSTD>
                                             
@@ -273,12 +273,15 @@ else
                                              else
                                             {
                                                 <BSTD>
+                                                    <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
+                                                      <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="Correcto." />
                                                     @d.EnombreEam                                    
                                                 </BSTD>
                                             
                                         
                                             <BSTD>
-                                                    @d.EcodEquiEam
+                                                    <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
+                                                    <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="Correcto." />
                                             </BSTD>
                                             <BSTD>
                                                     @d.EdescriEam
@@ -310,8 +313,8 @@ else
                                 {
                                   <BSTR>
                        @*         <BSTD>@d.IdEquipo</BSTD>*@
-                                @* <BSTD>@d.Centro</BSTD> *@
-                                @* <BSTD>@d.Division</BSTD> *@
+                                @* <BSTD>@d.Centro</BSTD> *@ <BSTD>@d.Linea</BSTD>
+                                @* <BSTD>@d.Division</BSTD> *@ <BSTD>@d.Linea</BSTD>
                                 <BSTD>@d.Linea</BSTD>
                                             @if(idequipoeditar==d.IdEquipo)
                                             {
@@ -403,14 +406,14 @@ else
     }
     else
     {
-        <BSInputRadio CheckedValue="@(1)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+        @* <BSInputRadio CheckedValue="@(1)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
             Agregar Equipos
             <span class="oi oi-plus"></span>
         </BSInputRadio>
         <BSInputRadio @bind-Value="tipo" CheckedValue="@(2)" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
             Consultar Equipos
             <span class="oi oi-magnifying-glass"></span>
-        </BSInputRadio>
+        </BSInputRadio> *@
     }
 }
 
