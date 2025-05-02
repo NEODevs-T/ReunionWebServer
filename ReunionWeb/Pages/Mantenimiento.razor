@@ -219,7 +219,7 @@ else
                     <button onclick="@Get" class="btn btn-success"><i class="oi oi-magnifying-glass"></i></button>
                 </BSCol>
             </BSRow>
-            <p></p>
+            @* <p></p>
             <div class="box">
                 <div class="box_flex">
                     <BSCol Column="2" class="box_date date--from">
@@ -234,7 +234,7 @@ else
                     </BSCol Colum="2">
                 </div>
             </div>
-            <p></p>
+            <p></p> *@
 
 
             @if (MaestraData.fechaProg.Count() > 0 && dataIsLoaded == 2)
@@ -354,7 +354,9 @@ else
             }
             else if (dataIsLoaded == 2 && MaestraData.fechaProg.Count() == 0)
             {
-                <p>No hay Fechas.</p>
+                <div style="text-align: center; padding: 20px; font-size: 18px; color: rgb(102, 101, 101);">
+                <p>No hay fecha Programada</p>
+                </div>
             }
 
 
