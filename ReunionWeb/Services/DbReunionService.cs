@@ -603,11 +603,11 @@ namespace ReunionWeb.Services
         //Insertar discrepancia con chismoso
         public async Task<bool> InsertarRegistros(CambFec data, CambStat data2)
         {
-            data.IdReuDiaNavigation.CambStats.Add(data2);
+            //data.IdReuDiaNavigation.CambStats.Add(data2);
+            
             _neocontext.CambFecs.Add(data);
-            //_neocontext.CambStats.Add(data2);
+            _neocontext.CambStats.Add(data2);
             await _neocontext.SaveChangesAsync();
-
             return true;
         }
 

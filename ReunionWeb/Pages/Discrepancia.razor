@@ -671,12 +671,12 @@
         {
             NotificationService.Notify(Notificar.Notificacion("error", "Error inesperado.",  ex.Message));
         }
-
+        Reset();
         isDesactivado = false;
     }
 
 
-    protected async Task Reset()
+    protected void Reset()
     {
         Reuniondb = new ReuDium();
         CambStata = new CambStat();
