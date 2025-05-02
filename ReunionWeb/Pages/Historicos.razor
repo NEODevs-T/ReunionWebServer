@@ -150,11 +150,15 @@
                 </Template>
             </RadzenDataGridColumn>
 
-
-
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Equipo" Frozen="true" Property="RdcodEq" Width="80px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="Cod. Equipo" Frozen="true" Property="RdcodEq" Width="80px">
                 <Template>
                     @context.RdcodEq
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="Nombre del Equipo" Frozen="true" Property="RdcodEq" Width="80px">
+                <Template Context="context">
+                    @(string.IsNullOrWhiteSpace(context.EnombreEam) ? "EQUIPO NO ENCONTRADO" : context.EnombreEam)
                 </Template>
             </RadzenDataGridColumn>
 
