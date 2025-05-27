@@ -10,7 +10,7 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
 
-        <AuthorizeView Roles="Admin,AdminChempro, SupIntendente, SupIntendenteGeneral">
+        <AuthorizeView Roles="Admin,AdminChempro, SuperUser, SemiAdmin">
 
             <Authorized>
                 <div class="nav-item px-3">
@@ -92,7 +92,7 @@
             </NotAuthorized>
 
         </AuthorizeView>
-        <AuthorizeView Roles="Admin,AdminChempro, SupIntendente,SupIntendenteGeneral,MttoAdmin">
+        <AuthorizeView Roles="Admin,AdminChempro, SuperUser,SemiAdmin,MttoAdmin">
             <Authorized>
 
                 @* <div class="nav-item px-3">
@@ -102,7 +102,7 @@
                 </div> *@
             </Authorized>
         </AuthorizeView>
-        <AuthorizeView Roles="Admin,AdminChempro, SupIntendente,SupIntendenteGeneral,MttoAdmin,Planificador">
+        <AuthorizeView Roles="Admin,AdminChempro, SuperUser,SemiAdmin,MttoAdmin,Planificador">
             <Authorized>
 
                 <div class="nav-item px-3">

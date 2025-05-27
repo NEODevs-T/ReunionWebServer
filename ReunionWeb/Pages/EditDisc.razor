@@ -18,7 +18,7 @@
 <h3>Editar Discrepancia</h3>
 
 <h4></h4>
-<AuthorizeView Roles="Admin,AdminChempro, SupIntendente">
+<AuthorizeView Roles="Admin,AdminChempro, SuperUser">
 
     <Authorized>
 
@@ -151,7 +151,7 @@
                             <BSCol Column="2">
                                 <BSLabel>Fecha del Trabajo</BSLabel>
 
-                                @if (EsSupIntendente)
+                                @if (EsSuperUser)
                                 {
                                     <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
                                 }
@@ -624,7 +624,7 @@
     private string camStat;//Variable para verificar si es el usuario cambio el Status;
     private string PlanOld;//Variable para verificar si es el usuario cambio el plan de accion;
     private DateTime? camFec;//Variable para verificar si es el usuario cambio la Fecha;
-    private bool EsSupIntendente; //Variable para verificar que el usuario sea SuperIntendente
+    private bool EsSuperUser; //Variable para verificar que el usuario sea SuperIntendente
 
 
     private List<Claim> claims { get; set; }//obtener datos del token
@@ -633,7 +633,7 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        EsSupIntendente = user.IsInRole("SupIntendente");
+        EsSuperUser = user.IsInRole("SuperUser");
     }
 
     private async Task CreateData()
