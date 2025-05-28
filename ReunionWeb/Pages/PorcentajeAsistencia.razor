@@ -128,10 +128,10 @@
                             @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
                             {
 
-                                @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.Crnombre == d.Cargo).AridCargoRNavigation.Crbloque) == bloque)
+                                @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.IdCargoR == d.Cargo).AridCargoRNavigation.Crbloque) == bloque)
                                 {
 
-                                    <BSTD>@d.Cargo</BSTD>
+                                    <BSTD>@APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.IdCargoR == d.Cargo).AridCargoRNavigation.Crnombre</BSTD>
                                     <BSTD>@d.Asistencias</BSTD>
                                     <BSTD>@d.Total %</BSTD>
                                 }
@@ -140,7 +140,7 @@
                             else
                             {
 
-                                <BSTD>@d.Cargo</BSTD>
+                                <BSTD>@APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.IdCargoR == d.Cargo).AridCargoRNavigation.Crnombre</BSTD>
                                 <BSTD>@d.Asistencias</BSTD>
                                 <BSTD>@d.Total %</BSTD>
 
@@ -389,10 +389,10 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
                                 @if (APIReunionService.asistenreus.Where(c => c.AridCargoRNavigation.Crbloque == 1).Count() > 0)
                                 {
 
-                                    @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.Crnombre == d.Cargo).AridCargoRNavigation.Crbloque) == bloque)
+                                    @if ((APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.IdCargoR == d.Cargo).AridCargoRNavigation.Crbloque) == bloque)
                                     {
 
-                                        <BSTD>@d.Cargo</BSTD>
+                                        <BSTD>@APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.IdCargoR == d.Cargo).AridCargoRNavigation.Crnombre</BSTD>
                                         <BSTD>@d.Asistencias</BSTD>
                                         <BSTD>@d.Total %</BSTD>
                                     }
@@ -401,7 +401,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
                                 else
                                 {
 
-                                    <BSTD>@d.Cargo</BSTD>
+                                    <BSTD>@APIReunionService.asistenreus.FirstOrDefault(c => c.AridCargoRNavigation.IdCargoR == d.Cargo).AridCargoRNavigation.Crnombre</BSTD>
                                     <BSTD>@d.Asistencias</BSTD>
                                     <BSTD>@d.Total %</BSTD>
 
@@ -660,7 +660,7 @@ else if (dataIsLoaded == 1 && porasis.Count() == 0)
                     var elementosParaEliminar = listafiltradabloque
                         .Where((elemento, index) => listacargos.Any(lista =>
                             lista.Crbloque != bloque &&
-                            lista.Crnombre == elemento.Cargo))
+                            lista.IdCargoR == elemento.Cargo))
                         .ToList();
 
                     foreach (var elemento in elementosParaEliminar)

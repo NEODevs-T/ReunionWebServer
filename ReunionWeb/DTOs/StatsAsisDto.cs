@@ -3,9 +3,9 @@
     public class StatsAsisDto
     {
    
-            public string Cargo { get; set; } = string.Empty;
+            public int Cargo { get; set; }
             public double Asistencias { get; set; }
-             public double Total { get; set; }
+            public double Total { get; set; }
     }
 }
 
