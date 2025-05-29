@@ -254,15 +254,17 @@
                                 <option value="Cerrado">Cerrado</option>
                                 <option value="No Conforme">No Conforme</option>
                                 <option value="Pendiente/Responsable">Pendiente/Responsable</option>
+                                <option value="Pendiente">Pendiente</option>
 
                             }
                             else
                             {
                                 <option value="Revisar">Revisar</option>
+                                <option value="Pendiente">Pendiente</option>
                             }
                             @if (DiscForm.Rdodt is not null)
                             {
-                                <option value="Pendiente">Pendiente</option>
+                                //<option value="Pendiente">Pendiente</option>
                                // <option value="Pendiente/Responsable">Pendiente/Responsable</option>
                                 //<option value="No Conforme">No Conforme</option>
                             }
@@ -628,7 +630,6 @@
     private string PlanOld;//Variable para verificar si es el usuario cambio el plan de accion;
     private DateTime? camFec;//Variable para verificar si es el usuario cambio la Fecha;
     private bool EsSuperUser; //Variable para verificar que el usuario sea SuperIntendente
-
 
     private List<Claim> claims { get; set; }//obtener datos del token
 
