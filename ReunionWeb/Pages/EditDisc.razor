@@ -260,11 +260,13 @@
                             }
                             @if (DiscForm.Rdodt is not null)
                             {
-                                <option value="Pendiente/Responsable">Pendiente/Responsable</option>
+                              //  <option value="Pendiente">Pendiente00000000000</option>
+                                <option value="No Conforme">No Conforme</option>
                             }
                             else
                             {
-                                <option value="Pendiente">Pendiente</option>
+                               // <option value="Pendiente/Responsable">Pendiente/Responsable</option>
+                                <option value="No Conforme">No Conforme</option>
                             }
 
                             <BSFeedback For="@(() => DiscForm.Rdstatus)" ValidMessage="Correcto." />
