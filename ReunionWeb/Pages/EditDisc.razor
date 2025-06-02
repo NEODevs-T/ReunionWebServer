@@ -151,7 +151,7 @@
                             <BSCol Column="2">
                                 <BSLabel>Fecha del Trabajo</BSLabel>
 
-                                @if (EsSuperUser)
+                                @if (tipo == 1 && (EsSuperUser || EsAdmin))
                                 {
                                     <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
                                 }
@@ -630,6 +630,7 @@
     private string PlanOld;//Variable para verificar si es el usuario cambio el plan de accion;
     private DateTime? camFec;//Variable para verificar si es el usuario cambio la Fecha;
     private bool EsSuperUser; //Variable para verificar que el usuario sea SuperIntendente
+    private bool EsAdmin; // Variable para verificar que el usuario sea Administrador
 
     private List<Claim> claims { get; set; }//obtener datos del token
 
@@ -638,6 +639,7 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         EsSuperUser = user.IsInRole("SuperUser");
+        EsAdmin = user.IsInRole("Admin");
     }
 
     private async Task CreateData()
