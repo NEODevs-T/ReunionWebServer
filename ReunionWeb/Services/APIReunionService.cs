@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReunionWeb.DTOs;
 
 using ReunionWeb.NeoDbs;
+using ReunionWeb.Pages;
 using static System.Net.WebRequestMethods;
 
 namespace ReunionWeb.Services
@@ -27,6 +28,7 @@ namespace ReunionWeb.Services
         public List<EquipoEam> equipos { get; set; } = new List<EquipoEam>();
         public List<EquipoEam> equiposlinea { get; set; } = new List<EquipoEam>();
         public List<CalendarioTrabajoDTO> calentrabajo { get; set; } = new List<CalendarioTrabajoDTO>();
+        public List<AsistenReuPorcetanjeDTO> porcentaje { get; set; } = new List<AsistenReuPorcetanjeDTO>();
 
         public APIReunionService(HttpClient http, NavigationManager navigationManager)
         {
@@ -146,7 +148,7 @@ namespace ReunionWeb.Services
         public async Task<string> Postasistencia(List<AsistenReu> asisten)
         {
             var result = await _http.PostAsJsonAsync("http://neo.paveca.com.ve/ReunionApi/Lineas/Asistencia", asisten);
-           // var result = await _http.PostAsJsonAsync("http://localhost:5258/Lineas/Asistencia", asisten);
+            // var result = await _http.PostAsJsonAsync("http://localhost:5258/Lineas/Asistencia", asisten);
             var msj = await result.Content.ReadAsStringAsync();
             return msj;
         }
@@ -165,13 +167,21 @@ namespace ReunionWeb.Services
             if (result != null)
                 calentrabajo = result;
         }
-        
+
         public async Task GetEquiposCentro(string centro)
         {
             //var result = await _http.GetFromJsonAsync<List<CalendarioTrabajoDTO>>($"http://localhost:5258/Lineas/Lineas/TrabajosCalendario/pais/{centro}/{division}");
             var result = await _http.GetFromJsonAsync<List<EquipoEam>>($"http://neo.paveca.com.ve/ReunionApi/Empresas/Equipos/{centro}");
             if (result != null)
                 equiposlinea = result;
+        }
+
+        public async Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area)
+        {
+            var url = $"http://neo.paveca.com.ve/ReunionApi/AsistenciaReu/GetPorcentajeAsistenciaDiaria?fechaInicio={fechaInicio}&fechaFin={fechaFin}&empresa={empresa}&area={area}";
+            var result = await _http.GetFromJsonAsync<List<AsistenReuPorcetanjeDTO>>(url);
+            if (result != null)
+                porcentaje = result;
         }
 
 

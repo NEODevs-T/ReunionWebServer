@@ -1,0 +1,52 @@
+@page "/porcentaje"
+@inject IDbReunionService DbReunionService
+@inject IAPIReunionService APIReunionService
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@inject NotificationService NotificationService
+@attribute [Authorize(Roles = "Admin, AdminChempro, SupIntendente, SupIntendenteGeneral, SuperAdmin, MttoAdmin,SeguridadAdmin, CalidadAdmin")]
+
+<h3>Porcentaje de Asistencia</h3>
+<p></p>
+
+<BSContainer>
+    @if (APIReunionService.porcentaje.Count() == 0)
+    {
+        <div class="loader"></div>
+    }
+    else
+    {
+        <BSRow>
+            <BSCol Column="3">
+                <BSLabel>Centro</BSLabel>
+                <BSInput InputType="InputType.Select" @bind-Value="area">
+                    <option value="">Seleccione</option>
+                    @foreach (var d in APIReunionService.centro)
+                    {
+                        <option value="@d.Cnom">@d.Cnom</option>
+                    }
+                </BSInput>
+            </BSCol>
+            <BSCol Column="2">
+                <BSLabel>Fecha Inicial</BSLabel>
+                <BSInput InputType="InputType.Date" @bind-Value="fechaInicio" />
+            </BSCol>
+            <BSCol Column="2">
+                <BSLabel>Fecha Final</BSLabel>
+                <BSInput InputType="InputType.Date" @bind-Value="fechaFin" />
+            </BSCol>
+         </BSRow>
+    }
+
+</BSContainer>
+
+<p></p>
+
+@code {
+    public string area { get; set; } = "";
+    public string fechaInicio {get; set;} = "";
+    public string fechaFin {get; set;} = "";
+    // Otras variables y métodos...
+}
