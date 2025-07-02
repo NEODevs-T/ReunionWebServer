@@ -23,7 +23,7 @@ interface IMaestraData
     Task<List<MaestraVDTO>> GetMaestraXLinea(int idlinea);
     Task<List<EquipoEamDTO>> GetEquiposEAM(string cent);
     Task<List<EquipoEamDTO>> GetEquiposID(string idCentro);
-    Task<List<EquipoEamDTO>> GetEquiposxlinea(string idLinea);
+    Task<List<EquipoEamDTO>> GetEquiposPorLinea(string idLinea);
     Task<List<DivisionesVDTO>> GetBdDiv(string cent);
     Task<List<DivisionesVDTO>> ObtenerDivisionDelCentro(int idCentro);
     Task<List<CentrosVDTO>> GetCentrosxEmpresa(string cent);

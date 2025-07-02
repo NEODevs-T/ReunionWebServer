@@ -177,198 +177,175 @@ else
             <p></p>
       
 
-        @if (MaestraData.equiposlinea.Count() > 0 && dataIsLoaded == 2)
-        {
-                 
-              <BSCol Column="3">
-                <BSLabel>Filtrar Código</BSLabel>
-                <BSInput InputType="InputType.Text" @bind-Value="EquipoFiltro" >
-                   
-                   
-                </BSInput>
+            @if (MaestraData.equiposlinea.Count() > 0 && dataIsLoaded == 2)
+            {
 
-            </BSCol Colum="3">
-        
-        <p></p>
-            <BSContainer>
+                <BSCol Column="3">
+                    <BSLabel>Filtrar Código</BSLabel>
+                    <BSInput InputType="InputType.Text" @bind-Value="EquipoFiltro">
 
 
-                <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
-                    <BSTHead Class="cabecera">
-                        <BSTR>
+                    </BSInput>
 
-                            @* <BSTD>Id</BSTD> *@
-                            <BSTD>Centro</BSTD>
-                            <BSTD>División</BSTD>
-                            <BSTD>Línea</BSTD>
-                            <BSTD>Nombre</BSTD>
-                            <BSTD>Código</BSTD>
-                            <BSTD>Descripcion</BSTD>
-                            <BSTD>Estado</BSTD>
-                            <BSTD>Editar</BSTD>
+                </BSCol Colum="3">
+
+                <p></p>
+                <BSContainer>
 
 
+                    <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
+                        <BSTHead Class="cabecera">
+                            <BSTR>
 
-                        </BSTR>
-                    </BSTHead>
-                    <BSTBody>
-                        
-                            @if (EquipoFiltro.Length>2)
-                            {
+                                @*<BSTD>Id</BSTD>*@
+                                @* <BSTD>Centro</BSTD> *@
+                                @* <BSTD>División</BSTD> *@
+                                <BSTD>Línea</BSTD>
+                                <BSTD>Nombre</BSTD>
+                                <BSTD>Código</BSTD>
+                                <BSTD>Descripcion</BSTD>
+                                <BSTD>Estado</BSTD>
+                                <BSTD>Editar</BSTD>
 
-                                
-                                    @if(MaestraData.equiposlinea.Where(a => a.EcodEquiEam.Contains(EquipoFiltro)).Count()==0)
-                                    {
-                                        <p>No hay registros.</p>
-                                    }
-                                    else
-                                    {
-                                         @foreach (var d in  MaestraData.equiposlinea.Where(a => a.EcodEquiEam.Contains(EquipoFiltro)).ToList())
-                                        {
-                                            <BSTR>
-                                            @*<BSTD>@d.IdEquipo</BSTD>*@
-                                            @* <BSTD>@d.MaestraData.centro</BSTD> *@
-                                            <BSTD>@d.EdescriEam</BSTD>
-                                            <BSTD>@d.Linea</BSTD>
-                                            
-                                            @if(idequipoeditar==d.IdEquipo)
-                                            {
-                                                <BSTD>
-                                                    
-                                                      <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
-                                                      <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="Correcto." />
 
-                                                </BSTD> 
-                                                
-                                                <BSTD>
-                                                    
-                                                      <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
-                                                      <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="Correcto." />
 
-                                                </BSTD>  
+                            </BSTR>
+                        </BSTHead>
+                        <BSTBody>
 
-                                                <BSTD>
-                                                    
-                                                      <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
-                                                      <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="Correcto." />
+                            @if (EquiposFiltrados.Any())
+{
+    @foreach (var d in EquiposFiltrados)
+    {
+        <BSTR>
+            <BSTD>@d.Linea</BSTD>
 
-                                                </BSTD>
+            @if (idequipoeditar == d.IdEquipo)
+            {
+                <BSTD>
+                    <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
+                    <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="Correcto." />
+                </BSTD>
 
-                                                <BSTD>
-                                                    
-                                                      <BSInput InputType="InputType.Select" @bind-Value="d.EestaEam">
-                                                            <option value="true">Activar</option>  
-                                                            <option value="false">Desactivar</option> 
-                                                       </BSInput>
-                                                      <BSFeedback For="@(() => d.EestaEam)" ValidMessage="Correcto." />
+                <BSTD>
+                    <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
+                    <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="Correcto." />
+                </BSTD>
 
-                                                </BSTD>
-                                                <BSTD>                                                                            
-                                                 <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))" Target="History"><i class="oi oi-circle-check"></i></BSButton>
-                                                    <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar" Target="History"><i class="oi oi-circle-x"></i></BSButton>
+                <BSTD>
+                    <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
+                    <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="Correcto." />
+                </BSTD>
 
-                                             </BSTD>
-                                        
-                                            }
-                                             else
-                                            {
-                                                <BSTD>
-                                                    <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
-                                                      <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="Correcto." />
-                                                    @d.EnombreEam                                    
-                                                </BSTD>
-                                            
-                                        
-                                            <BSTD>
-                                                    <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
-                                                    <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="Correcto." />
-                                            </BSTD>
-                                            <BSTD>
-                                                    @d.EdescriEam
-                                            </BSTD>
-                                            <BSTD>
-                                                @if(d.EestaEam==true)
-                                                {
-                                                    <p>Activo</p>
-                                                }
-                                                else
-                                                {
-                                                    <p>Inactivo</p>
-                                                }
-                                            </BSTD>
-                                            
-                                            <BSTD>                                               
-                                                 <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdEquipo))" Target="History"><i class="oi oi-pencil"></i></BSButton>
-                                            </BSTD>
-                                            }
-                                            </BSTR> 
-                                        }
-                                     }
-                              }
-                            
-                            
-                            else               
+                <BSTD>
+                    <BSInput InputType="InputType.Select" @bind-Value="d.EestaEam">
+                        <option value="true">Activar</option>
+                        <option value="false">Desactivar</option>
+                    </BSInput>
+                    <BSFeedback For="@(() => d.EestaEam)" ValidMessage="Correcto." />
+                </BSTD>
+
+                <BSTD>
+                    <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))"><i class="oi oi-circle-check"></i></BSButton>
+                    <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar"><i class="oi oi-circle-x"></i></BSButton>
+                </BSTD>
+            }
+            else
+            {
+                <BSTD>@d.EnombreEam</BSTD>
+                <BSTD>@d.EcodEquiEam</BSTD>
+                <BSTD>@d.EdescriEam</BSTD>
+                <BSTD>
+                    @if (d.EestaEam)
+                    {
+                        <p>Activo</p>
+                    }
+                    else
+                    {
+                        <p>Inactivo</p>
+                    }
+                </BSTD>
+                <BSTD>
+                    <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdEquipo))">
+                        <i class="oi oi-pencil"></i>
+                    </BSButton>
+                </BSTD>
+            }
+        </BSTR>
+    }
+}
+else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
+{
+    <tr><td colspan="6"><em>No hay registros disponibles.</em></td></tr>
+}
+
+
+
+
+                            else
                             {
                                 @foreach (var d in MaestraData.equiposlinea)
                                 {
-                                  <BSTR>
-                       @*         <BSTD>@d.IdEquipo</BSTD>*@
-                                @* <BSTD>@d.Centro</BSTD> *@ <BSTD>@d.Linea</BSTD>
-                                @* <BSTD>@d.Division</BSTD> *@ <BSTD>@d.Linea</BSTD>
+                                    <BSTR>
+                               @* <BSTD>@d.IdEquipo</BSTD> *@
+                                @* <BSTD>@d.Centro</BSTD> <BSTD>@d.Linea</BSTD> *@
+                                @* <BSTD>@d.Division</BSTD> <BSTD>@d.Linea</BSTD> *@
                                 <BSTD>@d.Linea</BSTD>
-                                            @if(idequipoeditar==d.IdEquipo)
-                                            {
-                                                <BSTD>
-                                                    
-                                                      <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
-                                                      <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="Correcto." />
-
-                                                </BSTD> 
-                                                
-                                                <BSTD>
-                                                    
-                                                      <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
-                                                      <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="Correcto." />
-
-                                                </BSTD>  
-
-                                                <BSTD>
-                                                    
-                                                      <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
-                                                      <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="Correcto." />
-
-                                                </BSTD>
-
-                                                <BSTD>
-                                                    
-                                                      <BSInput InputType="InputType.Select" @bind-Value="d.EestaEam">
-                                                            <option value="true">Activar</option>  
-                                                            <option value="false">Desactivar</option> 
-                                                       </BSInput>
-                                                      <BSFeedback For="@(() => d.EestaEam)" ValidMessage="Correcto." />
-
-                                                </BSTD>
-                                                <BSTD>                                                                            
-                                                 <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))" Target="History"><i class="oi oi-circle-check"></i></BSButton>
-                                                 <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar" Target="History"><i class="oi oi-circle-x"></i></BSButton>
-                                            </BSTD>
-                                        
-                                            }
-                                             else
-                                            {
-                                                <BSTD>
-                                                    @d.EnombreEam                                   
-                                                </BSTD>
-                                            
-                                        
+                                        @if (idequipoeditar == d.IdEquipo)
+                                        {
                                             <BSTD>
-                                                    @d.EcodEquiEam
+
+                                                <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
+                                                <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="Correcto." />
+
+                                            </BSTD>
+
+                                            <BSTD>
+
+                                                <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
+                                                <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="Correcto." />
+
+                                            </BSTD>
+
+                                            <BSTD>
+
+                                                <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
+                                                <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="Correcto." />
+
+                                            </BSTD>
+
+                                            <BSTD>
+
+                                                <BSInput InputType="InputType.Select" @bind-Value="d.EestaEam">
+                                                    <option value="true">Activar</option>
+                                                    <option value="false">Desactivar</option>
+                                                </BSInput>
+                                                <BSFeedback For="@(() => d.EestaEam)" ValidMessage="Correcto." />
+
                                             </BSTD>
                                             <BSTD>
-                                                    @d.EdescriEam
+                                                <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))" Target="History"><i
+                                                        class="oi oi-circle-check"></i></BSButton>
+                                                <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar" Target="History"><i
+                                                        class="oi oi-circle-x"></i></BSButton>
+                                            </BSTD>
+
+                                        }
+                                        else
+                                        {
+                                            <BSTD>
+                                                @d.EnombreEam
+                                            </BSTD>
+
+
+                                            <BSTD>
+                                                @d.EcodEquiEam
                                             </BSTD>
                                             <BSTD>
-                                                @if(d.EestaEam==true)
+                                                @d.EdescriEam
+                                            </BSTD>
+                                            <BSTD>
+                                                @if (d.EestaEam == true)
                                                 {
                                                     <p>Activo</p>
                                                 }
@@ -377,45 +354,47 @@ else
                                                     <p>Inactivo</p>
                                                 }
                                             </BSTD>
-                                            
-                                            <BSTD>                                               
-                                                 <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdEquipo))" Target="History"><i class="oi oi-pencil"></i></BSButton>
+
+                                            <BSTD>
+                                                <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdEquipo))"
+                                                    Target="History"><i class="oi oi-pencil"></i></BSButton>
                                             </BSTD>
-                                            }
-                                            </BSTR> 
-                            
+                                        }
+                                    </BSTR>
+
+                                }
                             }
-                        }
 
-                    </BSTBody>
+                        </BSTBody>
 
-                </BSTable>
-            </BSContainer>
+                    </BSTable>
+                </BSContainer>
+            }
+            else if (dataIsLoaded == 1 && MaestraData.equiposlinea.Count() == 0)
+            {
+                <div class="loader"></div>
+            }
+            else if (dataIsLoaded == 2 && MaestraData.equiposlinea.Count() == 0)
+            {
+                <p>No hay equipos.</p>
+            }
+
         }
-        else if (dataIsLoaded == 1 && MaestraData.equiposlinea.Count() == 0)
+        else
         {
-            <div class="loader"></div>
+            <BSInputRadio CheckedValue="@(1)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success"
+                IsOutlined="true">
+                Agregar Equipos
+                <span class="oi oi-plus"></span>
+            </BSInputRadio>
+            <BSInputRadio @bind-Value="tipo" CheckedValue="@(2)" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success"
+                IsOutlined="true">
+                Consultar Equipos
+                <span class="oi oi-magnifying-glass"></span>
+            </BSInputRadio>
         }
-        else if (dataIsLoaded == 2 && MaestraData.equiposlinea.Count() == 0)
-        {
-                <div style="text-align: center; padding: 20px; font-size: 18px; color: rgb(102, 101, 101);">
-                    <p>No hay equipos.</p>
-                </div>
-        }
+    }
 
-    }
-    else
-    {
-        @* <BSInputRadio CheckedValue="@(1)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-            Agregar Equipos
-            <span class="oi oi-plus"></span>
-        </BSInputRadio>
-        <BSInputRadio @bind-Value="tipo" CheckedValue="@(2)" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-            Consultar Equipos
-            <span class="oi oi-magnifying-glass"></span>
-        </BSInputRadio> *@
-    }
-}
 
 
 
@@ -429,46 +408,41 @@ else
 
     private string EquipoFiltro { get; set; } = "";
     private int tipo { get; set; } = 0;
-    private int idequipoeditar { get; set; } = 0;//id para mostar los campos de edicion
-    private string mensaje = "", result = "";//resultado del save;
+    private int idequipoeditar { get; set; } = 0;//id para mostrar los campos de edición
+    private string mensaje = "", result = "";//resultado del save
 
     int dataIsLoaded = 0;
     string _message;
-    //Alerts Alertas = new Alerts();
-    private NotifiRadzen Notificar = new NotifiRadzen();//Logic para crear las noyificaciones radzen
+    private NotifiRadzen Notificar = new NotifiRadzen(); //Logic para crear las notificaciones radzen
 
     EquipoDTO EquipoForm = new EquipoDTO();
     private List<Claim> claims { get; set; }
 
     private async Task CreateData()
-
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        claims = Enumerable.ToList(user.Claims);
-
+        claims = user.Claims.ToList();
     }
+
     protected async Task Get()
     {
         tipo = 2;
-        if (dataIsLoaded != 1)
-        {
-            dataIsLoaded = 1;
-            await MaestraData.GetEquiposxlinea(IdLin.ToString());
-            dataIsLoaded = 2;
-        }
+        dataIsLoaded = 1;
+        await MaestraData.GetEquiposPorLinea(IdLin.ToString());
+        dataIsLoaded = 2;
     }
 
-        protected async Task BuscarDivision(ChangeEventArgs e)
+    protected async Task BuscarDivision(ChangeEventArgs e)
     {
-        if (!string.IsNullOrWhiteSpace(e.Value?.ToString()) && int.TryParse(e.Value.ToString(), out int IdCentro))
+        if (!string.IsNullOrWhiteSpace(e.Value?.ToString()) && int.TryParse(e.Value.ToString(), out int selectedCentro))
         {
-
+            IdCent = selectedCentro;
             try
             {
-                if (IdCentro != 0)
+                if (IdCent != 0)
                 {
-                    MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(IdCentro);
+                    MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(IdCent);
                 }
             }
             catch (Exception ex)
@@ -484,14 +458,14 @@ else
 
     protected async Task BuscarLinea(ChangeEventArgs e)
     {
-        if (!string.IsNullOrWhiteSpace(e.Value?.ToString()) && int.TryParse(e.Value.ToString(), out int IdLin))
+        if (!string.IsNullOrWhiteSpace(e.Value?.ToString()) && int.TryParse(e.Value.ToString(), out int selectedDivision))
         {
-
+            IdDiv = selectedDivision;
             try
             {
-                if (IdLin != 0)
+                if (IdDiv != 0)
                 {
-                    MaestraData.lineas = await MaestraData.ObtenerLasLineasPorDivision(IdLin);
+                    MaestraData.lineas = await MaestraData.ObtenerLasLineasPorDivision(IdDiv);
                 }
             }
             catch (Exception ex)
@@ -505,23 +479,25 @@ else
         }
     }
 
-
     protected override async Task OnInitializedAsync()
     {
         await CreateData();
-        await MaestraData.GetCentrosxEmpresa("All" + claims[10].Value);
+        if (claims != null && claims.Count > 10)
+        {
+            await MaestraData.GetCentrosxEmpresa("All" + claims[10].Value);
+        }
     }
+
     protected async Task SaveEquipo(EditContext e)
     {
         if (e.Validate())
         {
-
             try
             {   
                 EquipoForm.Efecha = DateTime.Now;
                 EquipoForm.IdLinea = IdLin;
                 EquipoForm.EestaEam = true;
-                EquipoForm.EcodEquiEam = EquipoForm.EcodEquiEam.Replace(" ", String.Empty);
+                EquipoForm.EcodEquiEam = EquipoForm.EcodEquiEam.Replace(" ", string.Empty);
                 mensaje = await MaestraData.AddEquipo(EquipoForm);
 
                 if (mensaje == "Registro Exitoso")
@@ -533,14 +509,10 @@ else
                     NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
                 }
                 Reset();
-
-
             }
             catch (Exception ex)
             {
-                NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo",
-                ex.Message));
-
+                NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo", ex.Message));
             }
         }
     }
@@ -549,21 +521,26 @@ else
     {
         idequipoeditar = id;
     }
+
     async Task Cancelar()
     {
         idequipoeditar = 0;
     }
+
     async Task Editar(EquipoEamDTO equipo)
     {
         try
         {
-            EquipoDTO eq = new EquipoDTO();
-            eq.IdEquipo = equipo.IdEquipo;
-            eq.IdLinea = equipo.IdLinea;
-            eq.EcodEquiEam = equipo.EcodEquiEam;
-            eq.EdescriEam = equipo.EdescriEam;
-            eq.EestaEam = equipo.EestaEam;
-            eq.EnombreEam = equipo.EnombreEam;
+            EquipoDTO eq = new EquipoDTO
+            {
+                IdEquipo = equipo.IdEquipo,
+                IdLinea = equipo.IdLinea,
+                EcodEquiEam = equipo.EcodEquiEam,
+                EdescriEam = equipo.EdescriEam,
+                EestaEam = equipo.EestaEam,
+                EnombreEam = equipo.EnombreEam,
+                Efecha = DateTime.Now
+            };
 
             mensaje = await MaestraData.AddEquipo(eq);
 
@@ -573,24 +550,28 @@ else
             }
             else
             {
-                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+                NotificationService.Notify(Notificar.Notificacion("exito", "Se añadió Exitosamente", ""));
             }
 
             idequipoeditar = 0;
         }
         catch (Exception ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo",
-            ex.Message));
+            NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo", ex.Message));
         }
-
     }
-
 
     protected async Task Reset()
     {
         EquipoForm = new EquipoDTO();
         IdCent = 0;
     }
+    
+    private IEnumerable<EquipoEamDTO> EquiposFiltrados =>
+    string.IsNullOrWhiteSpace(EquipoFiltro) || EquipoFiltro.Length <= 2
+    ? MaestraData.equiposlinea
+    : MaestraData.equiposlinea.Where(a => a.EcodEquiEam.Contains(EquipoFiltro, StringComparison.OrdinalIgnoreCase));
+
     }
+    
 
