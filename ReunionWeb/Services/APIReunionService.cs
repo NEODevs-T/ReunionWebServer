@@ -175,7 +175,6 @@ namespace ReunionWeb.Services
             if (result != null)
                 equiposlinea = result;
         }
-
         public async Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area)
         {
             var url = $"http://neo.paveca.com.ve/ReunionApi/AsistenciaReu/GetPorcentajeAsistenciaDiaria?fechaInicio={fechaInicio}&fechaFin={fechaFin}&empresa={empresa}&area={area}";

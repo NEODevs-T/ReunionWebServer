@@ -32,6 +32,7 @@ namespace ReunionWeb.Services
         Task GetResReu();
         Task GetDivision(string centro, string div);
         Task GetAsistencia( string div, string empresa);
+        Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area);
         Task GetLineas( int div);
         Task GetStatsAsist( string div, string empresa, string f1,string f2);
         Task GetListaAsist( string div, string empresa, string f1,string f2);
