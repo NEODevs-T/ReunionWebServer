@@ -1,13 +1,20 @@
+using System;
+using System.Collections.Generic;
+
 namespace ReunionWeb.DTOs
 { 
-    public partial class AsistenReuPorcetanjeDTO
+public class AsistenReuPorcetanjeDTO
 {
-    public int IdCargoR { get; set; }
-
+    public string Nombre { get; set; }
     public int ReunionesProgramadas { get; set; }
-
     public int ReunionesAsistidas { get; set; }
-
-    public double  PorcentajeAsistencia { get; set; }
+    public double PorcentajeAsistencia { get; set; }
 }
+
+public class PorcentajeAsistenciaDiariaResponseDTO
+{
+    public double PorcentajeGlobal { get; set; }
+    public List<AsistenReuPorcetanjeDTO> DetallePorCargo { get; set; }
+}
+
 }

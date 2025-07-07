@@ -18,10 +18,9 @@ namespace ReunionWeb.Services
         List<AsistenReu> asistenreus { get; set; }
         List<CargoReu> cargoreus { get; set; }
         List<StatsAsisDto> StatsAsisDtos { get; set; }
-         List<EquipoEam> equipos { get; set; }
-         List<EquipoEam> equiposlinea { get; set; }
+        List<EquipoEam> equipos { get; set; }
+        List<EquipoEam> equiposlinea { get; set; }
         List<CalendarioTrabajoDTO> calentrabajo { get; set; }
-        List<AsistenReuPorcetanjeDTO> porcentaje { get; set; }
         Task GetEquiposEAM(string centro);//api en lineas
         Task GetEquiposCentro(string centro);//api en empresa
         Task GetCentros(string centro);
@@ -31,14 +30,17 @@ namespace ReunionWeb.Services
         Task Getksf();
         Task GetResReu();
         Task GetDivision(string centro, string div);
-        Task GetAsistencia( string div, string empresa);
-        Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area);
-        Task GetLineas( int div);
-        Task GetStatsAsist( string div, string empresa, string f1,string f2);
-        Task GetListaAsist( string div, string empresa, string f1,string f2);
+        Task GetAsistencia(string div, string empresa);
+        Task GetLineas(int div);
+        Task GetStatsAsist(string div, string empresa, string f1, string f2);
+        Task GetListaAsist(string div, string empresa, string f1, string f2);
         Task GetTrabajosCalendario(string pais, string centro, string division);
         Task<string> Postasistencia(List<AsistenReu> asisten);
         Task<string> PostEquipo(EquipoDTO equipo);
+        Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area);
+        List<AsistenReuPorcetanjeDTO> porcentaje { get; }
+        double PorcentajeGlobal { get; }
+        
 
     }
 }

@@ -28,7 +28,10 @@ namespace ReunionWeb.Services
         public List<EquipoEam> equipos { get; set; } = new List<EquipoEam>();
         public List<EquipoEam> equiposlinea { get; set; } = new List<EquipoEam>();
         public List<CalendarioTrabajoDTO> calentrabajo { get; set; } = new List<CalendarioTrabajoDTO>();
-        public List<AsistenReuPorcetanjeDTO> porcentaje { get; set; } = new List<AsistenReuPorcetanjeDTO>();
+        public List<AsistenReuPorcetanjeDTO> porcentaje { get; private set; } = new();
+        public double PorcentajeGlobal { get; private set; }
+
+
 
         public APIReunionService(HttpClient http, NavigationManager navigationManager)
         {
@@ -177,14 +180,34 @@ namespace ReunionWeb.Services
         }
         public async Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area)
         {
-            var url = $"http://neo.paveca.com.ve/ReunionApi/AsistenciaReu/GetPorcentajeAsistenciaDiaria?fechaInicio={fechaInicio}&fechaFin={fechaFin}&empresa={empresa}&area={area}";
-            var result = await _http.GetFromJsonAsync<List<AsistenReuPorcetanjeDTO>>(url);
-            if (result != null)
-                porcentaje = result;
+            try
+            {
+                var url = $"http://neo.paveca.com.ve/apineomaster/api/AsistenciaReu/GetPorcentajeAsistenciaDiaria" +
+                $"?fechaInicio={Uri.EscapeDataString(fechaInicio)}" +
+                $"&fechaFin={Uri.EscapeDataString(fechaFin)}" +
+                $"&empresa={Uri.EscapeDataString(empresa)}" +
+                $"&area={Uri.EscapeDataString(area)}";
+
+                var result = await _http.GetFromJsonAsync<PorcentajeAsistenciaDiariaResponseDTO>(url);
+
+                if (result != null)
+                {
+                    PorcentajeGlobal = result.PorcentajeGlobal;
+                    porcentaje = result.DetallePorCargo ?? new List<AsistenReuPorcetanjeDTO>();
+                }
+                else
+                {
+                    PorcentajeGlobal = 0;
+                    porcentaje = new List<AsistenReuPorcetanjeDTO>();
+                }
+            }
+            catch (Exception ex)
+            {
+                PorcentajeGlobal = 0;
+                porcentaje = new List<AsistenReuPorcetanjeDTO>();
+                throw new Exception("Error al obtener datos de asistencia: " + ex.Message);
+            }
         }
-
-
-
 
         ////Version local**********************************************************************************************************************
         ////Conversion
