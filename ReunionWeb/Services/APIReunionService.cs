@@ -29,6 +29,7 @@ namespace ReunionWeb.Services
         public List<EquipoEam> equiposlinea { get; set; } = new List<EquipoEam>();
         public List<CalendarioTrabajoDTO> calentrabajo { get; set; } = new List<CalendarioTrabajoDTO>();
         public List<AsistenReuPorcetanjeDTO> porcentaje { get; private set; } = new();
+        public List<CargoReuDTO> cargos { get; set; } = new List<CargoReuDTO>();
         public double PorcentajeGlobal { get; private set; }
 
 
@@ -178,6 +179,15 @@ namespace ReunionWeb.Services
             if (result != null)
                 equiposlinea = result;
         }
+        public async Task<List<CargoReuDTO>> GetCargosReu()
+        {
+            var result = await _http.GetFromJsonAsync<List<CargoReuDTO>>("http://neo.paveca.com.ve/apineomaster/api/AsistenciaReu/GetCargoReuDiaria");
+
+            if (result != null)
+                cargos = result;
+
+            return result ?? new List<CargoReuDTO>();
+        }        
         public async Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area)
         {
             try

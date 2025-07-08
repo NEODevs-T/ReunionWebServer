@@ -40,7 +40,7 @@ namespace ReunionWeb.Services
         Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area);
         List<AsistenReuPorcetanjeDTO> porcentaje { get; }
         double PorcentajeGlobal { get; }
-        
+        Task<List<CargoReuDTO>> GetCargosReu();
 
     }
 }

@@ -110,47 +110,40 @@ else if (registros != null)
     private List<AsistenReuPorcetanjeDTO> registrosFiltrados = new();
     private List<AsistenReuPorcetanjeDTO> registros;
     private double porcentajeGlobal = 0;
-
-    private List<Empresa> empresas = new()
-    {
-        new Empresa { Id = "PAVECA", Nombre = "PAVECA" },
-        new Empresa { Id = "CHEMPRO", Nombre = "CHEMPRO"},
-        new Empresa { Id = "PANASA", Nombre = "PANASA"},
-        new Empresa { Id = "PAINSA", Nombre = "PAINSA"},
-        new Empresa { Id = "PAPISA", Nombre = "PAPISA"},
-        new Empresa { Id = "BIOPACOL", Nombre = "BIOPACOL"},
-        new Empresa { Id = "TTL", Nombre = "TTL"}
-    };
-
-    private List<Area> todasLasAreas = new()
-    {
-        new Area { Id = "Comedor", Nombre = "Comedor"},
-        new Area { Id = "Conversión", Nombre = "Conversión"},
-        new Area { Id = "Efluentes", Nombre = "Efluentes"},
-        new Area { Id = "Generación de Energía", Nombre = "Generación de Energía"},
-        new Area { Id = "Molinos", Nombre = "Molinos"},
-        new Area { Id = "PPPD", Nombre = "PPPD" },
-        new Area { Id = "Planta de Chempro", Nombre = "Planta de Chempro"},
-        new Area { Id = "Cogeneración", Nombre = "Cogeneración"},
-        new Area { Id = "Conversión PANASA", Nombre = "Conversión PANASA"},
-        new Area { Id = "Producción", Nombre = "Producción"},
-        new Area { Id = "K-10", Nombre = "K-10"},
-        new Area { Id = "K-11", Nombre = "K-11"},
-        new Area { Id = "K-12", Nombre = "K-12"},
-        new Area { Id = "K-129", Nombre = "K-129"},
-        new Area { Id = "K-13", Nombre = "K-13"},
-        new Area { Id = "K-130", Nombre = "K-130"},
-        new Area { Id = "K-131", Nombre = "K-131"},
-        new Area { Id = "K-132", Nombre = "K-132"},
-        new Area { Id = "Converting", Nombre = "Converting"},
-        new Area { Id = "Mill", Nombre = "Mill"}
-    };
-
+    private List<Empresa> empresas = new();
     private List<Area> areas = new();
+    private List<CargoReuDTO> cargosReunion = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        cargosReunion = await APIReunionService.GetCargosReu();
+        empresas = cargosReunion
+            .Select(c => c.Crempresa)
+            .Distinct()
+            .Select(e => new Empresa { Id = e, Nombre = e})
+            .ToList();
         areas = new List<Area>();
+    }
+
+        private void OnEmpresaChanged(object value)
+    {
+        empresa = value?.ToString() ?? "";
+        area = "";
+
+        if (string.IsNullOrEmpty(empresa))
+        {
+            areas = new List<Area>();
+        }
+        else
+        {
+            areas = cargosReunion
+                .Where(c => c.Crempresa == empresa)
+                .Select(c => c.Crarea)
+                .Distinct()
+                .Select(a => new Area { Id = a, Nombre = a})
+                .ToList();
+        }
+        StateHasChanged();
     }
 
     private async Task Consultar()
@@ -189,12 +182,6 @@ else if (registros != null)
             registrosFiltrados = registros?.Where(x => x.Nombre.Contains(filtroCargo, StringComparison.OrdinalIgnoreCase)).ToList()
                                 ?? new List<AsistenReuPorcetanjeDTO>();
         }
-    }
-
-    private void OnEmpresaChanged(object value)
-    {
-        area = "";
-        areas = todasLasAreas.ToList(); // Aquí puedes aplicar lógica para filtrar por empresa si lo deseas
     }
 
     private string GetColor(double porcentaje)
