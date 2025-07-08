@@ -12,9 +12,6 @@ namespace ReunionWeb
         private readonly ILocalStorageService _localStorage;
         private readonly ProtectedLocalStorage _DataLocal;
         private readonly HttpClient _http;
-       
-
-   
 
         public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient http, ProtectedLocalStorage DataLocal)
         {
@@ -24,27 +21,35 @@ namespace ReunionWeb
         }
 
 
-        public override async  Task<AuthenticationState>  GetAuthenticationStateAsync()
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-           string token = await _localStorage.GetItemAsStringAsync("ReunionWebToken");
-           
-
-            var identity = new ClaimsIdentity();
-            _http.DefaultRequestHeaders.Authorization = null;
-
-            if (!string.IsNullOrEmpty(token))
+            try
             {
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-                _http.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+                string token = await _localStorage.GetItemAsStringAsync("ReunionWebToken");
+
+
+                var identity = new ClaimsIdentity();
+                _http.DefaultRequestHeaders.Authorization = null;
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                    _http.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+                }
+
+                var user = new ClaimsPrincipal(identity);
+                var state = new AuthenticationState(user);
+
+                NotifyAuthenticationStateChanged(Task.FromResult(state));
+                return state;
             }
-
-            var user = new ClaimsPrincipal(identity);
-            var state = new AuthenticationState(user);
-
-            NotifyAuthenticationStateChanged(Task.FromResult(state));
-            return state;
-
+            catch
+            {
+                await _localStorage.RemoveItemAsync("OdtValue");
+                await _localStorage.RemoveItemAsync("ReunionWebToken");
+                return null;
+            }
         }
 
         public static IEnumerable<Claim>ParseClaimsFromJwt(string jwt)
@@ -63,6 +68,5 @@ namespace ReunionWeb
             }
             return Convert.FromBase64String(base64);
         }
-
     }
 }

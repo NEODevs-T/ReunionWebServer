@@ -205,8 +205,7 @@
 
                     carga = false;
 
-                }else if (ValidarToken == "null")
-                {
+                }else if (ValidarToken == "null"){
                     if(idioma == 1)
                     {
                         mensaje = "Este usuario no está registrado en este proyecto.";
@@ -224,15 +223,20 @@
                     } else if(idioma == 2){
                         mensaje = "Loading...";
                     }
-
+                    
                     Console.WriteLine(ValidarToken);
                     await LocalStorage.SetItemAsync("ReunionWebToken", ValidarToken);
                     var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-                    var userA = authState.User;
-                    claims = Enumerable.ToList(userA.Claims);
+                    if (authState != null){
+                        var userA = authState.User;
+                        claims = Enumerable.ToList(userA.Claims);
+                    }else{
+                        NotificationService.Notify(Notificar.Notificacion("error", "Error Inesperado:", "Intentelo de nuevo mas tarde."));
+                    }
                     user = new UserLoginDto();
                     carga = false;
                     mensaje = ""; 
+
                     NavigationManager.NavigateTo("");
                 }
             }
