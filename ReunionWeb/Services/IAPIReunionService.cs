@@ -37,7 +37,7 @@ namespace ReunionWeb.Services
         Task GetTrabajosCalendario(string pais, string centro, string division);
         Task<string> Postasistencia(List<AsistenReu> asisten);
         Task<string> PostEquipo(EquipoDTO equipo);
-        Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area);
+        Task<PorcentajeAsistenciaDiariaResponseDTO> GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area, List<string> eventosExternos = null);
         List<AsistenReuPorcetanjeDTO> porcentaje { get; }
         double PorcentajeGlobal { get; }
         Task<List<CargoReuDTO>> GetCargosReu();

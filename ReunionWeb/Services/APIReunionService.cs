@@ -188,36 +188,47 @@ namespace ReunionWeb.Services
 
             return result ?? new List<CargoReuDTO>();
         }        
-        public async Task GetPorcentajeAsistenciaDiaria(string fechaInicio, string fechaFin, string empresa, string area)
+
+
+public async Task<PorcentajeAsistenciaDiariaResponseDTO> GetPorcentajeAsistenciaDiaria(
+    string fechaInicio, string fechaFin, string empresa, string area, List<string> eventosExternos = null)
+{
+    try
+    {
+        var baseUrl = "http://neo.paveca.com.ve/apineomaster/api/AsistenciaReu/GetPorcentajeAsistenciaDiaria";
+        var queryParams = new List<string>
         {
-            try
-            {
-                var url = $"http://neo.paveca.com.ve/apineomaster/api/AsistenciaReu/GetPorcentajeAsistenciaDiaria" +
-                $"?fechaInicio={Uri.EscapeDataString(fechaInicio)}" +
-                $"&fechaFin={Uri.EscapeDataString(fechaFin)}" +
-                $"&empresa={Uri.EscapeDataString(empresa)}" +
-                $"&area={Uri.EscapeDataString(area)}";
+            $"fechaInicio={Uri.EscapeDataString(fechaInicio)}",
+            $"fechaFin={Uri.EscapeDataString(fechaFin)}",
+            $"empresa={Uri.EscapeDataString(empresa)}",
+            $"area={Uri.EscapeDataString(area)}"
+        };
 
-                var result = await _http.GetFromJsonAsync<PorcentajeAsistenciaDiariaResponseDTO>(url);
-
-                if (result != null)
-                {
-                    PorcentajeGlobal = result.PorcentajeGlobal;
-                    porcentaje = result.DetallePorCargo ?? new List<AsistenReuPorcetanjeDTO>();
-                }
-                else
-                {
-                    PorcentajeGlobal = 0;
-                    porcentaje = new List<AsistenReuPorcetanjeDTO>();
-                }
-            }
-            catch (Exception ex)
+        if (eventosExternos != null && eventosExternos.Count > 0)
+        {
+            foreach (var evento in eventosExternos)
             {
-                PorcentajeGlobal = 0;
-                porcentaje = new List<AsistenReuPorcetanjeDTO>();
-                throw new Exception("Error al obtener datos de asistencia: " + ex.Message);
+                queryParams.Add($"eventosExternos={Uri.EscapeDataString(evento)}");
             }
         }
+
+        var url = $"{baseUrl}?{string.Join("&", queryParams)}";
+
+        var result = await _http.GetFromJsonAsync<PorcentajeAsistenciaDiariaResponseDTO>(url);
+
+        return result ?? new PorcentajeAsistenciaDiariaResponseDTO
+        {
+            PorcentajeGlobal = 0,
+            DetallePorCargo = new List<AsistenReuPorcetanjeDTO>()
+        };
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("Error al obtener datos de asistencia: " + ex.Message);
+    }
+}
+
+
 
         ////Version local**********************************************************************************************************************
         ////Conversion
