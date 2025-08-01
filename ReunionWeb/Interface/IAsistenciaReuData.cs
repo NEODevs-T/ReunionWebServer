@@ -16,4 +16,7 @@ interface IAsistenciaReuData
     Task<string> Postasistencia(List<AsistenReuDTO> asisten);
     Task<List<StatsAsisDto>> GetStatsAsist(string div, string empresa, string f1, string f2);
     Task<List<AsistenReuDTO>> GetListaAsist(string div, string empresa, string f1, string f2);
+    Task<PorcentajeAsistenciaDiariaResponseDTO> GetPorcentajeAsistenciaDiaria(
+    string fechaInicio, string fechaFin, string empresa, string area,
+    bool diasExcepcionalesLaborables = false, List<string> eventosExternos = null);
 }

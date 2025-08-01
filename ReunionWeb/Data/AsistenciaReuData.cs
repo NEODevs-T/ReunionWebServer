@@ -30,6 +30,8 @@ public class AsistenciaReuData : IAsistenciaReuData
     private readonly IHttpClientFactory _clientFactory;
     public List<AsistenReuDTO> asistenreus { get; set; } = new List<AsistenReuDTO>();
     public List<StatsAsisDto> StatsAsisDtos { get; set; } = new List<StatsAsisDto>();
+    public List<AsistenReuPorcetanjeDTO> asistenreuspor { get; set; } = new List<AsistenReuPorcetanjeDTO>();
+
 
     public async Task<List<StatsAsisDto>> GetStatsAsist(string div, string empresa, string f1, string f2)
     {
@@ -57,4 +59,30 @@ public class AsistenciaReuData : IAsistenciaReuData
         }
         return mens;
     }
+
+    public async Task<PorcentajeAsistenciaDiariaResponseDTO> GetPorcentajeAsistenciaDiaria(
+    string fechaInicio, string fechaFin, string empresa, string area,
+    bool diasExcepcionalesLaborables = false, List<string> eventosExternos = null)
+    {
+        var queryParams = new List<string>
+        {
+            $"fechaInicio={Uri.EscapeDataString(fechaInicio)}",
+            $"fechaFin={Uri.EscapeDataString(fechaFin)}",
+            $"empresa={Uri.EscapeDataString(empresa)}",
+            $"area={Uri.EscapeDataString(area)}",
+            $"diasExcepcionalesLaborables={diasExcepcionalesLaborables.ToString().ToLower()}"
+        };
+        if (eventosExternos != null && eventosExternos.Count > 0)
+        {
+            foreach (var evento in eventosExternos)
+            {
+                queryParams.Add($"eventosExternos={Uri.EscapeDataString(evento)}");
+            }
+        }
+        url = $"{BaseUrl}/GetPorcentajeAsistenciaDiaria?{string.Join("&", queryParams)}";
+        cliente = _clientFactory.CreateClient();
+        var response = await cliente.GetFromJsonAsync<PorcentajeAsistenciaDiariaResponseDTO>(url);
+        return response ?? new PorcentajeAsistenciaDiariaResponseDTO();
+    }
+
 }
