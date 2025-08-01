@@ -44,8 +44,9 @@ public class APIReunionService : IAPIReunionService
         public List<EquipoEamDTO> equipos { get; set; } = new List<EquipoEamDTO>();
         public List<EquipoEamDTO> equiposlinea { get; set; } = new List<EquipoEamDTO>();
         public List<CalendarioTrabajoDTO> calentrabajo { get; set; } = new List<CalendarioTrabajoDTO>();
-
         public RegistroCambiosDTO listaRegistro { get; set; } //= new RegistroCambiosDTO(); 
+        public List<AsistenReuPorcetanjeDTO> porcentaje { get; private set; } = new();
+        public double PorcentajeGlobal { get; private set; }
 
 
         // **-------> PROPIEDADES DE JAVIER <------**
@@ -199,6 +200,44 @@ public class APIReunionService : IAPIReunionService
                 cliente = _clientFactory.CreateClient();
                 return await cliente.GetFromJsonAsync<List<EquipoEamDTO>>(url) ?? new List<EquipoEamDTO>();
         }
+
+        public async Task<PorcentajeAsistenciaDiariaResponseDTO> GetPorcentajeAsistenciaDiaria(
+    string fechaInicio, string fechaFin, string empresa, string area, List<string> eventosExternos = null)
+{
+    try
+    {
+        var baseUrl = "http://neo.paveca.com.ve/apineomaster/api/AsistenciaReu/GetPorcentajeAsistenciaDiaria";
+        var queryParams = new List<string>
+        {
+            $"fechaInicio={Uri.EscapeDataString(fechaInicio)}",
+            $"fechaFin={Uri.EscapeDataString(fechaFin)}",
+            $"empresa={Uri.EscapeDataString(empresa)}",
+            $"area={Uri.EscapeDataString(area)}"
+        };
+
+        if (eventosExternos != null && eventosExternos.Count > 0)
+        {
+            foreach (var evento in eventosExternos)
+            {
+                queryParams.Add($"eventosExternos={Uri.EscapeDataString(evento)}");
+            }
+        }
+
+        var url = $"{baseUrl}?{string.Join("&", queryParams)}";
+
+        var result = await _http.GetFromJsonAsync<PorcentajeAsistenciaDiariaResponseDTO>(url);
+
+        return result ?? new PorcentajeAsistenciaDiariaResponseDTO
+        {
+            PorcentajeGlobal = 0,
+            DetallePorCargo = new List<AsistenReuPorcetanjeDTO>()
+        };
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("Error al obtener datos de asistencia: " + ex.Message);
+    }
+}
 
 
 
