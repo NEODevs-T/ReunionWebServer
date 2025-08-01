@@ -36,4 +36,9 @@ public class CargoReuData : ICargoReuData
         return cargoreuss = await cliente.GetFromJsonAsync<List<CargoReuDTO>>(url) ?? new List<CargoReuDTO>();
     }
 
+    public async Task<List<CargoReuDTO>> GetCargosReunion()
+    {
+        return await _http.GetFromJsonAsync<List<CargoReuDTO>>("http://neo.paveca.com.ve/apineomaster/api/AsistenciaReu/GetCargoReuDiaria");
+    }
+
 }

@@ -61,8 +61,7 @@ public class AsistenciaReuData : IAsistenciaReuData
     }
 
     public async Task<PorcentajeAsistenciaDiariaResponseDTO> GetPorcentajeAsistenciaDiaria(
-    string fechaInicio, string fechaFin, string empresa, string area,
-    bool diasExcepcionalesLaborables = false, List<string> eventosExternos = null)
+    string fechaInicio, string fechaFin, string empresa, string area, List<string> eventosExternos = null)
     {
         var queryParams = new List<string>
         {
@@ -70,7 +69,6 @@ public class AsistenciaReuData : IAsistenciaReuData
             $"fechaFin={Uri.EscapeDataString(fechaFin)}",
             $"empresa={Uri.EscapeDataString(empresa)}",
             $"area={Uri.EscapeDataString(area)}",
-            $"diasExcepcionalesLaborables={diasExcepcionalesLaborables.ToString().ToLower()}"
         };
         if (eventosExternos != null && eventosExternos.Count > 0)
         {
@@ -86,3 +84,4 @@ public class AsistenciaReuData : IAsistenciaReuData
     }
 
 }
+
