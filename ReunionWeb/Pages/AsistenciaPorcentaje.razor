@@ -34,10 +34,14 @@
             <RadzenDropDown @bind-Value="area" Data="@areas" TextProperty="Nombre" ValueProperty="Id" Style="width: 100%;" Placeholder="Seleccione un centro" Disabled="@((string.IsNullOrEmpty(empresa)) || !areas.Any())" />
         </RadzenColumn>
         <RadzenColumn Width="300px">
-        <RadzenLabel Text="Excluir los días no laborables" />
-        <RadzenCheckBox @bind-Value="diasExcepcionalesLaborables"
-                    TValue="bool"
-                    Change="@(args => AbrirDialogoDiasNoLaborables(args))" />
+            <RadzenLabel Text="Excluir los días no laborables" />
+            <RadzenButton
+            Text="@((diasExcepcionalesLaborables ? "✔" : "✖") + " Días no laborables")"
+            ButtonStyle="ButtonStyle.Light"
+            Style="width: 80%; background-color: #28a745; color: white;"
+            Size="ButtonSize.Small"
+            Icon="event_busy"
+            Click="@(() => AbrirDialogoDiasNoLaborables(!diasExcepcionalesLaborables))" />
         </RadzenColumn>
         <RadzenColumn Width="150px" Style="display: flex; align-items: flex-start; padding-top: 30px;">
             <RadzenButton Text="Consultar"
@@ -45,7 +49,7 @@
                   Style="width: 100%; background-color: #28a745; color: white;"
                   Icon="search"
                   Disabled="@(fechaInicio > fechaFin || fechaInicio == default || fechaFin == default || string.IsNullOrEmpty(empresa) || string.IsNullOrEmpty(area))" />
-            </RadzenColumn>
+        </RadzenColumn>
         </RadzenRow>
     </RadzenTemplateForm>
 @if (dataIsLoaded == 1)
@@ -61,6 +65,11 @@
                    Placeholder="Buscar cargo..."
                    Style="margin:15px 0 10px 0; width:250px;"
                    Change="@(args => FiltrarCargo())" />
+    <RadzenButton Text="Buscar Cargo"
+                    Icon="search"
+                    ButtonStyle="ButtonStyle.Secondary"
+                    Style="margin-bottom: 10px;"
+                    Click="FiltrarCargo" />
 }
 @if (registros != null && registros.Any())
 {
