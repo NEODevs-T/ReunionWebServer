@@ -147,9 +147,10 @@
                 </BSCarouselItem>
 
                 <BSCarouselItem Interval="0">
-                    <img src="./images/Mapa.png" width="100%" height="90%"/>
-
+                    <img src="./images/Mapa_PAVECA.png" class="carousel-image" />
                 </BSCarouselItem>
+                
+                
             }
 
     </BSCarousel>
@@ -220,9 +221,10 @@
         Reu. Quincenal: Para los planes de accion derivados de la reunion quincenal y cualquier responsable	
         Auditorias: Para los planes de accion derivados de las Auditorias y cualquier responsable	
         ESD: Para los planes de accion derivados de los equipos de solucion de discrepancias y cualquier responsable</p>	*@
-    </div>			
+    </div>
 
 }
+
 @code{
         private List<Claim> claims { get; set; }
         private string Pais { get; set; } = ""; //pais
@@ -256,4 +258,5 @@
             int _idPais = Int32.Parse(user.FindFirst(c => c.Type == "IdPais")?.Value ?? "0");
             return _idPais;
         }
+        
     }
