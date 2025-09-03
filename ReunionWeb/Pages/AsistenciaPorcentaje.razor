@@ -145,16 +145,26 @@
     private double porcentajeGlobal = 0;
     private List<Empresa> empresas = new();
     private List<Area> areas = new();
-    private List<CargoReuDTO> cargosReunion = new();
+    private List<CarReuDTO> cargosReunion = new();
+    private List<Claim> claims;
 
-    protected override async Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        claims = user.Claims.ToList();
+
+        string? idEmpresaUsuario = claims.FirstOrDefault(c => c.Type.Contains("Empresa"))?.Value;
+
         cargosReunion = await CargoReuData.GetCargosReunion();
+
         empresas = cargosReunion
-            .Select(c => c.Crempresa)
+            .Where(c => c.Empresa.Contains(idEmpresaUsuario))
+            .Select(c => c.Empresa)
             .Distinct()
             .Select(e => new Empresa { Id = e, Nombre = e })
             .ToList();
+
         areas = new List<Area>();
     }
 
@@ -170,8 +180,8 @@
         else
         {
             areas = cargosReunion
-                .Where(c => c.Crempresa == empresa)
-                .Select(c => c.Crarea)
+                .Where(c => c.Empresa == empresa)
+                .Select(c => c.Centro)
                 .Distinct()
                 .Select(a => new Area { Id = a, Nombre = a })
                 .ToList();
