@@ -1,4 +1,5 @@
-﻿@page "/historicos"
+﻿@page "/es/historicos"
+@page "/en/historical"
 
 @inject IAsistenciaReuData AsistenciaReuData
 @inject IAvisadorData AvisadorData
@@ -12,7 +13,10 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NotificationService NotificationService
 @inject ILocalStorageService LocalStorage
-<h3>Históricos</h3>
+@using System.Globalization
+@using Radzen.Blazor
+@using ReunionWeb.Resources
+<h3>@ValidationMessages.Historicos</h3>
 
 
 <BSContainer>
@@ -27,9 +31,9 @@
 
         <BSRow>
             <BSCol Column="3" ColumnSmall="2">
-                <BSLabel>Centro</BSLabel>
+                <BSLabel>@ValidationMessages.Centro</BSLabel>
                 <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="IdCentro">
-                    <option value="0"> Seleccione </option>
+                    <option value="0"> @ValidationMessages.Seleccione </option>
                     @foreach (var d in MaestraData.centro)
                     {
                         <option value="@d.IdCentro">@d.Centro</option>
@@ -39,9 +43,9 @@
 
 
             <BSCol Column="3" ColumnSmall="2">
-                <BSLabel>División</BSLabel>
+                <BSLabel>@ValidationMessages.Division</BSLabel>
                 <BSInput InputType="InputType.Select" @bind-Value="IdDiv">
-                    <option value="0">Seleccione</option>
+                    <option value="0">@ValidationMessages.Seleccione</option>
                     @foreach (var d in MaestraData.divisions)
                     {
                         <option value="@d.IdDivision">@d.Ndivision</option>
@@ -52,19 +56,19 @@
 
 
             <BSCol Column="3" ColumnSmall="2">
-                <BSLabel> Desde</BSLabel>
+                <BSLabel> @ValidationMessages.Desde</BSLabel>
                 <BSInput InputType="InputType.Date" @bind-Value="fecha1" />
             </BSCol>
 
             <BSCol Column="3" ColumnSmall="2">
-                <BSLabel>Hasta</BSLabel>
+                <BSLabel>@ValidationMessages.Hasta</BSLabel>
                 <BSInput InputType="InputType.Date" @bind-Value="fecha2" />
             </BSCol>
 
             <BSCol ColumnSmall="1" Column="2">
-                <BSLabel>Código</BSLabel>
+                <BSLabel>@ValidationMessages.Codigo</BSLabel>
                 <BSInput InputType="InputType.Select" @bind-Value="Codigo">
-                    <option value="Todo">Todo</option>
+                    <option value="Todo">@ValidationMessages.Todo</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -74,16 +78,16 @@
             </BSCol>
 
             <BSCol ColumnSmall="2" Column="3">
-                <BSLabel>Estado</BSLabel>
+                <BSLabel>@ValidationMessages.Estado</BSLabel>
                 <BSInput InputType="InputType.Select" @bind-Value="Status">
-                    <option value="Total Pendiente">Total Pendiente</option>
-                    <option value="Todo">Todo</option>
-                    <option value="Pendiente">Pendiente</option>
-                    <option value="Pendiente/Responsable">Pendiente/Responsable</option>
-                    <option value="No Conforme">No Conforme</option>
-                    <option value="Listo">Listo</option>
-                    <option value="Cerrado">Cerrado</option>
-                    <option value="Vencidos">Vencidos</option>
+                    <option value="Total Pendiente">@ValidationMessages.TotalPendiente</option>
+                    <option value="Todo">@ValidationMessages.Todo</option>
+                    <option value="Pendiente">@ValidationMessages.Pendiente</option>
+                    <option value="Pendiente/Responsable">@ValidationMessages.Pendiente / @ValidationMessages.Responsable</option>
+                    <option value="No Conforme">@ValidationMessages.NoConforme</option>
+                    <option value="Listo">@ValidationMessages.Listo</option>
+                    <option value="Cerrado">@ValidationMessages.Cerrado</option>
+                    <option value="Vencidos">@ValidationMessages.Vencidos</option>
                 </BSInput>
             </BSCol>
 
@@ -94,31 +98,31 @@
 
             <BSCol ColumnSmall="2" Column="1">
                 <BSRow>
-                    <BSLabel> Filtro Fecha de Trabajo</BSLabel>
+                    <BSLabel>@ValidationMessages.FiltroFechaDeTrabajo</BSLabel>
                 </BSRow>
                 <BSInputRadio CheckedValue="@("2")" @bind-Value="tipoconsulta" IsToggle="true" Size="Size.ExtraSmall"
                     Color="BSColor.Success" IsOutlined="true">
-                    Fecha Trabajo
+                    @ValidationMessages.FechaDelTrabajo
                     <span class="oi oi-cog"></span>
                 </BSInputRadio>
             </BSCol>
 
             <BSCol ColumnSmall="2" Column="1">
                 <BSRow>
-                    <BSLabel> Filtro Fecha de Reunión</BSLabel>
+                    <BSLabel> @ValidationMessages.FiltroFechaDeReunion</BSLabel>
                 </BSRow>
                 <BSInputRadio CheckedValue="@("0")" @bind-Value="tipoconsulta" IsToggle="true" Size="Size.ExtraSmall"
                     Color="BSColor.Success" IsOutlined="true">
-                    Fecha Reunión
+                    @ValidationMessages.FechaDeReunion
                     <span class="oi oi-people"></span>
                 </BSInputRadio>
             </BSCol>
 
             <BSCol ColumnSmall="2" Column="2">
                 <BSRow>
-                    <BSLabel>Buscar</BSLabel>
+                    <BSLabel>@ValidationMessages.Buscar</BSLabel>
                 </BSRow>
-                <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" OnClick="Get"> Consultar <span
+                <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" OnClick="Get"> @ValidationMessages.Consultar <span
                         class="oi oi-check"></span></BSButton>
             </BSCol>
 
@@ -145,19 +149,19 @@
                     @(tabla.IndexOf(context) + 1)
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Línea" Frozen="true" Property="Rdarea" Width="80px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.Linea" Frozen="true" Property="Rdarea" Width="80px">
                 <Template>
                     @context.Rdarea
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Cod. Equipo" Frozen="true" Property="RdcodEq" Width="80px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.CodigoDeEquipo" Frozen="true" Property="RdcodEq" Width="80px">
                 <Template>
                     @context.RdcodEq
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Nombre del Equipo" Frozen="true" Property="RdcodEq" Width="80px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.NombreDelEquipo" Frozen="true" Property="RdcodEq" Width="80px">
                 <Template Context="context">
                     @(string.IsNullOrWhiteSpace(context.EnombreEam) ? "EQUIPO NO ENCONTRADO" : context.EnombreEam)
                 </Template>
@@ -169,31 +173,31 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Discrepancia" Property="Rddisc" Width="220px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.Discrepancia" Property="Rddisc" Width="220px">
                 <Template>
                     @context.Rddisc
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Código" Property="RdcodDis" Width="60px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.Codigo" Property="RdcodDis" Width="60px">
                 <Template>
                     @context.RdcodDis
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Acción" Property="RdplanAcc" Width="200px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.Accion" Property="RdplanAcc" Width="200px">
                 <Template>
                     @context.RdplanAcc
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Tiempo" Property="Rdtiempo" Width="60px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.Tiempo" Property="Rdtiempo" Width="60px">
                 <Template>
                     @context.Rdtiempo
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Responsable" Property="Responsable" Width="100px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.Responsable" Property="Responsable" Width="100px">
                 <Template>
                     @context.Responsable
                 </Template>
@@ -220,19 +224,19 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Estado" Property="Rdstatus" Width="90px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.Estado" Property="Rdstatus" Width="90px">
                 <Template>
-                    @context.Rdstatus
+                    @ValidationMessages.ResourceManager.GetString(context.Rdstatus, CultureInfo.CurrentUICulture)
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="F. Reunión" Property="RdfecReu" Width="90px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.FechaDeReunion" Property="RdfecReu" Width="90px">
                 <Template>
                     @context.RdfecReu.ToString("yyyy/MM/dd")
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="F. Trabajo" Property="RdfecTra" Width="90px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@ValidationMessages.FechaDelTrabajo" Property="RdfecTra" Width="90px">
                 <Template>
                     @context.RdfecTra.ToString("yyyy/MM/dd")
                 </Template>
@@ -248,10 +252,13 @@ else if (dataIsLoaded == 1 && tabla.Count() == 0)
 else if (dataIsLoaded == 2 && tabla.Count() == 0)
 {
 <div style="text-align: center; padding: 20px; font-size: 18px; color: rgb(102, 101, 101);">
-    <p>No hay datos para esta fecha.</p>
+    <p>@ValidationMessages.NoHayDatos</p>
 </div>
 }
 @code {
+            [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    private int idPais { get; set; }
     RadzenDataGrid<ReunionDTO> ReuTabla;
     List<ReunionDTO> tabla = new List<ReunionDTO>();
     private NotifiRadzen Notificar = new NotifiRadzen();
@@ -293,7 +300,6 @@ else if (dataIsLoaded == 2 && tabla.Count() == 0)
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         claims = Enumerable.ToList(user.Claims);
-
     }
 
     protected override async Task OnInitializedAsync()
@@ -303,6 +309,25 @@ else if (dataIsLoaded == 2 && tabla.Count() == 0)
         fecha2 = DateTime.Now;
         await CreateData();
 
+                var idPaisClaim = claims.FirstOrDefault(c => c.Type == "IdPais")?.Value;
+        int paisTemp;
+
+        if (int.TryParse(idPaisClaim, out paisTemp) && paisTemp == 5)
+        {
+            idPais = paisTemp;
+            var culture = new System.Globalization.CultureInfo("en");
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+            await LocalStorage.SetItemAsync("userCulture", "en");
+        }
+        else
+        {
+            var culture = new System.Globalization.CultureInfo("es");
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+            await LocalStorage.SetItemAsync("userCulture", "es");
+        }
+
         var rol = claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
 
         //TODO: Crear logica con funcion qur retorne esto.se usa en hoistoricos tambien
@@ -310,6 +335,7 @@ else if (dataIsLoaded == 2 && tabla.Count() == 0)
         {
             case "Admin":
             case "SuperAdmin":
+            case "PrimeUser":
                 UsrAdmin = "SuperAdmin";
                 await MaestraData.GetCentrosxEmpresa("All" + claims.FirstOrDefault(c => c.Type.Contains("IdEmpresa"))?.Value);
                 break;
@@ -384,8 +410,9 @@ else if (dataIsLoaded == 2 && tabla.Count() == 0)
                 tabla = await PizarraData.GetHistoricos(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, Uri.EscapeDataString(Status));
                 foreach (var d in tabla)
                 {
-                    d.Ksf = KsfData.ksfs.Where(x => x.Idksf == d.Idksf).FirstOrDefault().KsfNombre;
-                    d.Responsable = RespoReuData.resporeus.Where(x => x.IdResReu == d.IdResReu).FirstOrDefault().Rrnombre;
+                    d.Ksf = KsfData.ksfs.Where(x => x.Idksf == d.Idksf).Select(x => idPais == 5 ? x.KsfEnglish : x.KsfNombre).FirstOrDefault();
+                    var nombreOriginal = RespoReuData.resporeus.Where(x => x.IdResReu == d.IdResReu).FirstOrDefault()?.Rrnombre ?? "";
+                    d.Responsable = ValidationMessages.ResourceManager.GetString(ValidationMessages.MapResponsableKey(nombreOriginal),CultureInfo.CurrentUICulture);
                 }
 
                 dataIsLoaded = 2;
