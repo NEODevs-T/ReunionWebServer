@@ -21,6 +21,8 @@ builder.Services.AddHttpClient<IAPIReunionService, APIReunionService>(client =>
 {
     client.BaseAddress = new Uri("http://neo.paveca.com.ve/ReunionApi/");
 });
+builder.Services.AddScoped<CultureService>();
+builder.Services.AddScoped<UsuarioContexto>();
 builder.Services.AddScoped<IDbReunionService, DbReunionService>();
 builder.Services.AddScoped<IAPIReunionService, APIReunionService>();
 builder.Services.AddScoped<IMaestraData, MaestraData>();
@@ -52,12 +54,16 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
 }
 
-
+app.UsePathBase("/reuniondiariaDESARROLLO");
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
+/*app.MapGet("/", context =>
+{
+    context.Response.Redirect("/reuniondiariaDESARROLLO/es/inicio");
+    return Task.CompletedTask;
+});*/
 app.Run();
