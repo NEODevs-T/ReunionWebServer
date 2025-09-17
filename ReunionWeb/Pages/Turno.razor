@@ -1,4 +1,8 @@
-@page "/turno"
+@page "/es/turno"
+@page "/en/shift"
+
+@using System.Globalization
+@using ReunionWeb.Resources
 
 @inject IAsistenciaReuData AsistenciaReuData
 @inject IAvisadorData AvisadorData
@@ -12,25 +16,25 @@
 @inject ILocalStorageService LocalStorage
 @inject NotificationService NotificationService
 
-@attribute [Authorize(Roles = "Admin, AdminChempro, SuperUser, SemiAdmin,SuperAdmin")]
+@attribute [Authorize(Roles = "Admin, AdminChempro, PrimeUser, SuperUser, SemiAdmin,SuperAdmin")]
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consolidacion</title>
+    <title>@ValidationMessages.Consolidacion</title>
 </head>
 
 <body>
-    <h3>Consolidacion de Discrepancia</h3>
+    <h3>@ValidationMessages.ConsolidacionDeDiscrepancia</h3>
     @* ccc *@
     <div class="box-reuform">
         <div class="box-reuCent">
-            <label for="">Centro
+            <label for="">@ValidationMessages.Centro
                 <BSInput InputType="InputType.Select" class="Form-imput" @onchange="BuscarDivision"
                     @bind-Value="idCent">
-                    <option value="0">Selecione un Centro</option>
+                    <option value="0">@ValidationMessages.SeleccioneUnCentro</option>
                     @if (MaestraData.centro != null)
                     {
                         @foreach (var d in MaestraData.centro)
@@ -43,9 +47,9 @@
             </label>
         </div>
         <div class="box-reuDiv">
-            <label for="">Division
+            <label for="">@ValidationMessages.Division
                 <BSInput InputType="InputType.Select" class="Form-imput linea" @bind-Value="idDiv">
-                    <option value="0">Selecione una Division</option>
+                    <option value="0">@ValidationMessages.SeleccioneUnaDivision</option>
                     @if (MaestraData.centro != null)
                     {
                         @foreach (var d in MaestraData.divisions)
@@ -58,14 +62,14 @@
             </label>
         </div>
         <div class="box-reutipo">
-            <label for="">Busqueda
+            <label for="">@ValidationMessages.Buscar
                 <BSInput InputType="InputType.Select" class="Form-imput linea" @bind-Value="tipo">
-                    <option value="0">Selecione que Buscar</option>
+                    <option value="0">@ValidationMessages.SeleccioneBuscar</option>
                     @if (MaestraData.centro != null)
                     {
-                        <option value="1">Vencidas Turno</option>
-                        <option value="2">Pendientes Libro</option>
-                        <option value="3">Ksf Reunion Diaria</option>
+                        <option value="1">@ValidationMessages.VencidasTurno</option>
+                        <option value="2">@ValidationMessages.PendientesLibro</option>
+                        <option value="3">@ValidationMessages.KsfReunionDiaria</option>
 
                     }
                 </BSInput>
@@ -73,7 +77,7 @@
         </div>
 
         <div class="botton-Disc">
-            <button @onclick="buscar" type="submit" id="btn-disc" class="btn btn-primary mb-3">Buscar</button>
+            <button @onclick="buscar" type="submit" id="btn-disc" class="btn btn-primary mb-3">@ValidationMessages.Buscar</button>
         </div>
     </div>
     @if (band == true)
@@ -89,43 +93,43 @@
                 class="tabla-radzen" AllowPaging="true" PageSize="10" AllowSorting="true" Data="@PizarraData.reudiatablas"
                 TItem="ReunionDTO">
                 <Columns>
-                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="Linea" Filterable="false" Sortable="false"
+                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="@ValidationMessages.Linea" Filterable="false" Sortable="false"
                         TextAlign="TextAlign.Center">
                         <Template Context="data">
                             <RadzenText class="mb-0 tipografia">@data.Rdarea</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="C. Equipo" Filterable="false" Sortable="false"
+                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="@ValidationMessages.CodigoDeEquipo" Filterable="false" Sortable="false"
                         TextAlign="TextAlign.Center">
                         <Template Context="data">
                             <RadzenText class="mb-0 tipografia">@data.RdcodEq</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Width="10%" TItem="ReunionDTO" Title="Nombre Equipo" Filterable="false" Sortable="false"
+                    <RadzenDataGridColumn Width="10%" TItem="ReunionDTO" Title="@ValidationMessages.NombreDelEquipo" Filterable="false" Sortable="false"
                         TextAlign="TextAlign.Center">
                         <Template Context="data">
                             <RadzenText class="mb-0 tipografia">@(string.IsNullOrWhiteSpace(data.EnombreEam) ? "EQUIPO NO ENCONTRADO" : data.EnombreEam)</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="Discrepancia" Filterable="false" Sortable="false"
+                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="@ValidationMessages.Discrepancia" Filterable="false" Sortable="false"
                         TextAlign="TextAlign.Center">
                         <Template Context="data">
                             <RadzenText class="mb-0 tipografia">@data.Rddisc</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="Plan de Accion" Filterable="false"
+                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="@ValidationMessages.PlanDeAccion" Filterable="false"
                         Sortable="false" TextAlign="TextAlign.Center">
                         <Template Context="data">
                             <RadzenText class="mb-0 tipografia">@data.RdplanAcc</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="F. Reunion" Filterable="false" Sortable="false"
+                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="@ValidationMessages.FReunion" Filterable="false" Sortable="false"
                         TextAlign="TextAlign.Center">
                         <Template Context="data">
                             <RadzenText class="mb-0 tipografia">@data.RdfecReu.ToString("dd/MM/yyyy")</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="Acciones" Filterable="false" Sortable="false"
+                    <RadzenDataGridColumn Width="5%" TItem="ReunionDTO" Title="@ValidationMessages.Acciones" Filterable="false" Sortable="false"
                         TextAlign="TextAlign.Center">
                         <Template Context="data">
                             @if (libro == 0)
@@ -141,7 +145,7 @@
         else if (PizarraData.reudiatablas.Count() == 0 && confirmacion == true)
         {
 <div style="text-align: center; padding: 20px; font-size: 18px; color: gray;">
-    <p>No hay registros disponibles</p>
+    <p>@ValidationMessages.NoHayRegistros</p>
 </div>
         }
 
@@ -243,6 +247,7 @@
     bool confirmacion;
     int tipo = 1;
     int libro = 0;
+    private int idPais {get; set;}
 
     private async Task CreateData()
 
@@ -251,6 +256,15 @@
         var user = authState.User;
         claims = Enumerable.ToList(user.Claims);
 
+        var idPaisClaim = claims.FirstOrDefault(c => c.Type == "IdPais")?.Value;
+        if (int.TryParse(idPaisClaim, out int paisTemp))
+        {
+            idPais = paisTemp;
+            var culture = new System.Globalization.CultureInfo(paisTemp == 5 ? "en" : "es");
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+            await LocalStorage.SetItemAsync("userCulture", culture.Name);
+        }
     }
 
 
@@ -262,7 +276,7 @@
         await CreateData();
 
         PizarraData.reudiatablas = new List<ReunionDTO>();
-        if (claims != null && claims.Count > 1 && (claims[1]?.Value == "Admin" || claims[1]?.Value == "SuperAdmin"))
+        if (claims != null && claims.Count > 1 && (claims[1]?.Value == "Admin" || claims[1]?.Value == "SuperAdmin" || claims[1]?.Value == "PrimeUser"))
         {
 
             await MaestraData.GetCentrosxEmpresa("All" + claims[10].Value);
@@ -332,7 +346,7 @@
         }
         else
         {
-            mensaje = "Verifique todos los campos";
+            mensaje = ValidationMessages.VerifiqueCampos;
             NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
 
         }
@@ -356,13 +370,13 @@
 
     if (validacion == true)
     {
-        mensaje = "Se agregó correctamente a la Reunión diaria";
+        mensaje =  ValidationMessages.ReunionDiariaAgregada;
         NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
         await buscar();
     }
     else
     {
-        mensaje = "No pudo ser Agregada";
+        mensaje = ValidationMessages.NoAgregada;
         NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
     }
 }
@@ -376,14 +390,14 @@
         bool validacion = await PizarraData.UpdateDiscrepancia3(registro, registro.IdReuDia);
         if (validacion == true)
         {
-            mensaje = "La discrepancia a sido rechazada";
+            mensaje = ValidationMessages.DiscrepanciaRechazada;
             NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
             await buscar();
 
         }
         else
         {
-            mensaje = "No pudo ser rechazada";
+            mensaje = ValidationMessages.NoRechazada;
             NotificationService.Notify(Notificar.Notificacion("advertencia", mensaje, ""));
         }
     }
