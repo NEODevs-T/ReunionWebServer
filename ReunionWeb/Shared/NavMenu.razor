@@ -11,6 +11,7 @@
     </div>
 </div>
 
+
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
 
@@ -91,6 +92,36 @@
                 </div>
             </NotAuthorized>
         </AuthorizeView>
+        <AuthorizeView Roles="Admin,AdminChempro, SuperUser,SemiAdmin,MttoAdmin">
+            <Authorized>
+
+                @* <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="stats_asistencia">
+                        <span class="oi oi-graph" aria-hidden="true"></span> <strong>%Asistencias</strong>
+                    </NavLink>
+                </div> *@
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Roles="Admin,AdminChempro, SuperUser,SemiAdmin,MttoAdmin,Planificador">
+            <Authorized>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="@($"{Nav.BaseUri}{mantenimientoHref}")">
+                        <span class="oi oi-cog" aria-hidden="true"></span> <strong>@labelMantenimiento</strong>
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="Admin,AdminChempro,SuperAdmin">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="@($"{Nav.BaseUri}{equiposHref}")">
+                        <span class="oi oi-wrench" aria-hidden="true"></span> <strong>@labelEquipos</strong>
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
 
     </nav>
 </div>
@@ -106,6 +137,8 @@
     private string labelPorcentajeAsistencia = "Porcentaje Asistencia";
     private string labelPizarra = "Pizarra";
     private string labelHistoricos = "Históricos";
+    private string labelMantenimiento = "Mantenimiento Programado";
+    private string labelEquipos = "Equipos";
     private string homeHref = "es/inicio";
     private string discrepanciaHref = "es/discrepancia";
     private string pendientesHref = "es/pendientes";
@@ -115,6 +148,8 @@
     private string historicosHref = "es/historicos";
     private string calendarioHref = "es/calendario";
     private string turnoHref = "es/turno";
+    private string mantenimientoHref = "es/mantenimiento";
+    private string equiposHref = "es/addequipo";
     private const int TrinidadYTobago = 5;
 
     protected override async Task OnInitializedAsync()
@@ -136,6 +171,8 @@
                 labelPizarra = "Whiteboard";
                 labelHistoricos = "Historical";
                 labelCalendario = "Calendar";
+                labelMantenimiento = "Scheduled Maintenance";
+                labelEquipos = "Equipment";
 
                 homeHref = "en/home";
                 discrepanciaHref = "en/issue";
@@ -146,6 +183,8 @@
                 historicosHref = "en/historical";
                 calendarioHref = "en/calendar";
                 turnoHref = "en/shift";
+                mantenimientoHref = "en/maintenance";
+                equiposHref = "en/addequipment";
             }
         }
     }
