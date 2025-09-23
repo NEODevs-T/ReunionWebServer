@@ -7,20 +7,13 @@ namespace ReunionWeb.DTOs.Maestra;
 public class EquipoEamDTO
 {
     public int IdEquipo { get; set; }
-
     public int IdLinea { get; set; }
-
+    public string Linea { get; set; } = string.Empty;
     public string EcodEquiEam { get; set; } = null!;
-
     public string EnombreEam { get; set; } = null!;
-
-    public string? EdescriEam { get; set; }
-
+    public string EdescriEam { get; set; } = null!;
     public bool EestaEam { get; set; }
-
     public DateTime Efecha { get; set; }
-
-    public LineaDTO Linea { get; set; }
-
-
+    public int? IdEmpresa { get; set; }
+    
 }

@@ -29,7 +29,7 @@ interface IMaestraData
     Task<List<CentrosVDTO>> GetCentrosxEmpresa(string cent);
     Task<List<LineaVDTO>> ObtenerLasLineasPorDivision(int idDivision);
     Task<List<LineaVDTO>> GetLineas(int idDivision);
-    Task<string> AddEquipo(EquipoDTO equipo);
+    Task<string> AddEquipo(EquipoEamDTO equipo);
     Task<List<EquipoEamDTO>> GetEquiposCentro(string idCentro);
     Task<CentroDivisionDTO> GetCentroDiv(string centro, string division, int tipo);
     Task<List<EquipoEamDTO>> GetEquiposEAMPorLinea(int idLinea);

@@ -13,6 +13,10 @@
 @inject ILocalStorageService LocalStorage
 @inject NotificationService NotificationService
 
+@using ReunionWeb.Resources
+@using System.Globalization
+
+
 
 @attribute [Authorize(Roles = "Admin, AdminChempro,SuperAdmin")]
 
@@ -416,8 +420,9 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
     int dataIsLoaded = 0;
     string _message;
     private NotifiRadzen Notificar = new NotifiRadzen(); //Logic para crear las notificaciones radzen
+    
+    EquipoEamDTO EquipoForm = new EquipoEamDTO();
 
-    EquipoDTO EquipoForm = new EquipoDTO();
     private List<Claim> claims { get; set; }
 
     private async Task CreateData()
@@ -427,13 +432,41 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
         claims = user.Claims.ToList();
     }
 
-    protected async Task Get()
+protected async Task Get()
+{
+    try
     {
         tipo = 2;
+
+        // Validar que la línea esté seleccionada
+        if (IdLin == 0)
+        {
+            mensaje = ValidationMessages.CamposNecesarios;
+            NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, mensaje));
+            return;
+        }
+
         dataIsLoaded = 1;
-        await MaestraData.GetEquiposPorLinea(IdLin.ToString());
+
+        // Obtener equipos por línea
+        var equipos = await MaestraData.GetEquiposPorLinea(IdLin.ToString());
+
+        if (equipos == null || !equipos.Any())
+        {
+            mensaje = "No se encontraron equipos para la línea seleccionada.";
+            NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, mensaje));
+        }
+
         dataIsLoaded = 2;
     }
+    catch (Exception ex)
+    {
+        mensaje = "Error inesperado: " + ex.Message;
+        NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato, mensaje));
+        dataIsLoaded = 0;
+    }
+}
+
 
     protected async Task BuscarDivision(ChangeEventArgs e)
     {
@@ -490,34 +523,61 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
         }
     }
 
-    protected async Task SaveEquipo(EditContext e)
+protected async Task SaveEquipo(EditContext e)
+{
+    if (e.Validate())
     {
-        if (e.Validate())
+        // Validación manual adicional
+        if (string.IsNullOrWhiteSpace(EquipoForm.EcodEquiEam) ||
+            string.IsNullOrWhiteSpace(EquipoForm.EnombreEam) ||
+            string.IsNullOrWhiteSpace(EquipoForm.EdescriEam) ||
+            IdLin == 0)
         {
-            try
-            {   
-                EquipoForm.Efecha = DateTime.Now;
-                EquipoForm.IdLinea = IdLin;
-                EquipoForm.EestaEam = true;
-                EquipoForm.EcodEquiEam = EquipoForm.EcodEquiEam.Replace(" ", string.Empty);
-                mensaje = await MaestraData.AddEquipo(EquipoForm);
+            mensaje = "Todos los campos son obligatorios.";
+            NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+            return;
+        }
 
-                if (mensaje == "Registro Exitoso")
-                {
-                    NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
-                }
-                else
-                {
-                    NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
-                }
-                Reset();
-            }
-            catch (Exception ex)
+        try
+        {
+            EquipoForm.Efecha = DateTime.Now;
+            EquipoForm.IdLinea = IdLin;
+            EquipoForm.EestaEam = true;
+            EquipoForm.EcodEquiEam = EquipoForm.EcodEquiEam?.Replace(" ", string.Empty);
+            EquipoForm.Linea = MaestraData.lineas.FirstOrDefault(l => l.IdLinea == IdLin)?.Linea ?? "Desconocida";
+            EquipoForm.IdEmpresa = int.TryParse(claims.FirstOrDefault(c => c.Type.Contains("Empresa"))?.Value, out int empresaId) ? empresaId : 0;
+
+
+            Console.WriteLine("=== DATOS DEL EQUIPO A ENVIAR ===");
+            Console.WriteLine($"IdEquipo: {EquipoForm.IdEquipo}");
+            Console.WriteLine($"IdLinea: {EquipoForm.IdLinea}");
+            Console.WriteLine($"EcodEquiEam: {EquipoForm.EcodEquiEam}");
+            Console.WriteLine($"EnombreEam: {EquipoForm.EnombreEam}");
+            Console.WriteLine($"EdescriEam: {EquipoForm.EdescriEam}");
+            Console.WriteLine($"EestaEam: {EquipoForm.EestaEam}");
+            Console.WriteLine($"Efecha: {EquipoForm.Efecha}");
+            Console.WriteLine($"Tipo de objeto: {EquipoForm.GetType().FullName}");
+
+
+            mensaje = await MaestraData.AddEquipo(EquipoForm);
+
+            if (mensaje == "Registro Exitoso")
             {
-                NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo", ex.Message));
+                NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
+                await Reset();
+            }
+            else
+            {
+                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
             }
         }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo", ex.Message));
+        }
     }
+}
+
 
     async Task Habilitar(int id)
     {
@@ -533,7 +593,7 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
     {
         try
         {
-            EquipoDTO eq = new EquipoDTO
+            EquipoEamDTO eq = new EquipoEamDTO
             {
                 IdEquipo = equipo.IdEquipo,
                 IdLinea = equipo.IdLinea,
@@ -565,7 +625,7 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
 
     protected async Task Reset()
     {
-        EquipoForm = new EquipoDTO();
+        EquipoForm = new EquipoEamDTO();
         IdCent = 0;
     }
     

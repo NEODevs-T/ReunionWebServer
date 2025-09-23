@@ -99,18 +99,20 @@ public class MaestraData : IMaestraData
         return lineas = await cliente.GetFromJsonAsync<List<LineaVDTO>>(url) ?? new List<LineaVDTO>();
     }
 
-    public async Task<string> AddEquipo(EquipoDTO equipo)
+    public async Task<string> AddEquipo(EquipoEamDTO equipo)
     {
-        string mens = "";
         url = $"{BaseUrl}/AddEquipo";
         cliente = _clientFactory.CreateClient();
-        mensaje = await cliente.PostAsJsonAsync(url, equipo);
-        if (mensaje.IsSuccessStatusCode)
+        var respuesta = await cliente.PostAsJsonAsync(url, equipo);
+
+        if (respuesta.IsSuccessStatusCode)
         {
-            mens = "Se añadido exitosamente";
+            return "Registro Exitoso";
         }
-        return mens;
+
+        return "Error al registrar el equipo";
     }
+
     public async Task<List<EquipoEamDTO>> GetEquiposCentro(string idCentro)
     {
         url = $"{BaseUrl}/GetEquipos/{idCentro}";
