@@ -182,5 +182,21 @@
 <data name="ErrorP" xml:space="preserve"><value>Si el problema persiste, recargue la página.</value></data>
 <data name="ERevisar" xml:space="preserve"><value>Revise los datos</value></data>
 <data name="FechaMenor" xml:space="preserve"><value>La fecha de trabajo no puede ser menor a la fecha de reunión.</value></data>
+<data name="FechasProgramadas" xml:space="preserve"><value>Fechas Programadas</value></data>
+<data name="FechaProgramada" xml:space="preserve"><value>Fecha Programada</value></data>
+<data name="GuardarFecha" xml:space="preserve"><value>Guardar Fecha</value></data>
+<data name="Editar" xml:space="preserve"><value>Editar</value></data>
+<data name="Activar" xml:space="preserve"><value>Activar</value></data>
+<data name="Desactivar" xml:space="preserve"><value>Desactivar</value></data>
+<data name="NoHayFecha" xml:space="preserve"><value>No hay fecha Programada</value></data>
+<data name="AgregarFechaProgramada" xml:space="preserve"><value>Agregar Fecha Programada</value></data>
+<data name="ConsultarFechaProgramada" xml:space="preserve"><value>Consultar Fecha Programada</value></data>
+<data name="Activo" xml:space="preserve"><value>Activo</value></data>
+<data name="Inactivo" xml:space="preserve"><value>Inactivo</value></data>
+<data name="GuardarFechaN" xml:space="preserve"><value>Se aguardado con exito la nueva fecha</value></data> 
+<data name="SegundaFechaN" xml:space="preserve"><value>la segunda fecha no puede ser menor que la primera</value></data>
+<data name="ColocarFecha" xml:space="preserve"><value>debe colocar las dos fechas</value></data>
+<data name="CamposNecesarios" xml:space="preserve"><value>por favor ingrese los campos necesarios</value></data> 
+<data name="MExito" xml:space="preserve"><value>Se logro modificar con exito</value></data> 
 </root>
 

@@ -175,6 +175,22 @@ namespace ReunionWeb.Resources
         public static string ErrorP => _resourceManager.GetString("ErrorP", CultureInfo.CurrentUICulture);
         public static string ERevisar => _resourceManager.GetString("ERevisar", CultureInfo.CurrentUICulture);
         public static string FechaMenor => _resourceManager.GetString("FechaMenor", CultureInfo.CurrentUICulture);
+        public static string FechasProgramadas => _resourceManager.GetString("FechasProgramadas", CultureInfo.CurrentUICulture);
+        public static string FechaProgramada => _resourceManager.GetString("FechaProgramada", CultureInfo.CurrentUICulture);
+        public static string GuardarFecha => _resourceManager.GetString("GuardarFecha", CultureInfo.CurrentUICulture);
+        public static string Editar => _resourceManager.GetString("Editar", CultureInfo.CurrentUICulture);
+        public static string Activar => _resourceManager.GetString("Activar", CultureInfo.CurrentUICulture);
+        public static string Desactivar => _resourceManager.GetString("Desactivar", CultureInfo.CurrentUICulture);
+        public static string NoHayFecha => _resourceManager.GetString("NoHayFecha", CultureInfo.CurrentUICulture);
+        public static string AgregarFechaProgramada => _resourceManager.GetString("AgregarFechaProgramada", CultureInfo.CurrentUICulture);
+        public static string ConsultarFechaProgramada => _resourceManager.GetString("ConsultarFechaProgramada", CultureInfo.CurrentUICulture);
+        public static string Activo => _resourceManager.GetString("Activo", CultureInfo.CurrentUICulture);
+        public static string Inactivo => _resourceManager.GetString("Inactivo", CultureInfo.CurrentUICulture);
+        public static string GuardarFechaN => _resourceManager.GetString("GuardarFecha", CultureInfo.CurrentUICulture);
+        public static string SegundaFechaN => _resourceManager.GetString("SegundaFechaN", CultureInfo.CurrentUICulture);
+        public static string ColocarFecha => _resourceManager.GetString("ColocarFecha", CultureInfo.CurrentUICulture);
+        public static string CamposNecesarios => _resourceManager.GetString("CamposNecesarios", CultureInfo.CurrentUICulture);
+        public static string MExito => _resourceManager.GetString("MExito", CultureInfo.CurrentUICulture);
 
         public static string MapResponsableKey(string nombre)
         {

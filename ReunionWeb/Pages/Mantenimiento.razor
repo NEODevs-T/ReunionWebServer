@@ -12,6 +12,8 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
 @inject NotificationService NotificationService
+@using System.Globalization
+@using ReunionWeb.Resources
 
 
 @attribute [Authorize(Roles = "Admin, AdminChempro,SuperAdmi, Planificador")]
@@ -56,7 +58,7 @@ else
     </head>
 
     <body>
-        <h2>Fechas Programadas</h2>
+        <h2>@ValidationMessages.FechasProgramadas</h2>
         @if (tipo == 1)
         {
             <!DOCTYPE html>
@@ -70,11 +72,11 @@ else
 
             <body>
                 <br>
-                <h3>Agregar Fecha</h3>
+                <h3>@ValidationMessages.AgregarFecha</h3>
 
                 <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall"
                     Color="BSColor.Success" IsOutlined="true">
-                    Volver
+                    @ValidationMessages.Atras
                     <span class="oi oi-arrow-circle-left"></span>
                 </BSInputRadio>
                 <p></p>
@@ -88,40 +90,40 @@ else
                         </BSCol>
                         <BSRow>
                             <BSCol Column="4" ColumnSmall="2">
-                                <BSLabel>Centro</BSLabel>
+                                <BSLabel>@ValidationMessages.Centro</BSLabel>
                                 <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="idCent">
-                                    <option value="0">Seleccione</option>
+                                    <option value="0">@ValidationMessages.Seleccione</option>
                                     @foreach (var d in MaestraData.centro)
                                     {
                                         <option value="@d.IdCentro">@d.Centro</option>
                                     }
                                 </BSInput>
-                                <BSFeedback For="@(() =>idCent)" ValidMessage="Correcto." />
+                                <BSFeedback For="@(() =>idCent)" ValidMessage="@ValidationMessages.Correcto" />
                             </BSCol>
 
                             <BSCol Column="4" ColumnSmall="2">
-                                <BSLabel>División</BSLabel>
+                                <BSLabel>@ValidationMessages.Division</BSLabel>
                                 <BSInput InputType="InputType.Select" @onchange='BuscarLinea' @bind-Value="idDiv">
-                                    <option value="0">Seleccione</option>
+                                    <option value="0">@ValidationMessages.Seleccione</option>
                                     @foreach (var d in MaestraData.divisions)
                                     {
                                         <option value="@d.IdDivision">@d.Ndivision</option>
                                     }
                                 </BSInput>
-                                <BSFeedback For="@(() =>idDiv)" ValidMessage="Correcto." />
+                                <BSFeedback For="@(() =>idDiv)" ValidMessage="@ValidationMessages.Correcto" />
                             </BSCol>
 
 
                             <BSCol Column="4">
-                                <BSLabel>Línea</BSLabel>
+                                <BSLabel>@ValidationMessages.Linea</BSLabel>
                                 <BSInput InputType="InputType.Select" @bind-Value="idLin">
-                                    <option value="0">Seleccione...</option>
+                                    <option value="0">@ValidationMessages.Seleccione...</option>
                                     @foreach (var d in MaestraData.lineas)
                                     {
                                         <option value="@d.IdLinea">@d.Linea</option>
                                     }
                                 </BSInput>
-                                <BSFeedback For="@(() =>idLin)" ValidMessage="Correcto." />
+                                <BSFeedback For="@(() =>idLin)" ValidMessage="@ValidationMessages.Correcto" />
 
                             </BSCol>
                         </BSRow>
@@ -131,27 +133,27 @@ else
                         <p></p>
                         <BSRow>
                             <BSCol Column="3">
-                                <BSLabel>Fecha Programada</BSLabel>
+                                <BSLabel>@ValidationMessages.FechaProgramada</BSLabel>
                                 <BSInput InputType="InputType.Date" @bind-Value="@fecha" />
-                                <BSFeedback For="@(() => fechaProg.Fpprogra)" ValidMessage="Correcto." />
+                                <BSFeedback For="@(() => fechaProg.Fpprogra)" ValidMessage="@ValidationMessages.Correcto" />
                             </BSCol>
                         </BSRow>
                         <p></p>
                         <BSRow>
                             <BSCol Column="12">
-                                <BSLabel>Descripción</BSLabel>
+                                <BSLabel>@ValidationMessages.Descripcion</BSLabel>
                                 <BSInput InputType="InputType.Text" @bind-Value="@fechaProg.Fpdesc" />
-                                <BSFeedback For="@(() => fechaProg.Fpdesc)" ValidMessage="Correcto." />
+                                <BSFeedback For="@(() => fechaProg.Fpdesc)" ValidMessage="@ValidationMessages.Correcto" />
                             </BSCol>
                             <BSRow>
                             </BSRow>
                             <p></p>
                         </BSRow>
                         <BSCol Column="12">
-                            <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit> Guardar Fecha <span
+                            <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit> @ValidationMessages.GuardarFecha <span
                                     class="oi oi-check"></span></BSButton>
 
-                            <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset> Nuevo</BSButton>
+                            <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset> @ValidationMessages.Nuevo</BSButton>
 
                         </BSCol>
                     </BSForm>
@@ -167,28 +169,28 @@ else
 
             <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success"
                 IsOutlined="true">
-                Volver
+                @ValidationMessages.Atras
                 <span class="oi oi-arrow-circle-left"></span>
             </BSInputRadio>
             <p></p>
             <p></p>
             <BSRow>
                 <BSCol Column="3">
-                    <BSLabel>Centro</BSLabel>
+                    <BSLabel>@ValidationMessages.Centro</BSLabel>
                     <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="idCent">
-                        <option value="0">Seleccione</option>
+                        <option value="0">@ValidationMessages.Seleccione</option>
                         @foreach (var d in MaestraData.centro)
                         {
                             <option value="@d.IdCentro">@d.Centro</option>
                         }
                     </BSInput>
-                    <BSFeedback For="@(() =>idCent)" ValidMessage="Correcto." />
+                    <BSFeedback For="@(() =>idCent)" ValidMessage="@ValidationMessages.Correcto" />
                 </BSCol>
 
                 <BSCol Column="3">
-                    <BSLabel>División</BSLabel>
+                    <BSLabel>@ValidationMessages.Division</BSLabel>
                     <BSInput InputType="InputType.Select" @onchange='BuscarLinea' @bind-Value="idDiv">
-                        <option value="0">Seleccione</option>
+                        <option value="0">@ValidationMessages.Seleccione</option>
 
                         {
                         @foreach (var d in MaestraData.divisions)
@@ -197,26 +199,26 @@ else
                         }
 
                     </BSInput>
-                    <BSFeedback For="@(() =>idDiv)" ValidMessage="Correcto." />
+                    <BSFeedback For="@(() =>idDiv)" ValidMessage="@ValidationMessages.Correcto" />
                 </BSCol>
 
 
                 <BSCol Column="3">
-                    <BSLabel>Línea</BSLabel>
+                    <BSLabel>@ValidationMessages.Linea</BSLabel>
                     <BSInput InputType="InputType.Select" @bind-Value="idLin">
-                        <option value="0">Seleccione...</option>
+                        <option value="0">@ValidationMessages.Seleccione...</option>
                         @foreach (var d in MaestraData.lineas)
                         {
                             <option value="@d.IdLinea">@d.Linea</option>
                         }
                     </BSInput>
-                    <BSFeedback For="@(() =>idLin)" ValidMessage="Correcto." />
+                    <BSFeedback For="@(() =>idLin)" ValidMessage="@ValidationMessages.Correcto" />
                 </BSCol Colum="3">
                 <BSCol>
 
 
                     <BSRow>
-                        <BSLabel>Buscar</BSLabel>
+                        <BSLabel>@ValidationMessages.Buscar</BSLabel>
                     </BSRow>
                     <button onclick="@Get" class="btn btn-success"><i class="oi oi-magnifying-glass"></i></button>
                 </BSCol>
@@ -251,13 +253,13 @@ else
                             <BSTR>
 
                                 @* <BSTD>ID</BSTD> *@
-                                <BSTD>Línea</BSTD>
-                                <BSTD>Fecha Programada</BSTD>
-                                <BSTD>Descripcion</BSTD>
-                                <BSTD>Estado</BSTD>
+                                <BSTD>@ValidationMessages.Linea</BSTD>
+                                <BSTD>@ValidationMessages.FechaProgramada</BSTD>
+                                <BSTD>@ValidationMessages.Descripcion</BSTD>
+                                <BSTD>@ValidationMessages.Estado</BSTD>
                                 @if (UsrRol == "Admin" || UsrRol == "SuperAdmin" || UsrRol == "Planificador")
                                 {
-                                    <BSTD>Editar</BSTD>
+                                    <BSTD>@ValidationMessages.Editar</BSTD>
                                 }
 
 
@@ -278,24 +280,24 @@ else
                                         <BSTD>
 
                                             <BSInput InputType="InputType.Date" @bind-Value="d.Fpprogra" />
-                                            <BSFeedback For="@(() => d.Fpprogra)" ValidMessage="Correcto." />
+                                            <BSFeedback For="@(() => d.Fpprogra)" ValidMessage="@ValidationMessages.Correcto" />
 
                                         </BSTD>
 
                                         <BSTD>
 
                                             <BSInput InputType="InputType.Text" @bind-Value="d.Fpdesc" />
-                                            <BSFeedback For="@(() => d.Fpdesc)" ValidMessage="Correcto." />
+                                            <BSFeedback For="@(() => d.Fpdesc)" ValidMessage="@ValidationMessages.Correcto" />
 
                                         </BSTD>
 
                                         <BSTD>
 
                                             <BSInput InputType="InputType.Select" @bind-Value="d.Fpestado">
-                                                <option value="true">Activar</option>
-                                                <option value="false">Desactivar</option>
+                                                <option value="true">@ValidationMessages.Activar</option>
+                                                <option value="false">@ValidationMessages.Desactivar</option>
                                             </BSInput>
-                                            <BSFeedback For="@(() => d.Fpestado)" ValidMessage="Correcto." />
+                                            <BSFeedback For="@(() => d.Fpestado)" ValidMessage="@ValidationMessages.Correcto" />
 
                                         </BSTD>
                                         <BSTD>
@@ -325,11 +327,11 @@ else
                                         <BSTD>
                                             @if (d.Fpestado == true)
                                             {
-                                                <p>Activo</p>
+                                                <p>@ValidationMessages.Activo</p>
                                             }
                                             else
                                             {
-                                                <p>Inactivo</p>
+                                                <p>@ValidationMessages.Inactivo</p>
                                             }
                                         </BSTD>
                                         @if (UsrRol == "Admin" || UsrRol == "SuperAdmin" || UsrRol == "Planificador")
@@ -357,7 +359,7 @@ else
             else if (dataIsLoaded == 2 && MaestraData.fechaProg.Count() == 0)
             {
                 <div style="text-align: center; padding: 20px; font-size: 18px; color: rgb(102, 101, 101);">
-                <p>No hay fecha Programada</p>
+                <p>@ValidationMessages.NoHayFecha</p>
                 </div>
             }
 
@@ -371,14 +373,14 @@ else
                 <Authorized>
                     <BSInputRadio CheckedValue="@(1)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall"
                         Color="BSColor.Success" IsOutlined="true">
-                        Agregar Fecha Programada
+                        @ValidationMessages.AgregarFechaProgramada
                         <span class="oi oi-plus"></span>
                     </BSInputRadio>
                 </Authorized>
             </AuthorizeView>
             <BSInputRadio @bind-Value="tipo" CheckedValue="@(2)" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success"
                 IsOutlined="true">
-                Consultar Fecha Programada
+                @ValidationMessages.ConsultarFechaProgramada
                 <span class="oi oi-magnifying-glass"></span>
             </BSInputRadio>
         }
@@ -622,19 +624,17 @@ else
 
                     if (band == true)
                     {
-                        mensaje = "Se aguardado con exito la nueva fecha";
-                        NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
+                        NotificationService.Notify(Notificar.Notificacion("exito", ValidationMessages.Exito, ValidationMessages.GuardarFechaN));
                     }
                     else
                     {
-                        mensaje = "Ha ocurrido un error inesperado";
-                        NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+                        NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, ValidationMessages.ErrorInesp));
                     }
                     Reset();
                 }
                 catch (Exception ex)
                 {
-                    NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo",
+                    NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato,
                     ex.Message));
 
                 }
@@ -642,8 +642,7 @@ else
         }
         else
         {
-            mensaje = "Llene todos los campos";
-            NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+            NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, ValidationMessages.VerifiqueCampos));
         }
     }
 
@@ -662,8 +661,7 @@ else
             await MaestraData.GetMaestraXLinea(idLin);
             if (fecha1 > fecha2)
             {
-                mensaje = "la segunda fecha no puede ser menor que la primera";
-                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+                NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, ValidationMessages.SegundaFechaN));
             }
             else if (fecha1 != null && fecha2 != null)
             {
@@ -680,8 +678,7 @@ else
             }
             else if (fecha1 != null && fecha2 == null || fecha1 == null && fecha2 != null)
             {
-                mensaje = "debe colocar las dos fechas";
-                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+                NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, ValidationMessages.ColocarFecha));
             }
             else
             {
@@ -697,8 +694,8 @@ else
         }
         else
         {
-            mensaje = "por favor ingrese los campos necesarios";
-            NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+            NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, ValidationMessages.CamposNecesarios));
+
         }
         tipo = 2;
     }
@@ -735,14 +732,15 @@ else
 
             if (band == true)
             {
-                NotificationService.Notify(Notificar.Notificacion("exito", mensaje, "Se logro modificar con exito"));
+                NotificationService.Notify(Notificar.Notificacion("exito", ValidationMessages.Exito, ValidationMessages.MExito));
 
                 idFechaPro = 0;
                 ventanaModal = 0;
             }
             else
             {
-                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+                NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, ValidationMessages.ErrorInesp));
+
                 idFechaPro = 0;
                 ventanaModal = 0;
             }
@@ -751,7 +749,7 @@ else
         }
         catch (Exception ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo",
+            NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato,
             ex.Message));
         }
         ventanaModal = 0;
@@ -773,19 +771,19 @@ else
 
             if (band == true)
             {
-                NotificationService.Notify(Notificar.Notificacion("exito", mensaje, "Se logro modificar con exito"));
+                NotificationService.Notify(Notificar.Notificacion("exito", ValidationMessages.Exito, ValidationMessages.MExito));
             }
             else
             {
-                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+
+                NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, ValidationMessages.ErrorInesp));
             }
 
             idFechaPro = 0;
         }
         catch (Exception ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo",
-            ex.Message));
+            NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato, ex.Message));
         }
     }
 }
