@@ -9,6 +9,7 @@
 <value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
 </resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
 </resheader>
+<data name="AgregarEquipos" xml:space="preserve"><value>Agregar Equipos</value></data>
 <data name="Accion" xml:space="preserve"><value>Acción</value></data>
 <data name="Acciones" xml:space="preserve"><value>Acciones</value></data>
 <data name="Aceptar" xml:space="preserve"><value>Aceptar</value></data>
@@ -31,16 +32,20 @@
 <data name="Cerrado" xml:space="preserve"><value>Cerrado</value></data>
 <data name="Codigo" xml:space="preserve"><value>Código</value></data>
 <data name="CodigoDeEquipo" xml:space="preserve"><value>Código de Equipo</value></data>
+<data name="CodigosDeEquipos" xml:space="preserve"><value>Códigos de Equipos</value></data>
+<data name="CodigoEAM" xml:space="preserve"><value>Código EAM</value></data>
 <data name="Consolidacion" xml:space="preserve"><value>Consolidación</value></data>
 <data name="ConsolidacionDeDiscrepancia" xml:space="preserve"><value>Consolidación de Discrepancia</value></data>
 <data name="Consultar" xml:space="preserve"><value>Consultar</value></data>
+<data name="ConsultarEquipos" xml:space="preserve"><value>Consultar Equipos</value></data>
 <data name="Correcto" xml:space="preserve"><value>Correcto.</value></data>
-<data name="Compras" xml:space="preserve"><value>Compras</value></data>,
+<data name="Compras" xml:space="preserve"><value>Compras</value></data>
 <data name="Desde" xml:space="preserve"><value>Desde</value></data>
 <data name="DetallesDeCalidad" xml:space="preserve"><value>Detalles de Calidad</value></data>
 <data name="Discrepancia" xml:space="preserve"><value>Discrepancia</value></data>
 <data name="Discrepancias" xml:space="preserve"><value>Discrepancias</value></data>
 <data name="Division" xml:space="preserve"><value>División</value></data>
+<data name="Equipo" xml:space="preserve"><value>Equipo</value></data>
 <data name="EDato" xml:space="preserve"><value>Error al Insertar los datos, Intente de Nuevo.</value></data>
 <data name="EditarDiscrepancia" xml:space="preserve"><value>Editar Discrepancia</value></data>
 <data name="Efluentes" xml:space="preserve"><value>Efluentes</value></data>
@@ -56,6 +61,7 @@
 <data name="FechaDeReunion" xml:space="preserve"><value>Fecha de Reunión</value></data>
 <data name="FechaDelCambio" xml:space="preserve"><value>Fecha del Cambio</value></data>
 <data name="Filtrar" xml:space="preserve"><value>Filtrar</value></data>
+<data name="FiltrarCodigo" xml:space="preserve"><value>Filtrar Código</value></data>
 <data name="FiltroFechaDeReunion" xml:space="preserve"><value>Filtro Fecha de Reunión</value></data>
 <data name="FiltroFechaDeTrabajo" xml:space="preserve"><value>Filtro Fecha de Trabajo</value></data>
 <data name="Guardar" xml:space="preserve"><value>Guardar</value></data>
@@ -83,6 +89,7 @@
 <data name="NoHayEquipos" xml:space="preserve"><value>No hay equipos.</value></data>
 <data name="NoHayRegistros" xml:space="preserve"><value>No hay registros disponibles.</value></data>
 <data name="NoHayRegistros2" xml:space="preserve"><value>No hay registros aún...</value></data>
+<data name="Nombre" xml:space="preserve"><value>Nombre</value></data>
 <data name="NombreDelEquipo" xml:space="preserve"><value>Nombre del Equipo</value></data>
 <data name="NuevaFechaDeTrabajo" xml:space="preserve"><value>Nueva Fecha de Trabajo</value></data>
 <data name="Nuevo" xml:space="preserve"><value>Nuevo</value></data>
@@ -140,6 +147,7 @@
 <data name="BuscarCargo2" xml:space="preserve"><value>Buscar Cargo ...</value></data>
 <data name="SeleccioneDML" xml:space="preserve"><value>Seleccione los días no laborables que desea excluir:</value></data>
 <data name="AgregarFecha" xml:space="preserve"><value>Agregar fecha</value></data>
+<data name="AgregarEquipo" xml:space="preserve"><value>Agregar Equipo</value></data>
 <data name="FechasSeleccionadas" xml:space="preserve"><value>Fechas seleccionadas</value></data>
 <data name="Cancelar" xml:space="preserve"><value>Cancelar</value></data>
 <data name="NoHayFiltros" xml:space="preserve"><value>No hay registros para los filtros seleccionados.</value></data>

@@ -20,7 +20,7 @@
 
 @attribute [Authorize(Roles = "Admin, AdminChempro,SuperAdmin")]
 
-<h3>Códigos de Equipos </h3>
+<h3>@ValidationMessages.CodigosDeEquipos</h3>
 
 
 <p></p>
@@ -36,7 +36,7 @@ else
     if (tipo == 1)
     {
         <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-            Volver
+            @ValidationMessages.Atras
             <span class="oi oi-arrow-circle-left"></span>
         </BSInputRadio>
         <p></p>
@@ -50,40 +50,40 @@ else
                 </BSCol>
                 <BSRow>
                     <BSCol Column="4" ColumnSmall="2">
-                        <BSLabel>Centro</BSLabel>
+                        <BSLabel>@ValidationMessages.Centro</BSLabel>
                         <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="IdCent">
-                            <option value="0">Seleccione</option>
+                            <option value="0">@ValidationMessages.Seleccione</option>
                             @foreach (var d in MaestraData.centro)
                             {
                                 <option value="@d.IdCentro">@d.Centro</option>
                             }
                         </BSInput>
-                        <BSFeedback For="@(() =>IdCent)" ValidMessage="Correcto." />
+                        <BSFeedback For="@(() =>IdCent)" ValidMessage="@ValidationMessages.Correcto" />
                     </BSCol>
 
                     <BSCol Column="4" ColumnSmall="2">
-                        <BSLabel>División</BSLabel>
+                        <BSLabel>@ValidationMessages.Division</BSLabel>
                         <BSInput InputType="InputType.Select" @onchange='BuscarLinea' @bind-Value="IdDiv">
-                            <option value="0">Seleccione</option>
+                            <option value="0">@ValidationMessages.Seleccione</option>
                             @foreach (var d in MaestraData.divisions)
                             {
                                     <option value="@d.IdDivision">@d.Ndivision</option>                           
                             }
                         </BSInput>
-                        <BSFeedback For="@(() =>IdDiv)" ValidMessage="Correcto." />
+                        <BSFeedback For="@(() =>IdDiv)" ValidMessage="@ValidationMessages.Correcto" />
                     </BSCol>
 
 
                     <BSCol Column="4">
-                        <BSLabel>Línea</BSLabel>
+                        <BSLabel>@ValidationMessages.Linea</BSLabel>
                         <BSInput InputType="InputType.Select" @bind-Value="IdLin">
-                            <option value="0">Seleccione...</option>
+                            <option value="0">@ValidationMessages.Seleccione</option>
                             @foreach (var d in MaestraData.lineas)
                             {
                                     <option value="@d.IdLinea">@d.Linea</option>                         
                             }
                         </BSInput>
-                        <BSFeedback For="@(() =>IdLin)" ValidMessage="Correcto." />
+                        <BSFeedback For="@(() =>IdLin)" ValidMessage="@ValidationMessages.Correcto" />
 
                     </BSCol>
                 </BSRow>
@@ -93,31 +93,31 @@ else
                 <p></p>
                 <BSRow>
                     <BSCol Column="3">
-                        <BSLabel>Código Eam</BSLabel>
+                        <BSLabel>@ValidationMessages.CodigoEAM</BSLabel>
                         <BSInput InputType="InputType.Text" @bind-Value="EquipoForm.EcodEquiEam" />
-                        <BSFeedback For="@(() => EquipoForm.EcodEquiEam)" ValidMessage="Correcto." />
+                        <BSFeedback For="@(() => EquipoForm.EcodEquiEam)" ValidMessage="@ValidationMessages.Correcto" />
                     </BSCol>
                 </BSRow>
                 <p></p>
                 <BSRow>
                     <BSCol Column="4">
-                        <BSLabel>Nombre del Equipo</BSLabel>
+                        <BSLabel>@ValidationMessages.NombreDelEquipo</BSLabel>
                         <BSInput InputType="InputType.Text" @bind-Value="EquipoForm.EnombreEam" />
-                        <BSFeedback For="@(() => EquipoForm.EnombreEam)" ValidMessage="Correcto." />
+                        <BSFeedback For="@(() => EquipoForm.EnombreEam)" ValidMessage="@ValidationMessages.Correcto" />
                     </BSCol>
                     <BSRow>
                         <BSCol Column="6">
-                            <BSLabel>Descripción</BSLabel>
+                            <BSLabel>@ValidationMessages.Descripcion</BSLabel>
                             <BSInput InputType="InputType.TextArea" @bind-Value="EquipoForm.EdescriEam" />
-                            <BSFeedback For="@(() => EquipoForm.EdescriEam)" ValidMessage="Correcto." />
+                            <BSFeedback For="@(() => EquipoForm.EdescriEam)" ValidMessage="@ValidationMessages.Correcto" />
                         </BSCol>
                     </BSRow>
                     <p></p>
                 </BSRow>
                 <BSCol Column="12">
-                    <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit >  Guardar Equipo <span class="oi oi-check"></span></BSButton>
+                    <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit >  @ValidationMessages.Guardar @ValidationMessages.Equipo <span class="oi oi-check"></span></BSButton>
 
-                <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset >  Nuevo</BSButton>
+                <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset >  @ValidationMessages.Nuevo</BSButton>
 
             </BSCol>
         </BSForm>
@@ -126,16 +126,16 @@ else
     else if (tipo == 2)
     {
         <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-            Volver
+            @ValidationMessages.Atras
             <span class="oi oi-arrow-circle-left"></span>
         </BSInputRadio>
         <p></p>
         <p></p>
         <BSRow>
             <BSCol Column="3">
-                <BSLabel>Centro</BSLabel>
+                <BSLabel>@ValidationMessages.Centro</BSLabel>
                 <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="IdCent" >
-                    <option value="0">Seleccione</option>
+                    <option value="0">@ValidationMessages.Seleccione</option>
                     @foreach (var d in MaestraData.centro)
                     {
                         <option value="@d.IdCentro">@d.Centro</option>
@@ -145,9 +145,9 @@ else
             </BSCol>
 
             <BSCol Column="3" >
-                <BSLabel>División</BSLabel>
+                <BSLabel>@ValidationMessages.Division</BSLabel>
                 <BSInput InputType="InputType.Select" @onchange='BuscarLinea' @bind-Value="IdDiv" >
-                    <option value="0">Seleccione</option>
+                    <option value="0">@ValidationMessages.Seleccione</option>
                   
                     {
                     @foreach (var d in MaestraData.divisions)
@@ -156,25 +156,25 @@ else
                     }
                     
                 </BSInput>
-                <BSFeedback For="@(() =>IdDiv)" ValidMessage="Correcto." />
+                <BSFeedback For="@(() =>IdDiv)" ValidMessage="@ValidationMessages.Correcto" />
             </BSCol>
 
 
             <BSCol Column="3">
-                <BSLabel>Línea</BSLabel>
+                <BSLabel>@ValidationMessages.Linea</BSLabel>
                 <BSInput InputType="InputType.Select" @bind-Value="IdLin">
-                    <option value="0">Seleccione...</option>
+                    <option value="0">@ValidationMessages.Seleccione</option>
                     @foreach (var d in MaestraData.lineas)
                     {
                                 <option value="@d.IdLinea">@d.Linea</option>                         
                     }
                 </BSInput>
-                <BSFeedback For="@(() =>IdLin)" ValidMessage="Correcto." />
+                <BSFeedback For="@(() =>IdLin)" ValidMessage="@ValidationMessages.Correcto" />
 
             </BSCol Colum="3">
             <BSCol>
                  <BSRow>
-                 <BSLabel>Buscar</BSLabel>
+                 <BSLabel>@ValidationMessages.Buscar</BSLabel>
                  </BSRow>
                 <button onclick="@Get" class="btn btn-success"><i class="oi oi-magnifying-glass"></i></button>
             </BSCol>
@@ -187,7 +187,7 @@ else
             {
 
                 <BSCol Column="3">
-                    <BSLabel>Filtrar Código</BSLabel>
+                    <BSLabel>@ValidationMessages.FiltrarCodigo</BSLabel>
                     <BSInput InputType="InputType.Text" @bind-Value="EquipoFiltro">
 
 
@@ -206,12 +206,12 @@ else
                                 @*<BSTD>Id</BSTD>*@
                                 @* <BSTD>Centro</BSTD> *@
                                 @* <BSTD>División</BSTD> *@
-                                <BSTD>Línea</BSTD>
-                                <BSTD>Nombre</BSTD>
-                                <BSTD>Código</BSTD>
-                                <BSTD>Descripcion</BSTD>
-                                <BSTD>Estado</BSTD>
-                                <BSTD>Editar</BSTD>
+                                <BSTD>@ValidationMessages.Linea</BSTD>
+                                <BSTD>@ValidationMessages.Nombre</BSTD>
+                                <BSTD>@ValidationMessages.Codigo</BSTD>
+                                <BSTD>@ValidationMessages.Descripcion</BSTD>
+                                <BSTD>@ValidationMessages.Estado</BSTD>
+                                <BSTD>@ValidationMessages.Editar</BSTD>
 
 
 
@@ -230,25 +230,25 @@ else
             {
                 <BSTD>
                     <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
-                    <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="Correcto." />
+                    <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="@ValidationMessages.Correcto" />
                 </BSTD>
 
                 <BSTD>
                     <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
-                    <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="Correcto." />
+                    <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="@ValidationMessages.Correcto" />
                 </BSTD>
 
                 <BSTD>
                     <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
-                    <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="Correcto." />
+                    <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="@ValidationMessages.Correcto" />
                 </BSTD>
 
                 <BSTD>
                     <BSInput InputType="InputType.Select" @bind-Value="d.EestaEam">
-                        <option value="true">Activar</option>
-                        <option value="false">Desactivar</option>
+                        <option value="true">@ValidationMessages.Activar</option>
+                        <option value="false">@ValidationMessages.Desactivar</option>
                     </BSInput>
-                    <BSFeedback For="@(() => d.EestaEam)" ValidMessage="Correcto." />
+                    <BSFeedback For="@(() => d.EestaEam)" ValidMessage="@ValidationMessages.Correcto" />
                 </BSTD>
 
                 <BSTD>
@@ -264,11 +264,11 @@ else
                 <BSTD>
                     @if (d.EestaEam)
                     {
-                        <p>Activo</p>
+                        <p>@ValidationMessages.Activo</p>
                     }
                     else
                     {
-                        <p>Inactivo</p>
+                        <p>@ValidationMessages.Inactivo</p>
                     }
                 </BSTD>
                 <BSTD>
@@ -282,7 +282,7 @@ else
 }
 else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
 {
-    <tr><td colspan="6"><em>No hay registros disponibles.</em></td></tr>
+    <tr><td colspan="6"><em>@ValidationMessages.NoHayRegistros</em></td></tr>
 }
 
 
@@ -302,31 +302,31 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
                                             <BSTD>
 
                                                 <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
-                                                <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="Correcto." />
+                                                <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="@ValidationMessages.Correcto" />
 
                                             </BSTD>
 
                                             <BSTD>
 
                                                 <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
-                                                <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="Correcto." />
+                                                <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="@ValidationMessages.Correcto" />
 
                                             </BSTD>
 
                                             <BSTD>
 
                                                 <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
-                                                <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="Correcto." />
+                                                <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="@ValidationMessages.Correcto" />
 
                                             </BSTD>
 
                                             <BSTD>
 
                                                 <BSInput InputType="InputType.Select" @bind-Value="d.EestaEam">
-                                                    <option value="true">Activar</option>
-                                                    <option value="false">Desactivar</option>
+                                                    <option value="true">@ValidationMessages.Activar</option>
+                                                    <option value="false">@ValidationMessages.Desactivar</option>
                                                 </BSInput>
-                                                <BSFeedback For="@(() => d.EestaEam)" ValidMessage="Correcto." />
+                                                <BSFeedback For="@(() => d.EestaEam)" ValidMessage="@ValidationMessages.Correcto" />
 
                                             </BSTD>
                                             <BSTD>
@@ -353,11 +353,11 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
                                             <BSTD>
                                                 @if (d.EestaEam == true)
                                                 {
-                                                    <p>Activo</p>
+                                                    <p>@ValidationMessages.Activo</p>
                                                 }
                                                 else
                                                 {
-                                                    <p>Inactivo</p>
+                                                    <p>@ValidationMessages.Inactivo</p>
                                                 }
                                             </BSTD>
 
@@ -382,7 +382,7 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
             }
             else if (dataIsLoaded == 2 && MaestraData.equiposlinea.Count() == 0)
             {
-                <p>No hay equipos.</p>
+                <p>@ValidationMessages.NoHayEquipos .</p>
             }
 
         }
@@ -390,12 +390,12 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
         {
             <BSInputRadio CheckedValue="@(1)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success"
                 IsOutlined="true">
-                Agregar Equipos
+                @ValidationMessages.AgregarEquipos
                 <span class="oi oi-plus"></span>
             </BSInputRadio>
             <BSInputRadio @bind-Value="tipo" CheckedValue="@(2)" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success"
                 IsOutlined="true">
-                Consultar Equipos
+                @ValidationMessages.ConsultarEquipos
                 <span class="oi oi-magnifying-glass"></span>
             </BSInputRadio>
         }

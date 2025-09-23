@@ -32,6 +32,7 @@ namespace ReunionWeb.Resources
         public static string Cerrado => _resourceManager.GetString("Cerrado", CultureInfo.CurrentUICulture);
         public static string Codigo => _resourceManager.GetString("Codigo", CultureInfo.CurrentUICulture);
         public static string CodigoDeEquipo => _resourceManager.GetString("CodigoDeEquipo", CultureInfo.CurrentUICulture);
+        public static string CodigoEAM => _resourceManager.GetString("CodigoEAM", CultureInfo.CurrentUICulture);
         public static string Consolidacion => _resourceManager.GetString("Consolidacion", CultureInfo.CurrentUICulture);
         public static string ConsolidacionDeDiscrepancia => _resourceManager.GetString("ConsolidacionDeDiscrepancia", CultureInfo.CurrentUICulture);
         public static string Consultar => _resourceManager.GetString("Consultar", CultureInfo.CurrentUICulture);
@@ -43,6 +44,7 @@ namespace ReunionWeb.Resources
         public static string Discrepancias => _resourceManager.GetString("Discrepancias", CultureInfo.CurrentUICulture);
         public static string Division => _resourceManager.GetString("Division", CultureInfo.CurrentUICulture);
         public static string EDato => _resourceManager.GetString("EDato", CultureInfo.CurrentUICulture);
+        public static string Equipo => _resourceManager.GetString("Equipo", CultureInfo.CurrentUICulture);
         public static string EditarDiscrepancia => _resourceManager.GetString("EditarDiscrepancia", CultureInfo.CurrentUICulture);
         public static string EnCurso => _resourceManager.GetString("EnCurso", CultureInfo.CurrentUICulture);
         public static string Error => _resourceManager.GetString("Error", CultureInfo.CurrentUICulture);
@@ -191,6 +193,11 @@ namespace ReunionWeb.Resources
         public static string ColocarFecha => _resourceManager.GetString("ColocarFecha", CultureInfo.CurrentUICulture);
         public static string CamposNecesarios => _resourceManager.GetString("CamposNecesarios", CultureInfo.CurrentUICulture);
         public static string MExito => _resourceManager.GetString("MExito", CultureInfo.CurrentUICulture);
+        public static string CodigosDeEquipos => _resourceManager.GetString("ConsultarEquipos", CultureInfo.CurrentUICulture);
+        public static string ConsultarEquipos => _resourceManager.GetString("AgregarEquipos", CultureInfo.CurrentUICulture);
+        public static string AgregarEquipos => _resourceManager.GetString("AgregarEquipos", CultureInfo.CurrentUICulture);
+        public static string Nombre => _resourceManager.GetString("Nombre", CultureInfo.CurrentUICulture);
+        public static string FiltrarCodigo => _resourceManager.GetString("FiltrarCodigo", CultureInfo.CurrentUICulture);
 
         public static string MapResponsableKey(string nombre)
         {
