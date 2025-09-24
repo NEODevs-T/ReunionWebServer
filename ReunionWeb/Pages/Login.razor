@@ -3,6 +3,9 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
 
+@using ReunionWeb.Resources
+@using System.Globalization
+
 
 
 <h3>Login</h3>
@@ -24,7 +27,8 @@
     <BSRow>
     <BSCol Column="6">
         <BSLabel IsHidden="true">User</BSLabel>
-        <BSInput InputType="InputType.Text" placeholder="Ficha/Usuario"  @bind-Value="user.UserName"/>
+        <BSInput InputType="InputType.Text" placeholder="@($"{ValidationMessages.Ficha} / {ValidationMessages.Usuario}")" @bind-Value="user.UserName" />
+
         <BSFeedback For="@(() => user.UserName)" ValidMessage="Correcto." />
     </BSCol>
     </BSRow>

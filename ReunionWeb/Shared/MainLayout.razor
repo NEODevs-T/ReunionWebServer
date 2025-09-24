@@ -5,6 +5,7 @@
 @inject NavigationManager NavigationManager
 @inject NotificationService NotificationService
 @using System.Globalization
+@using ReunionWeb.Resources
 
 @inject NavigationManager Navigation
 @inject UsuarioContexto UsuarioContexto
@@ -85,7 +86,7 @@
 
                     <div class="form-floating">
                         <BSLabel IsHidden="true">User</BSLabel>
-                        <BSInput InputType="InputType.Text" placeholder="Ficha/Usuario" @bind-Value="user.UserName" />
+                        <BSInput InputType="InputType.Text" placeholder="@($"{ValidationMessages.Ficha} / {ValidationMessages.Usuario}")" @bind-Value="user.UserName" />
                         <BSFeedback For="@(() => user.UserName)" ValidMessage="Correcto." />
                     </div>
                     <div class="form-floating">
@@ -151,7 +152,7 @@
 
                     <div class="form-floating">
                         <BSLabel IsHidden="true">User</BSLabel>
-                        <BSInput InputType="InputType.Text" placeholder="Ficha/Usuario" @bind-Value="user.UserName" />
+                        <BSInput InputType="InputType.Text" placeholder="@($"{ValidationMessages.Ficha} / {ValidationMessages.Usuario}")" @bind-Value="user.UserName" />
                         <BSFeedback For="@(() => user.UserName)" ValidMessage="Correct." />
                     </div>
                     <div class="form-floating">

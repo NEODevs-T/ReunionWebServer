@@ -57,6 +57,7 @@ namespace ReunionWeb.Resources
         public static string FReunion => _resourceManager.GetString("FReunion", CultureInfo.CurrentUICulture);
         public static string FechaDeReunion => _resourceManager.GetString("FechaDeReunion", CultureInfo.CurrentUICulture);
         public static string FechaDelCambio => _resourceManager.GetString("FechaDelCambio", CultureInfo.CurrentUICulture);
+        public static string Ficha => _resourceManager.GetString("Ficha", CultureInfo.CurrentUICulture);
         public static string Filtrar => _resourceManager.GetString("Filtrar", CultureInfo.CurrentUICulture);
         public static string FiltroFechaDeReunion => _resourceManager.GetString("FiltroFechaDeReunion", CultureInfo.CurrentUICulture);
         public static string FiltroFechaDeTrabajo => _resourceManager.GetString("FiltroFechaDeTrabajo", CultureInfo.CurrentUICulture);
@@ -198,6 +199,9 @@ namespace ReunionWeb.Resources
         public static string AgregarEquipos => _resourceManager.GetString("AgregarEquipos", CultureInfo.CurrentUICulture);
         public static string Nombre => _resourceManager.GetString("Nombre", CultureInfo.CurrentUICulture);
         public static string FiltrarCodigo => _resourceManager.GetString("FiltrarCodigo", CultureInfo.CurrentUICulture);
+        public static string Nequipos => _resourceManager.GetString("Nequipos", CultureInfo.CurrentUICulture);
+        public static string TodosCampos => _resourceManager.GetString("TodosCampos", CultureInfo.CurrentUICulture);
+        public static string AExitoso => _resourceManager.GetString("AExitoso", CultureInfo.CurrentUICulture);
 
         public static string MapResponsableKey(string nombre)
         {

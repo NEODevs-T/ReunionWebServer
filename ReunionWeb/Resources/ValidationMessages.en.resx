@@ -60,6 +60,7 @@
 <data name="FReunion" xml:space="preserve"><value>M. Date</value></data>
 <data name="FechaDeReunion" xml:space="preserve"><value>Metting Date</value></data>
 <data name="FechaDelCambio" xml:space="preserve"><value>Change Date</value></data>
+<data name="Ficha" xml:space="preserve"><value>Worksheet</value></data>
 <data name="Filtrar" xml:space="preserve"><value>To Filter</value></data>
 <data name="FiltrarCodigo" xml:space="preserve"><value>Filter Code</value></data>
 <data name="FiltroFechaDeReunion" xml:space="preserve"><value>Meeting Date Filter</value></data>
@@ -205,4 +206,7 @@
 <data name="ColocarFecha" xml:space="preserve"><value>You must enter both dates</value></data>
 <data name="CamposNecesarios" xml:space="preserve"><value>Please enter the required fields</value></data>
 <data name="MExito" xml:space="preserve"><value>Successfully modified</value></data>
+<data name="Nequipos" xml:space="preserve"><value>No equipment found for the selected line.</value></data>
+<data name="TodosCampos" xml:space="preserve"><value>All fields are required.</value></data>
+<data name="AExitoso" xml:space="preserve"><value>Successfully added.</value></data>
 </root>

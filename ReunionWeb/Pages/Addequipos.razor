@@ -18,7 +18,7 @@
 
 
 
-@attribute [Authorize(Roles = "Admin, AdminChempro,SuperAdmin")]
+@attribute [Authorize(Roles = "Admin, AdminChempro,SuperAdmin, PrimeUser")]
 
 <h3>@ValidationMessages.CodigosDeEquipos</h3>
 
@@ -453,7 +453,7 @@ protected async Task Get()
 
         if (equipos == null || !equipos.Any())
         {
-            mensaje = "No se encontraron equipos para la línea seleccionada.";
+            mensaje = ValidationMessages.Nequipos;
             NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, mensaje));
         }
 
@@ -461,7 +461,7 @@ protected async Task Get()
     }
     catch (Exception ex)
     {
-        mensaje = "Error inesperado: " + ex.Message;
+        mensaje = ValidationMessages.ErrorInesp + ex.Message;
         NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato, mensaje));
         dataIsLoaded = 0;
     }
@@ -533,8 +533,8 @@ protected async Task SaveEquipo(EditContext e)
             string.IsNullOrWhiteSpace(EquipoForm.EdescriEam) ||
             IdLin == 0)
         {
-            mensaje = "Todos los campos son obligatorios.";
-            NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+            mensaje = ValidationMessages.TodosCampos;
+            NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, mensaje));
             return;
         }
 
@@ -561,19 +561,19 @@ protected async Task SaveEquipo(EditContext e)
 
             mensaje = await MaestraData.AddEquipo(EquipoForm);
 
-            if (mensaje == "Registro Exitoso")
+            if (mensaje == ValidationMessages.RExitoso)
             {
                 NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
                 await Reset();
             }
             else
             {
-                NotificationService.Notify(Notificar.Notificacion("advertencia", "Atención", mensaje));
+                NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, mensaje));
             }
         }
         catch (Exception ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo", ex.Message));
+            NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato, ex.Message));
         }
     }
 }
@@ -606,20 +606,20 @@ protected async Task SaveEquipo(EditContext e)
 
             mensaje = await MaestraData.AddEquipo(eq);
 
-            if (mensaje == "Registro Exitoso")
+            if (mensaje == ValidationMessages.RExitoso)
             {
                 NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
             }
             else
             {
-                NotificationService.Notify(Notificar.Notificacion("exito", "Se añadió Exitosamente", ""));
+                NotificationService.Notify(Notificar.Notificacion("exito", ValidationMessages.AExitoso, ""));
             }
 
             idequipoeditar = 0;
         }
         catch (Exception ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("error", "Error al Insertar los datos, Intente de Nuevo", ex.Message));
+            NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato, ex.Message));
         }
     }
 

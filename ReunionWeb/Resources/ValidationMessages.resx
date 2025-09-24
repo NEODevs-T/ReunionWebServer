@@ -59,6 +59,7 @@
 <data name="Exito" xml:space="preserve"><value>exito</value></data>
 <data name="FReunion" xml:space="preserve"><value>F. Reunión</value></data>
 <data name="FechaDeReunion" xml:space="preserve"><value>Fecha de Reunión</value></data>
+<data name="Ficha" xml:space="preserve"><value>Ficha</value></data>
 <data name="FechaDelCambio" xml:space="preserve"><value>Fecha del Cambio</value></data>
 <data name="Filtrar" xml:space="preserve"><value>Filtrar</value></data>
 <data name="FiltrarCodigo" xml:space="preserve"><value>Filtrar Código</value></data>
@@ -206,5 +207,8 @@
 <data name="ColocarFecha" xml:space="preserve"><value>debe colocar las dos fechas</value></data>
 <data name="CamposNecesarios" xml:space="preserve"><value>por favor ingrese los campos necesarios</value></data> 
 <data name="MExito" xml:space="preserve"><value>Se logro modificar con exito</value></data> 
+<data name="Nequipos" xml:space="preserve"><value>No se encontraron equipos para la línea seleccionada.</value></data>
+<data name="TodosCampos" xml:space="preserve"><value>Todos los campos son obligatorios.</value></data>
+<data name="AExitoso" xml:space="preserve"><value>Se añadió Exitosamente</value></data>
 </root>
 
