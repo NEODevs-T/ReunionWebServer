@@ -55,13 +55,11 @@
                         <option value="Todo">All</option>
                         @foreach (var d in APIReunionService.centro)
                         {
-                            @foreach (var e in d.Lineas)
+                            @foreach (var e in d.Lineas.Where(li => li.Lestado && li.IdDivision == IdDiv))
                             {
-                                if (IdDiv == e.IdDivision)
-                                {
-                                    <option value="@e.Lnom">@e.Lnom</option>
-                                }
+                                <option value="@e.Lnom">@e.Lnom</option>
                             }
+                        }
                         }
                     </BSInput>
                 </BSCol>
@@ -419,13 +417,11 @@
                         <option value="Todo">Todo</option>
                         @foreach (var d in APIReunionService.centro)
                         {
-                            @foreach (var e in d.Lineas)
+                            @foreach (var e in d.Lineas.Where(li => li.Lestado && li.IdDivision == IdDiv))
                             {
-                                if (IdDiv == e.IdDivision)
-                                {
-                                    <option value="@e.Lnom">@e.Lnom</option>
-                                }
+                                <option value="@e.Lnom">@e.Lnom</option>
                             }
+                        }
                         }
                     </BSInput>
                 </BSCol>

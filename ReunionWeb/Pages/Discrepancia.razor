@@ -67,7 +67,8 @@
                     <option value="">Select...</option>
                     @foreach (var d in APIReunionService.centro)
                     {
-                        @foreach (var e in d.Lineas.Where(li => li.IdDivision == IdDiv && li.IdDivisionNavigation.IdCentro == IdCent))
+                        @foreach (var e in d.Lineas
+                                        .Where(li => li.Lestado && li.IdDivision == IdDiv && li.IdDivisionNavigation.IdCentro == IdCent))
                         {
                             <option value="@e.Lnom">@e.Lnom</option>
                         }
@@ -280,7 +281,8 @@
                     <option value="">Seleccione...</option>
                     @foreach (var d in APIReunionService.centro)
                     {
-                        @foreach (var e in d.Lineas.Where(li => li.IdDivision == IdDiv && li.IdDivisionNavigation.IdCentro == IdCent))
+                        @foreach (var e in d.Lineas
+                                        .Where(li => li.Lestado && li.IdDivision == IdDiv && li.IdDivisionNavigation.IdCentro == IdCent))
                         {
                             <option value="@e.Lnom">@e.Lnom</option>
                         }
