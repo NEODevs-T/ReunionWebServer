@@ -977,7 +977,7 @@
                     @foreach (var d in CambiosFecha)
                     {
                         <BSTR>
-                            <BSTD>@(CambiosFecha.IndexOf(d) + 1)</BSTD>
+                            <BSTD>@(CambiosFecha.IndexOf(d) + +1)</BSTD>
                             <BSTD>@d.Cffec.ToString("yyyy/MM/dd")</BSTD>
                                 <BSTD>@d.CffecNew.ToString("yyyy/MM/dd")</BSTD>
                                 <BSTD>@d.Cfuser</BSTD>
@@ -1086,7 +1086,7 @@
         {
             if (DiscForm.RdfecTra.Date >= DiscForm.RdfecReu.Date && (int)tipo == 1 || (int)tipo == 0 || (int)tipo == 2)
             {
-                if (CambiosFecha.Count() >= 3 & camFec != DiscForm.RdfecTra)
+                if (CambiosFecha.Count() >= 4 & camFec != DiscForm.RdfecTra)
                 {
                     if(Pais == "Trinidad y Tobago")
                     {
