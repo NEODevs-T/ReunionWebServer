@@ -36,28 +36,27 @@ namespace ReunionDiaApi.Controllers
 
 
         [HttpGet("{cent}")]
-        public async Task<ActionResult<List<Linea>>> GetBdDiv(string cent)
-        {
-            if (cent == "All")
-            {
-                centro = await _context.Centros
-               .Include(x => x.Divisions)
-               .ThenInclude(post => post.Lineas)
-               .ToListAsync();
-            }
+public async Task<ActionResult<List<Centro>>> GetBdDiv(string cent)
+{
+    if (cent == "All")
+    {
+        centro = await _context.Centros
+            .Include(x => x.Divisions)
+            .ThenInclude(div => div.Lineas.Where(l => l.Lestado))
+            .ToListAsync();
+    }
+    else
+    {
+        centro = await _context.Centros
+            .Include(x => x.Divisions)
+            .ThenInclude(div => div.Lineas.Where(l => l.Lestado))
+            .Where(x => x.Cnom == cent)
+            .ToListAsync();
+    }
 
-            else
-            {
-                centro = await _context.Centros
-               .Include(x => x.Divisions)
-               .ThenInclude(post => post.Lineas)
-               .Where(x => x.Cnom == cent)
-               .ToListAsync();
-            }
+    return Ok(centro);
+}
 
-
-            return Ok(centro);
-        }
 
         [HttpGet("Equipos/{cent}")]
         public async Task<ActionResult<List<EquipoEam>>> EquiposEAM(string cent)
