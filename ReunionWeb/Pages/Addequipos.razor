@@ -12,31 +12,35 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
 @inject NotificationService NotificationService
+@inject LocalizationService LocalizationService
+@inject ITranslationService Translator
+@inject IDiccionarioTraduccionesService DiccionarioTraduccionesService
 
 @using ReunionWeb.Resources
 @using System.Globalization
-
+@using ReunionWeb.Services
 
 
 @attribute [Authorize(Roles = "Admin, AdminChempro,SuperAdmin, PrimeUser")]
 
-<h3>@ValidationMessages.CodigosDeEquipos</h3>
 
 
-<p></p>
 
-
-    @if (MaestraData.centro.Count() == 0)
+    @if (!traduccionesCargadas || MaestraData.centro.Count() == 0)
 {
     <div class="loader"></div>
 
 }
 else
 {
+    <h3>@DiccionarioTraduccionesService.Traducciones["CodigosDeEquipos"]</h3>
+
+
+    <p></p>
     if (tipo == 1)
     {
         <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-            @ValidationMessages.Atras
+            @DiccionarioTraduccionesService.Traducciones["Atras"]
             <span class="oi oi-arrow-circle-left"></span>
         </BSInputRadio>
         <p></p>
@@ -50,40 +54,40 @@ else
                 </BSCol>
                 <BSRow>
                     <BSCol Column="4" ColumnSmall="2">
-                        <BSLabel>@ValidationMessages.Centro</BSLabel>
+                        <BSLabel>@DiccionarioTraduccionesService.Traducciones["Centro"]</BSLabel>
                         <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="IdCent">
-                            <option value="0">@ValidationMessages.Seleccione</option>
+                            <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                             @foreach (var d in MaestraData.centro)
                             {
                                 <option value="@d.IdCentro">@d.Centro</option>
                             }
                         </BSInput>
-                        <BSFeedback For="@(() =>IdCent)" ValidMessage="@ValidationMessages.Correcto" />
+                        <BSFeedback For="@(() =>IdCent)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                     </BSCol>
 
                     <BSCol Column="4" ColumnSmall="2">
-                        <BSLabel>@ValidationMessages.Division</BSLabel>
+                        <BSLabel>@DiccionarioTraduccionesService.Traducciones["Division"]</BSLabel>
                         <BSInput InputType="InputType.Select" @onchange='BuscarLinea' @bind-Value="IdDiv">
-                            <option value="0">@ValidationMessages.Seleccione</option>
+                            <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                             @foreach (var d in MaestraData.divisions)
                             {
                                     <option value="@d.IdDivision">@d.Ndivision</option>                           
                             }
                         </BSInput>
-                        <BSFeedback For="@(() =>IdDiv)" ValidMessage="@ValidationMessages.Correcto" />
+                        <BSFeedback For="@(() =>IdDiv)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                     </BSCol>
 
 
                     <BSCol Column="4">
-                        <BSLabel>@ValidationMessages.Linea</BSLabel>
+                        <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
                         <BSInput InputType="InputType.Select" @bind-Value="IdLin">
-                            <option value="0">@ValidationMessages.Seleccione</option>
+                            <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                             @foreach (var d in MaestraData.lineas)
                             {
                                     <option value="@d.IdLinea">@d.Linea</option>                         
                             }
                         </BSInput>
-                        <BSFeedback For="@(() =>IdLin)" ValidMessage="@ValidationMessages.Correcto" />
+                        <BSFeedback For="@(() =>IdLin)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
 
                     </BSCol>
                 </BSRow>
@@ -93,31 +97,31 @@ else
                 <p></p>
                 <BSRow>
                     <BSCol Column="3">
-                        <BSLabel>@ValidationMessages.CodigoEAM</BSLabel>
+                        <BSLabel>@DiccionarioTraduccionesService.Traducciones["CodigoEAM"]</BSLabel>
                         <BSInput InputType="InputType.Text" @bind-Value="EquipoForm.EcodEquiEam" />
-                        <BSFeedback For="@(() => EquipoForm.EcodEquiEam)" ValidMessage="@ValidationMessages.Correcto" />
+                        <BSFeedback For="@(() => EquipoForm.EcodEquiEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                     </BSCol>
                 </BSRow>
                 <p></p>
                 <BSRow>
                     <BSCol Column="4">
-                        <BSLabel>@ValidationMessages.NombreDelEquipo</BSLabel>
+                        <BSLabel>@DiccionarioTraduccionesService.Traducciones["NombreDelEquipo"]</BSLabel>
                         <BSInput InputType="InputType.Text" @bind-Value="EquipoForm.EnombreEam" />
-                        <BSFeedback For="@(() => EquipoForm.EnombreEam)" ValidMessage="@ValidationMessages.Correcto" />
+                        <BSFeedback For="@(() => EquipoForm.EnombreEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                     </BSCol>
                     <BSRow>
                         <BSCol Column="6">
-                            <BSLabel>@ValidationMessages.Descripcion</BSLabel>
+                            <BSLabel>@DiccionarioTraduccionesService.Traducciones["Descripcion"]</BSLabel>
                             <BSInput InputType="InputType.TextArea" @bind-Value="EquipoForm.EdescriEam" />
-                            <BSFeedback For="@(() => EquipoForm.EdescriEam)" ValidMessage="@ValidationMessages.Correcto" />
+                            <BSFeedback For="@(() => EquipoForm.EdescriEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                         </BSCol>
                     </BSRow>
                     <p></p>
                 </BSRow>
                 <BSCol Column="12">
-                    <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit >  @ValidationMessages.Guardar @ValidationMessages.Equipo <span class="oi oi-check"></span></BSButton>
+                    <BSButton Color="BSColor.Success" Size="Size.ExtraSmall" IsSubmit >  @DiccionarioTraduccionesService.Traducciones["Guardar"] @DiccionarioTraduccionesService.Traducciones["Equipo"] <span class="oi oi-check"></span></BSButton>
 
-                <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset >  @ValidationMessages.Nuevo</BSButton>
+                <BSButton Color="BSColor.Primary" Size="Size.ExtraSmall" IsReset >  @DiccionarioTraduccionesService.Traducciones["Nuevo"]</BSButton>
 
             </BSCol>
         </BSForm>
@@ -126,28 +130,28 @@ else
     else if (tipo == 2)
     {
         <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
-            @ValidationMessages.Atras
+            @DiccionarioTraduccionesService.Traducciones["Atras"]
             <span class="oi oi-arrow-circle-left"></span>
         </BSInputRadio>
         <p></p>
         <p></p>
         <BSRow>
             <BSCol Column="3">
-                <BSLabel>@ValidationMessages.Centro</BSLabel>
+                <BSLabel>@DiccionarioTraduccionesService.Traducciones["Centro"]</BSLabel>
                 <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="IdCent" >
-                    <option value="0">@ValidationMessages.Seleccione</option>
+                    <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                     @foreach (var d in MaestraData.centro)
                     {
                         <option value="@d.IdCentro">@d.Centro</option>
                     }
                 </BSInput>
-                <BSFeedback For="@(() =>IdCent)" ValidMessage="Correcto." />
+                <BSFeedback For="@(() =>IdCent)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
             </BSCol>
 
             <BSCol Column="3" >
-                <BSLabel>@ValidationMessages.Division</BSLabel>
+                <BSLabel>@DiccionarioTraduccionesService.Traducciones["Division"]</BSLabel>
                 <BSInput InputType="InputType.Select" @onchange='BuscarLinea' @bind-Value="IdDiv" >
-                    <option value="0">@ValidationMessages.Seleccione</option>
+                    <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                   
                     {
                     @foreach (var d in MaestraData.divisions)
@@ -156,25 +160,25 @@ else
                     }
                     
                 </BSInput>
-                <BSFeedback For="@(() =>IdDiv)" ValidMessage="@ValidationMessages.Correcto" />
+                <BSFeedback For="@(() =>IdDiv)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
             </BSCol>
 
 
             <BSCol Column="3">
-                <BSLabel>@ValidationMessages.Linea</BSLabel>
+                <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
                 <BSInput InputType="InputType.Select" @bind-Value="IdLin">
-                    <option value="0">@ValidationMessages.Seleccione</option>
+                    <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                     @foreach (var d in MaestraData.lineas)
                     {
                                 <option value="@d.IdLinea">@d.Linea</option>                         
                     }
                 </BSInput>
-                <BSFeedback For="@(() =>IdLin)" ValidMessage="@ValidationMessages.Correcto" />
+                <BSFeedback For="@(() =>IdLin)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
 
             </BSCol Colum="3">
             <BSCol>
                  <BSRow>
-                 <BSLabel>@ValidationMessages.Buscar</BSLabel>
+                 <BSLabel>@DiccionarioTraduccionesService.Traducciones["Buscar"]</BSLabel>
                  </BSRow>
                 <button onclick="@Get" class="btn btn-success"><i class="oi oi-magnifying-glass"></i></button>
             </BSCol>
@@ -187,7 +191,7 @@ else
             {
 
                 <BSCol Column="3">
-                    <BSLabel>@ValidationMessages.FiltrarCodigo</BSLabel>
+                    <BSLabel>@DiccionarioTraduccionesService.Traducciones["FiltrarCodigo"]</BSLabel>
                     <BSInput InputType="InputType.Text" @bind-Value="EquipoFiltro">
 
 
@@ -206,12 +210,12 @@ else
                                 @*<BSTD>Id</BSTD>*@
                                 @* <BSTD>Centro</BSTD> *@
                                 @* <BSTD>División</BSTD> *@
-                                <BSTD>@ValidationMessages.Linea</BSTD>
-                                <BSTD>@ValidationMessages.Nombre</BSTD>
-                                <BSTD>@ValidationMessages.Codigo</BSTD>
-                                <BSTD>@ValidationMessages.Descripcion</BSTD>
-                                <BSTD>@ValidationMessages.Estado</BSTD>
-                                <BSTD>@ValidationMessages.Editar</BSTD>
+                                <BSTD>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSTD>
+                                <BSTD>@DiccionarioTraduccionesService.Traducciones["Nombre"]</BSTD>
+                                <BSTD>@DiccionarioTraduccionesService.Traducciones["Codigo"]</BSTD>
+                                <BSTD>@DiccionarioTraduccionesService.Traducciones["Descripcion"]</BSTD>
+                                <BSTD>@DiccionarioTraduccionesService.Traducciones["Estado"]</BSTD>
+                                <BSTD>@DiccionarioTraduccionesService.Traducciones["Editar"]</BSTD>
 
 
 
@@ -230,25 +234,25 @@ else
             {
                 <BSTD>
                     <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
-                    <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="@ValidationMessages.Correcto" />
+                    <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                 </BSTD>
 
                 <BSTD>
                     <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
-                    <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="@ValidationMessages.Correcto" />
+                    <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                 </BSTD>
 
                 <BSTD>
                     <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
-                    <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="@ValidationMessages.Correcto" />
+                    <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                 </BSTD>
 
                 <BSTD>
                     <BSInput InputType="InputType.Select" @bind-Value="d.EestaEam">
-                        <option value="true">@ValidationMessages.Activar</option>
-                        <option value="false">@ValidationMessages.Desactivar</option>
+                        <option value="true">@DiccionarioTraduccionesService.Traducciones["Activar"]</option>
+                        <option value="false">@DiccionarioTraduccionesService.Traducciones["Desactivar"]</option>
                     </BSInput>
-                    <BSFeedback For="@(() => d.EestaEam)" ValidMessage="@ValidationMessages.Correcto" />
+                    <BSFeedback For="@(() => d.EestaEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                 </BSTD>
 
                 <BSTD>
@@ -264,11 +268,11 @@ else
                 <BSTD>
                     @if (d.EestaEam)
                     {
-                        <p>@ValidationMessages.Activo</p>
+                        <p>@DiccionarioTraduccionesService.Traducciones["Activo"]</p>
                     }
                     else
                     {
-                        <p>@ValidationMessages.Inactivo</p>
+                        <p>@DiccionarioTraduccionesService.Traducciones["Inactivo"]</p>
                     }
                 </BSTD>
                 <BSTD>
@@ -282,7 +286,7 @@ else
 }
 else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
 {
-    <tr><td colspan="6"><em>@ValidationMessages.NoHayRegistros</em></td></tr>
+    <tr><td colspan="6"><em>@DiccionarioTraduccionesService.Traducciones["NoHayRegistros"]</em></td></tr>
 }
 
 
@@ -302,31 +306,31 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
                                             <BSTD>
 
                                                 <BSInput InputType="InputType.Text" @bind-Value="d.EnombreEam" />
-                                                <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="@ValidationMessages.Correcto" />
+                                                <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
 
                                             </BSTD>
 
                                             <BSTD>
 
                                                 <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
-                                                <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="@ValidationMessages.Correcto" />
+                                                <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
 
                                             </BSTD>
 
                                             <BSTD>
 
                                                 <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
-                                                <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="@ValidationMessages.Correcto" />
+                                                <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
 
                                             </BSTD>
 
                                             <BSTD>
 
                                                 <BSInput InputType="InputType.Select" @bind-Value="d.EestaEam">
-                                                    <option value="true">@ValidationMessages.Activar</option>
-                                                    <option value="false">@ValidationMessages.Desactivar</option>
+                                                    <option value="true">@DiccionarioTraduccionesService.Traducciones["Activar"]</option>
+                                                    <option value="false">@DiccionarioTraduccionesService.Traducciones["Desactivar"]</option>
                                                 </BSInput>
-                                                <BSFeedback For="@(() => d.EestaEam)" ValidMessage="@ValidationMessages.Correcto" />
+                                                <BSFeedback For="@(() => d.EestaEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
 
                                             </BSTD>
                                             <BSTD>
@@ -353,11 +357,11 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
                                             <BSTD>
                                                 @if (d.EestaEam == true)
                                                 {
-                                                    <p>@ValidationMessages.Activo</p>
+                                                    <p>@DiccionarioTraduccionesService.Traducciones["Activo"]</p>
                                                 }
                                                 else
                                                 {
-                                                    <p>@ValidationMessages.Inactivo</p>
+                                                    <p>@DiccionarioTraduccionesService.Traducciones["Inactivo"]</p>
                                                 }
                                             </BSTD>
 
@@ -382,7 +386,7 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
             }
             else if (dataIsLoaded == 2 && MaestraData.equiposlinea.Count() == 0)
             {
-                <p>@ValidationMessages.NoHayEquipos .</p>
+                <p>@DiccionarioTraduccionesService.Traducciones["NoHayEquipos"] .</p>
             }
 
         }
@@ -390,12 +394,12 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
         {
             <BSInputRadio CheckedValue="@(1)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success"
                 IsOutlined="true">
-                @ValidationMessages.AgregarEquipos
+                @DiccionarioTraduccionesService.Traducciones["AgregarEquipos"]
                 <span class="oi oi-plus"></span>
             </BSInputRadio>
             <BSInputRadio @bind-Value="tipo" CheckedValue="@(2)" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success"
                 IsOutlined="true">
-                @ValidationMessages.ConsultarEquipos
+                @DiccionarioTraduccionesService.Traducciones["ConsultarEquipos"]
                 <span class="oi oi-magnifying-glass"></span>
             </BSInputRadio>
         }
@@ -422,14 +426,22 @@ else if (!string.IsNullOrWhiteSpace(EquipoFiltro))
     private NotifiRadzen Notificar = new NotifiRadzen(); //Logic para crear las notificaciones radzen
     
     EquipoEamDTO EquipoForm = new EquipoEamDTO();
+    private int idPais { get; set; }
 
     private List<Claim> claims { get; set; }
+    private bool traduccionesCargadas = false;
 
     private async Task CreateData()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         claims = user.Claims.ToList();
+
+        var idPaisClaim = claims.FirstOrDefault(c => c.Type == "IdPais")?.Value;
+        if (int.TryParse(idPaisClaim, out int paisTemp))
+        {
+            idPais = paisTemp;
+        }
     }
 
 protected async Task Get()
@@ -441,8 +453,8 @@ protected async Task Get()
         // Validar que la línea esté seleccionada
         if (IdLin == 0)
         {
-            mensaje = ValidationMessages.CamposNecesarios;
-            NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, mensaje));
+            mensaje = DiccionarioTraduccionesService.Traducciones["CamposNecesarios"];
+            NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], mensaje));
             return;
         }
 
@@ -453,16 +465,16 @@ protected async Task Get()
 
         if (equipos == null || !equipos.Any())
         {
-            mensaje = ValidationMessages.Nequipos;
-            NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, mensaje));
+            mensaje = DiccionarioTraduccionesService.Traducciones["Nequipos"];
+            NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], mensaje));
         }
 
         dataIsLoaded = 2;
     }
     catch (Exception ex)
     {
-        mensaje = ValidationMessages.ErrorInesp + ex.Message;
-        NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato, mensaje));
+        mensaje = DiccionarioTraduccionesService.Traducciones["ErrorInesp"] + ex.Message;
+        NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["EDato"], mensaje));
         dataIsLoaded = 0;
     }
 }
@@ -517,6 +529,11 @@ protected async Task Get()
     protected override async Task OnInitializedAsync()
     {
         await CreateData();
+        await LocalizationService.EstablecerCulturaDesdeTokenAsync();
+        CultureInfo.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
+        CultureInfo.CurrentUICulture = CultureInfo.DefaultThreadCurrentUICulture;
+        await DiccionarioTraduccionesService.CargarTraduccionesAsync();
+        traduccionesCargadas = true;
         if (claims != null && claims.Count > 10)
         {
             await MaestraData.GetCentrosxEmpresa("All" + claims[10].Value);
@@ -533,8 +550,8 @@ protected async Task SaveEquipo(EditContext e)
             string.IsNullOrWhiteSpace(EquipoForm.EdescriEam) ||
             IdLin == 0)
         {
-            mensaje = ValidationMessages.TodosCampos;
-            NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, mensaje));
+            mensaje = DiccionarioTraduccionesService.Traducciones["TodosCampos"];
+            NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], mensaje));
             return;
         }
 
@@ -561,19 +578,19 @@ protected async Task SaveEquipo(EditContext e)
 
             mensaje = await MaestraData.AddEquipo(EquipoForm);
 
-            if (mensaje == ValidationMessages.RExitoso)
+            if (mensaje == DiccionarioTraduccionesService.Traducciones["RExitoso"])
             {
                 NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
                 await Reset();
             }
             else
             {
-                NotificationService.Notify(Notificar.Notificacion("advertencia", ValidationMessages.Atencion, mensaje));
+                NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], mensaje));
             }
         }
         catch (Exception ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato, ex.Message));
+            NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["EDato"], ex.Message));
         }
     }
 }
@@ -606,20 +623,20 @@ protected async Task SaveEquipo(EditContext e)
 
             mensaje = await MaestraData.AddEquipo(eq);
 
-            if (mensaje == ValidationMessages.RExitoso)
+            if (mensaje == DiccionarioTraduccionesService.Traducciones["RExitoso"])
             {
                 NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
             }
             else
             {
-                NotificationService.Notify(Notificar.Notificacion("exito", ValidationMessages.AExitoso, ""));
+                NotificationService.Notify(Notificar.Notificacion("exito", DiccionarioTraduccionesService.Traducciones["AExitoso"], ""));
             }
 
             idequipoeditar = 0;
         }
         catch (Exception ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("error", ValidationMessages.EDato, ex.Message));
+            NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["EDato"], ex.Message));
         }
     }
 

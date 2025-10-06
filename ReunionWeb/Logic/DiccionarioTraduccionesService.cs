@@ -29,7 +29,7 @@ namespace ReunionWeb.Services
                 "Buscar", "BuscarCargo", "BuscarCargo2", "C_Equipo", "Calendario",
                 "CambiosDeEstados", "CambiosDeFechaDeTrabajoRestantes", "CambiosDeFechaTrabajo", "CamposNecesarios", "Cancelar",
                 "Cargo", "Centro", "Cerrado", "CerrarSesion", "Codigo",
-                "CodigoDeEquipo", "CodigoEAM", "ColocarFecha", "Consolidacion", "ConsolidacionDeDiscrepancia",
+                "CodigosDeEquipos", "CodigoDeEquipo", "CodigoEAM", "ColocarFecha", "Consolidacion", "ConsolidacionDeDiscrepancia",
                 "Consultar", "ConsultarEquipos", "ConsultarFechaProgramada", "Correcto", "Desactivar",
                 "Descripcion", "Desde", "DetallesCalidad", "DetallesDeCalidad", "Dia",
                 "DiasNoLaborables", "Discrepancia", "DiscrepanciaRechazada", "Discrepancias", "Division",
