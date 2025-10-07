@@ -298,12 +298,12 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
 
     protected override async Task OnInitializedAsync()
     {
+        await CreateData();
         await LocalizationService.EstablecerCulturaDesdeTokenAsync();
         CultureInfo.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
         CultureInfo.CurrentUICulture = CultureInfo.DefaultThreadCurrentUICulture;
         await DiccionarioTraduccionesService.CargarTraduccionesAsync();
         traduccionesCargadas = true;
-        await CreateData();
         Rol = claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
 
 
