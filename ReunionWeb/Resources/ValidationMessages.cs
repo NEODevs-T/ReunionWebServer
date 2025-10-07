@@ -202,7 +202,7 @@ namespace ReunionWeb.Resources
         public static string Nequipos => _resourceManager.GetString("Nequipos", CultureInfo.CurrentUICulture);
         public static string TodosCampos => _resourceManager.GetString("TodosCampos", CultureInfo.CurrentUICulture);
         public static string AExitoso => _resourceManager.GetString("AExitoso", CultureInfo.CurrentUICulture);
-
+        public static string Horas => _resourceManager.GetString("Horas", CultureInfo.CurrentUICulture);
         public static string MapResponsableKey(string nombre)
         {
             return nombre switch

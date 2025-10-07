@@ -209,4 +209,5 @@
 <data name="Nequipos" xml:space="preserve"><value>No equipment found for the selected line.</value></data>
 <data name="TodosCampos" xml:space="preserve"><value>All fields are required.</value></data>
 <data name="AExitoso" xml:space="preserve"><value>Successfully added.</value></data>
+<data name="Horas" xml:space="preserve"><value>Hours</value></data>
 </root>

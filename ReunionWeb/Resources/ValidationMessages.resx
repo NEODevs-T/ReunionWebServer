@@ -210,5 +210,6 @@
 <data name="Nequipos" xml:space="preserve"><value>No se encontraron equipos para la línea seleccionada.</value></data>
 <data name="TodosCampos" xml:space="preserve"><value>Todos los campos son obligatorios.</value></data>
 <data name="AExitoso" xml:space="preserve"><value>Se añadió Exitosamente</value></data>
+<data name="Horas" xml:space="preserve"><value>Horas</value></data>
 </root>
 
