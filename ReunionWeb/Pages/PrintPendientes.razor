@@ -13,15 +13,27 @@
 @inject IPizarraData PizarraData
 @inject IRespoReuData RespoReuData
 @inject IMaestraData MaestraData
+@inject IDiccionarioTraduccionesService DiccionarioTraduccionesService
+@inject LocalizationService LocalizationService
+@inject ITranslationService Translator
 
 @using ReunionWeb.Resources
 @using System.Globalization
+@using ReunionWeb.Services
 
+@if (!traduccionesCargadas || dataIsLoaded == 1)
+{
+    <div class="loading-container">
+        <div class="loader"></div>
+    </div>
+}
+else
+{
 <BSRow>
     <BSCol ColumnSmall="1" Column="2">
-        <BSLabel>@ValidationMessages.Codigo</BSLabel>
+        <BSLabel>@DiccionarioTraduccionesService.Traducciones["Codigo"]</BSLabel>
         <BSInput InputType="InputType.Select" @bind-Value="Codigo">
-            <option value="Todo">@ValidationMessages.Todo</option>
+            <option value="Todo">@DiccionarioTraduccionesService.Traducciones["Todo"]</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -31,37 +43,36 @@
     </BSCol>
 
     <BSCol ColumnSmall="1" Column="2">
-        <BSLabel>@ValidationMessages.Estado</BSLabel>
+        <BSLabel>@DiccionarioTraduccionesService.Traducciones["Estado"]</BSLabel>
         <BSInput InputType="InputType.Select" @bind-Value="Status">
-            <option value="Total Pendiente">@ValidationMessages.TotalPendiente</option>
-            <option value="Todo">@ValidationMessages.Todo</option>
-            <option value="Pendiente">@ValidationMessages.Pendiente</option>
-            <option value="Pendiente/Responsable">@ValidationMessages.Pendiente/ @ValidationMessages.Responsable</option>
-            <option value="Listo">@ValidationMessages.Listo</option>
-            <option value="Cerrado">@ValidationMessages.Cerrado</option>
-            <option value="Vencidos">@ValidationMessages.Vencidos</option>
+            <option value="Total Pendiente">@DiccionarioTraduccionesService.Traducciones["TotalPendiente"]</option>
+            <option value="Todo">@DiccionarioTraduccionesService.Traducciones["Todo"]</option>
+            <option value="Pendiente">@DiccionarioTraduccionesService.Traducciones["Pendiente"]</option>
+            <option value="Pendiente/Responsable">@DiccionarioTraduccionesService.Traducciones["Pendiente"]/ @DiccionarioTraduccionesService.Traducciones["Responsable"]</option>
+            <option value="Listo">@DiccionarioTraduccionesService.Traducciones["Listo"]</option>
+            <option value="Cerrado">@DiccionarioTraduccionesService.Traducciones["Cerrado"]</option>
+            <option value="Vencidos">@DiccionarioTraduccionesService.Traducciones["Vencidos"]</option>
         </BSInput>
     </BSCol>
 
     <BSCol Column="3">
-        <BSLabel>@ValidationMessages.Responsable</BSLabel>
+        <BSLabel>@DiccionarioTraduccionesService.Traducciones["Responsable"]</BSLabel>
         <BSInput InputType="InputType.Select" @bind-Value="idrespo">
-            <option value=0>@ValidationMessages.Todo</option>
+            <option value=0>@DiccionarioTraduccionesService.Traducciones["Todo"]</option>
             @foreach (var d in RespoReuData.resporeus)
             {
-                <option value="@d.IdResReu">@ValidationMessages.ResourceManager.GetString(ValidationMessages
-                    .MapResponsableKey(d.Rrnombre),CultureInfo.CurrentUICulture)</option>
+                <option value="@d.IdResReu">@DiccionarioTraduccionesService.Traducciones[ValidationMessages.MapResponsableKey(d.Rrnombre)]</option>
             }
         </BSInput>
     </BSCol>
         @{
-            var lineaTraducida = ValidationMessages.ResourceManager.GetString(
-                ValidationMessages.MapResponsableKey(linea),
-                CultureInfo.CurrentUICulture
-            );
+            var clave = ValidationMessages.MapResponsableKey(linea ?? string.Empty);
+            var lineaTraducida = DiccionarioTraduccionesService.Traducciones.TryGetValue(clave, out var traduccion)
+                ? traduccion
+                : linea;
         }
     <BSCol Column="3">
-        <BSLabel>@ValidationMessages.Linea</BSLabel>
+        <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
         <BSInput InputType="InputType.Text" @bind-Value="@lineaTraducida" IsReadonly=true />
     </BSCol>
 
@@ -81,19 +92,19 @@
                     @*<BSTD>Id</BSTD>*@
                     @*Centro para validar el comedor*@
 
-                    <BSTD>@ValidationMessages.Area</BSTD>
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["Area"]</BSTD>
                     <BSTD>Ksf</BSTD>
-                    <BSTD>@ValidationMessages.CodigoDeEquipo</BSTD>
-                    <BSTD ColSpan="4">@ValidationMessages.Discrepancia</BSTD>
-                    <BSTD>@ValidationMessages.Codigo</BSTD>
-                    <BSTD>@ValidationMessages.PlanDeAccion</BSTD>
-                    <BSTD>@ValidationMessages.Tiempo</BSTD>
-                    <BSTD>@ValidationMessages.Responsable</BSTD>
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["CodigoDeEquipo"]</BSTD>
+                    <BSTD ColSpan="4">@DiccionarioTraduccionesService.Traducciones["Discrepancia"]</BSTD>
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["Codigo"]</BSTD>
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["PlanDeAccion"]</BSTD>
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["Tiempo"]</BSTD>
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["Responsable"]</BSTD>
                     <BSTD>Status</BSTD>
-                    <BSTD>@ValidationMessages.Requisicion</BSTD>
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["Requisicion"]</BSTD>
                     <BSTD>ODT</BSTD>
-                    <BSTD>@ValidationMessages.FechaDeReunion</BSTD> @*Fecha del dia de reunion*@
-                    <BSTD>@ValidationMessages.FechaDelTrabajo</BSTD>@*Fecha de listo el trabajo*@
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["FechaDeReunion"]</BSTD> @*Fecha del dia de reunion*@
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["FechaDelTrabajo"]</BSTD>@*Fecha de listo el trabajo*@
 
 
                 </BSTR>
@@ -126,20 +137,36 @@
                                         @*<BSTD>@d.IdReuDia</BSTD>*@
 
                                         <BSTD>@d.Rdarea</BSTD>
-                                        <BSTD>@ValidationMessages.TraducirKsf(idPais, d.Idksf, KsfData.ksfs)</BSTD>
+                                        <BSTD>
+                                        @{
+                                            var texto = idPais == 5 
+                                                ? KsfData.ksfs.Where(x => x.Idksf == d.Idksf).FirstOrDefault()?.KsfEnglish 
+                                                : KsfData.ksfs.Where(x => x.Idksf == d.Idksf).FirstOrDefault()?.KsfNombre;
+                                        }
+                                        @texto</BSTD>
                                         <BSTD>@d.RdcodEq</BSTD>
                                         <BSTD ColSpan="4">@d.Rddisc.ToUpperInvariant()</BSTD>
                                         <BSTD>@d.RdcodDis</BSTD>
                                         <BSTD Class="textotabla">@d.RdplanAcc</BSTD>
                                         <BSTD>@d.Rdtiempo</BSTD>
                                         @{
-                                            var nombreResponsable = RespoReuData.resporeus.FirstOrDefault(x => x.IdResReu == d.IdResReu)?.Rrnombre;
-                                            var textoTraducido = ValidationMessages.ResourceManager.GetString(
-                                            ValidationMessages.MapResponsableKey(nombreResponsable),
-                                            CultureInfo.CurrentUICulture
-                                            );
+                                            var nombreResponsable = RespoReuData.resporeus
+                                                .FirstOrDefault(x => x.IdResReu == d.IdResReu)?.Rrnombre;
+
+                                            var clave = ValidationMessages.MapResponsableKey(nombreResponsable ?? string.Empty);
+                                            var textoTraducido = DiccionarioTraduccionesService.Traducciones.TryGetValue(clave, out var traduccion)
+                                                ? traduccion
+                                                : nombreResponsable;
                                         }
-                                        <BSTD class="@(nombreResponsable == "Por Definir" ? "Definir" : "")">@textoTraducido</BSTD>
+
+                                        @if (nombreResponsable == "Por Definir")
+                                        {
+                                            <BSTD Class="Definir">@textoTraducido</BSTD>
+                                        }
+                                        else
+                                        {
+                                            <BSTD>@textoTraducido</BSTD>
+                                        }
                                         @{
                                             var estadoTraducido = d.Rdstatus switch
                                             {
@@ -180,7 +207,7 @@
         </BSTable>
     }
 </body>
-
+}
 @code {
     [Parameter]
     public string? accion { get; set; }//centro
@@ -233,6 +260,7 @@
     List<ReunionDTO> listareu = new List<ReunionDTO>();//filtar los responsables
 
     private List<Claim> claims { get; set; }
+    private bool traduccionesCargadas = false;
 
     private async Task CreateData()
     {
@@ -244,10 +272,6 @@
         if (int.TryParse(idPaisClaim, out int paisTemp))
         {
             idPais = paisTemp;
-            var culture = new System.Globalization.CultureInfo(paisTemp == 5 ? "en" : "es");
-            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
-            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
-            await LocalStorage.SetItemAsync("userCulture", culture.Name);
         }
 
         await RespoReuData.GetResReu();
@@ -281,6 +305,11 @@
         await base.OnInitializedAsync();
         await RespoReuData.GetResReu();
         await KsfData.Getksf();
+        await LocalizationService.EstablecerCulturaDesdeTokenAsync();
+        CultureInfo.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
+        CultureInfo.CurrentUICulture = CultureInfo.DefaultThreadCurrentUICulture;
+        await DiccionarioTraduccionesService.CargarTraduccionesAsync();
+        traduccionesCargadas = true;
     }
 
     protected override async Task OnParametersSetAsync()
