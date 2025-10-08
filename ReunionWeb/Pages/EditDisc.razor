@@ -167,7 +167,7 @@ else
                                             @if (tipo == 1)
                         {
                             <BSCol Column="2">
-                                <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaDelTrabajo"]</BSLabel>
+                                <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaDeTrabajo"]</BSLabel>
 
                                 @if (tipo == 1 && (EsSuperUser || EsAdmin))
                                 {
@@ -182,7 +182,7 @@ else
                         else
                         {
                             <BSCol Column="2">
-                                <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaDelTrabajo"]</BSLabel>
+                                <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaDeTrabajo"]</BSLabel>
                                 <BSInput InputType="InputType.Date" IsDisabled @bind-Value="DiscForm.RdfecTra" />
                             </BSCol>
                         }
@@ -426,14 +426,14 @@ else
                     @if (tipo == 1 && (planificador == "Admin" || planificador == "Planificador" || planificador == "SuperAdmin"))
                     {
                         <BSCol Column="2">
-                            <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaDelTrabajo"]</BSLabel>
+                            <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaDeTrabajo"]</BSLabel>
                             <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
                         </BSCol>
                     }
                     else
                     {
                         <BSCol Column="2">
-                            <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaDelTrabajo"]</BSLabel>
+                            <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaDeTrabajo"]</BSLabel>
                             <BSInput InputType="InputType.Date" IsDisabled @bind-Value="DiscForm.RdfecTra" />
                         </BSCol>
                     }

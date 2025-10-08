@@ -116,7 +116,7 @@ else
                 </BSRow>
                 <BSInputRadio CheckedValue="@("2")" @bind-Value="tipoconsulta" IsToggle="true" Size="Size.ExtraSmall"
                     Color="BSColor.Success" IsOutlined="true">
-                    @DiccionarioTraduccionesService.Traducciones["FechaDelTrabajo"]
+                    @DiccionarioTraduccionesService.Traducciones["FTrabajo"]
                     <span class="oi oi-cog"></span>
                 </BSInputRadio>
             </BSCol>
@@ -127,7 +127,7 @@ else
                 </BSRow>
                 <BSInputRadio CheckedValue="@("0")" @bind-Value="tipoconsulta" IsToggle="true" Size="Size.ExtraSmall"
                     Color="BSColor.Success" IsOutlined="true">
-                    @DiccionarioTraduccionesService.Traducciones["FechaDeReunion"]
+                    @DiccionarioTraduccionesService.Traducciones["FReunion"]
                     <span class="oi oi-people"></span>
                 </BSInputRadio>
             </BSCol>
@@ -256,7 +256,7 @@ else
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="@DiccionarioTraduccionesService.Traducciones["FechaDelTrabajo"]" Property="RdfecTra" Width="90px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@DiccionarioTraduccionesService.Traducciones["FechaDeTrabajo"]" Property="RdfecTra" Width="90px">
                 <Template>
                     @context.RdfecTra.ToString("yyyy/MM/dd")
                 </Template>

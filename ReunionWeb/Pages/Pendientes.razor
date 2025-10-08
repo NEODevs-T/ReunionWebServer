@@ -119,12 +119,12 @@ else
                 <BSLabel>  @DiccionarioTraduccionesService.Traducciones["Ordenar"] </BSLabel>
             </BSRow>
             <BSInputRadio CheckedValue="@("2")" IsDisabled=@valueodt @bind-Value="tipoconsulta" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true" style="width:50%;">
-                @DiccionarioTraduccionesService.Traducciones["FechaDelTrabajo"]
+                @DiccionarioTraduccionesService.Traducciones["FTrabajo"]
                 <span class="oi oi-cog"></span>
             </BSInputRadio>
 
             <BSInputRadio CheckedValue="@("0")" IsDisabled=@valueodt @bind-Value="tipoconsulta" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true" style="width:50%;">
-                @DiccionarioTraduccionesService.Traducciones["FechaDeReunion"]
+                @DiccionarioTraduccionesService.Traducciones["FReunion"]
                 <span class="oi oi-people"></span>
             </BSInputRadio>
         </BSCol>
@@ -216,7 +216,7 @@ else
                     <BSTD>@DiccionarioTraduccionesService.Traducciones["Requisicion"]</BSTD>
                     <BSTD>ODT</BSTD>
                     <BSTD>@DiccionarioTraduccionesService.Traducciones["FechaDeReunion"]</BSTD> @*Fecha del dia de reunion*@
-                    <BSTD>@DiccionarioTraduccionesService.Traducciones["FechaDelTrabajo"]</BSTD>@*Fecha de listo el trabajo*@
+                    <BSTD>@DiccionarioTraduccionesService.Traducciones["FechaDeTrabajo"]</BSTD>@*Fecha de listo el trabajo*@
                     <BSTD></BSTD>
                 </BSTR>
             </BSTHead>

@@ -58,6 +58,7 @@
 <data name="Estado" xml:space="preserve"><value>Status</value></data>
 <data name="Exito" xml:space="preserve"><value>Success</value></data>
 <data name="FReunion" xml:space="preserve"><value>M. Date</value></data>
+<data name="FTrabajo" xml:space="preserve"><value>W. Date</value></data>
 <data name="FechaDeReunion" xml:space="preserve"><value>Metting Date</value></data>
 <data name="FechaDelCambio" xml:space="preserve"><value>Change Date</value></data>
 <data name="Ficha" xml:space="preserve"><value>Worksheet</value></data>
@@ -162,7 +163,7 @@
 <data name="ParadaMayor" xml:space="preserve"><value>Major Downtime</value></data>
 <data name="Tiempo" xml:space="preserve"><value>Time</value></data>
 <data name="Requisicion" xml:space="preserve"><value>Requisition</value></data>
-<data name="FechaDelTrabajo" xml:space="preserve"><value>Work Date</value></data>
+<data name="FechaDeTrabajo" xml:space="preserve"><value>Work Date</value></data>
 <data name="TotalPendiente" xml:space="preserve"><value>Total Pending</value></data>
 <data name="NoConforme" xml:space="preserve"><value>Non-Conforming</value></data>
 <data name="CambiosDeFechaTrabajo" xml:space="preserve"><value>Work Date Changes</value></data>
