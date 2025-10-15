@@ -40,7 +40,7 @@ namespace ReunionWeb.Services
                 "FaltaDePersonal", "FaltaRepuesto", "FechaDeReunion", "FechaDelCambio", "FechaDeTrabajo",
                 "FechaFinal", "FechaInicial", "FechaMenor", "FechaProgramada", "FechasProgramadas",
                 "FechasSeleccionadas", "Ficha", "Filtrar", "FiltrarCodigo", "FiltrarPorCargo",
-                "FiltroFechaDeReunion", "FiltroFechaDeTrabajo", "FormatoDeReunion", "Guardar", "GuardarFecha",
+                "FiltroFechaDeReunion", "FiltroFechaDeTrabajo", "FormatoDeReunion", "Guardar", "GuardarFecha", "GuardarFechaN",
                 "Hasta", "Historicos", "Hola", "Hoy", "Imprimir",
                 "Inactivo", "IniciarSesion", "KsfReunionDiaria", "Limite", "LimpiarFiltros",
                 "Linea", "Listo", "LlDisp", "MExito", "Mes",

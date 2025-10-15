@@ -151,7 +151,7 @@ else
                     {
                         <BSCol Column="2">
                             <BSLabel>@DiccionarioTraduccionesService.Traducciones["Tiempo"] (@DiccionarioTraduccionesService.Traducciones["Horas"])</BSLabel>
-                            <BSInput InputType="InputType.Number" IsDisabled @bind-Value="DiscForm.Rdtiempo" />
+                            <BSInput InputType="InputType.Number" Min="0" IsDisabled @bind-Value="DiscForm.Rdtiempo" />
                      </BSCol>
 
                     }
@@ -159,7 +159,7 @@ else
                     {
                         <BSCol Column="2">
                             <BSLabel>@DiccionarioTraduccionesService.Traducciones["Tiempo"] (@DiccionarioTraduccionesService.Traducciones["Horas"])</BSLabel>
-                            <BSInput InputType="InputType.Number" @bind-Value="DiscForm.Rdtiempo" />
+                            <BSInput InputType="InputType.Number" Min="0" @bind-Value="DiscForm.Rdtiempo" />
                         </BSCol>
                     }
 
@@ -251,7 +251,7 @@ else
                             {
                                 <BSCol Column="2">
                                     <BSLabel>@DiccionarioTraduccionesService.Traducciones["Requisicion"]</BSLabel>
-                                    <BSInput InputType="InputType.Number" @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
+                                    <BSInput InputType="InputType.Number" Min="0" @bind-Value="DiscForm.RdcodRequi"  ValidateOnInput="true" />
                                 </BSCol>
 
                             }  
@@ -259,7 +259,7 @@ else
 
                                 <BSCol Column="2">
                                     <BSLabel>@DiccionarioTraduccionesService.Traducciones["Requisicion"]</BSLabel>
-                                    <BSInput InputType="InputType.Number" IsDisabled @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
+                                    <BSInput InputType="InputType.Number" Min="0" IsDisabled @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
                                 </BSCol>
                             }
                         } 

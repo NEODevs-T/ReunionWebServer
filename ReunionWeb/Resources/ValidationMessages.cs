@@ -189,7 +189,7 @@ namespace ReunionWeb.Resources
         public static string ConsultarFechaProgramada => _resourceManager.GetString("ConsultarFechaProgramada", CultureInfo.CurrentUICulture);
         public static string Activo => _resourceManager.GetString("Activo", CultureInfo.CurrentUICulture);
         public static string Inactivo => _resourceManager.GetString("Inactivo", CultureInfo.CurrentUICulture);
-        public static string GuardarFechaN => _resourceManager.GetString("GuardarFecha", CultureInfo.CurrentUICulture);
+        public static string GuardarFechaN => _resourceManager.GetString("GuardarFechaN", CultureInfo.CurrentUICulture);
         public static string SegundaFechaN => _resourceManager.GetString("SegundaFechaN", CultureInfo.CurrentUICulture);
         public static string ColocarFecha => _resourceManager.GetString("ColocarFecha", CultureInfo.CurrentUICulture);
         public static string CamposNecesarios => _resourceManager.GetString("CamposNecesarios", CultureInfo.CurrentUICulture);

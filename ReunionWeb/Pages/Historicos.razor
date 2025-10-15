@@ -218,7 +218,7 @@ else
             </RadzenDataGridColumn>
 
 
-            <RadzenDataGridColumn TItem="ReunionDTO" Title="Requisición" Property="Rdodt" Width="100px">
+            <RadzenDataGridColumn TItem="ReunionDTO" Title="@DiccionarioTraduccionesService.Traducciones["Requisicion"]" Property="Rdodt" Width="100px">
 
                 <Template>
                     @if (context.RdcodRequi == null)
