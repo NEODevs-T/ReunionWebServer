@@ -135,7 +135,19 @@ else
                 <BSLabel>@DiccionarioTraduccionesService.Traducciones["Buscar"]</BSLabel>
             </BSRow>
             <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" IsDisabled=@valueodt @onclick="Get" style="width:70%;">  @DiccionarioTraduccionesService.Traducciones["Consultar"] <span class="oi oi-check"></span></BSButton>
-         </BSCol>
+        </BSCol>
+
+        <BSCol ColumnLarge="3" ColumnSmall="6">
+            <BSLabel>ODT</BSLabel>  <RadzenSwitch @bind-Value=@valuvisualeodt Change="Cambio" />
+            <BSRow>
+                <BSCol>
+                    <BSInput InputType="InputType.Text" @bind-Value="BuscarOdt" IsDisabled=@(!valueodt) />
+                </BSCol>
+                <BSCol>
+                    <BSButton IsOutlined Color="BSColor.Success" Size="Size.ExtraSmall" @onclick="BuscarxOdt" IsDisabled=@(!valueodt)>  <span class="oi oi-magnifying-glass"></span></BSButton>
+                </BSCol>
+            </BSRow>
+        </BSCol>
 
 
          @* <BSCol ColumnLarge="3" ColumnSmall="6">
@@ -681,11 +693,11 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
 
         //Eliminar el ODT para un  nuevo cargado
 
-        BuscarOdt = await LocalStorage.GetItemAsStringAsync("OdtValue");
+        BuscarOdt = await LocalStorage.GetItemAsStringAsync("ReunionDiariaOdtValue");
         if (string.IsNullOrEmpty(BuscarOdt))
         {
             valuvisualeodt= valueodt = false;
-            await LocalStorage.RemoveItemAsync("OdtValue");
+            await LocalStorage.RemoveItemAsync("ReunionDiariaOdtValue");
         }
         else
         {
@@ -743,13 +755,13 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
                 if (dataIsLoaded != 1)
                 {
                     dataIsLoaded = 1;
-                    listareu = await PizarraData.GetByODT(BuscarOdt, IdCentro.ToString(), IdDiv.ToString());
+                    listareu = await PizarraData.GetByODT(BuscarOdt, IdCentro.ToString(), IdDiv.ToString(), 1);
                     dataIsLoaded = 2;
 
                 }
 
                 if (listareu.Count() > 0)
-                { await LocalStorage.SetItemAsStringAsync("OdtValue", BuscarOdt); }
+                { await LocalStorage.SetItemAsStringAsync("ReunionDiariaOdtValue", BuscarOdt); }
             }
             else
             {
@@ -770,7 +782,7 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
 
         if (valueodt == true)
         {
-            await LocalStorage.RemoveItemAsync("OdtValue");
+            await LocalStorage.RemoveItemAsync("ReunionDiariaOdtValue");
             BuscarOdt = null;
             valueodt = false;
         }
@@ -810,18 +822,16 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
     }
 
 
-    void Editar(int id)
-    {
-        var lineaEncoded = Uri.EscapeDataString(NombreLinea ?? "");
-        var f1 = fecha1.ToString("dd-MM-yyyy");
-        var f2 = fecha2.ToString("dd-MM-yyy");
-        var estEncoded = Uri.EscapeDataString(NombreLinea ?? "");
-        var ruta = idPais == 5 ? "en" : "es";
-        var url = $"{ruta}/EditDisc/{id}/{tipoconsulta}/{lineaEncoded}/{f1}/{f2}/{estEncoded}";
-        NavigationManager.NavigateTo(url);
-        //NavigationManager.NavigateTo($"EditDisc/{id}/{tipoconsulta}/{NombreLinea}/{fecha1.ToString("dd-MM-yyyy")}/{fecha2.ToString("dd-MM-yyyy")}/{Status}/{Codigo}/{idrespo}/{IdKsf}");
-
-    }
+void Editar(int id)
+{
+    var ruta = idPais == 5 ? "en" : "es";
+    var f1 = fecha1.ToString("dd-MM-yyyy");
+    var f2 = fecha2.ToString("dd-MM-yyyy");
+    var lineaEncoded = Uri.EscapeDataString(NombreLinea ?? "");
+    var estEncoded = Uri.EscapeDataString(Status ?? "");
+    var url = $"{ruta}/EditDisc/{id}/{tipoconsulta}/{lineaEncoded}/{f1}/{f2}/{estEncoded}/{Codigo}/{idrespo}/{IdKsf}";
+    NavigationManager.NavigateTo(url);
+}
 
     protected override async Task OnParametersSetAsync()
     {
@@ -832,7 +842,7 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
             if (accion != null)
             {
                 //Si esta filtrando por ODT se consulta la odt si el campo es vacio se procede normal
-                BuscarOdt = await LocalStorage.GetItemAsStringAsync("OdtValue");
+                BuscarOdt = await LocalStorage.GetItemAsStringAsync("ReunionDiariaOdtValue");
 
                 if (string.IsNullOrEmpty(BuscarOdt) && !valueodt)
                 {

@@ -68,7 +68,7 @@ else
     }
     async Task Logout()
     {
-        await LocalStorage.RemoveItemAsync("OdtValue");
+        await LocalStorage.RemoveItemAsync("ReunionDiariaOdtValue");
         await LocalStorage.RemoveItemAsync("ReunionDiariaToken");
         await AuthStateProvider.GetAuthenticationStateAsync();
         var cultureName = await LocalStorage.GetItemAsync<string>("userCulture");
