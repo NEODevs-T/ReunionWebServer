@@ -109,6 +109,7 @@ else
         <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
             <BSTHead Class="cabecera">
                 <BSTR>
+                    @*<BSTD>Id</BSTD>*@
                     <BSTD>@DiccionarioTraduccionesService.Traducciones["Area"]</BSTD>
                     <BSTD>Ksf</BSTD>
                     <BSTD>@DiccionarioTraduccionesService.Traducciones["CodigoDeEquipo"]</BSTD>
@@ -122,7 +123,7 @@ else
                     <BSTD>@DiccionarioTraduccionesService.Traducciones["Requisicion"]</BSTD>
                     <BSTD>ODT</BSTD>
                     <BSTD>@DiccionarioTraduccionesService.Traducciones["FechaDeTrabajo"]</BSTD>
-                    @if (Rol == "Admin" || Rol == "AdminChempro" || Rol == "SuperUser" || Rol == "SemiAdmin")
+                    @if (Rol == "Admin" || Rol == "AdminChempro" || Rol == "PrimeUser" || Rol == "SuperUser" || Rol == "SemiAdmin")
                     {
                         <BSTD></BSTD>
                     }
@@ -134,6 +135,8 @@ else
                     @if (Codigo == d.RdcodDis || Codigo == "Todo")
                     {
                         <BSTR>
+                            @*<BSTD>@d.IdReuDia</BSTD>*@
+                            @* <BSTD>@d.Rddiv</BSTD>*@
                             <BSTD>@d.Rdarea</BSTD>
                             @{
                                 var textoKsf = idPais == 5 
@@ -191,7 +194,7 @@ else
                             <BSTD>@codRequiTexto</BSTD>
                             <BSTD>@d.Rdodt</BSTD>
                             <BSTD>@d.RdfecTra.ToString("dd/MM/yyyy")</BSTD>
-                            @if (Rol == "Admin" || Rol == "AdminChempro" || Rol == "SuperUser" || Rol == "SemiAdmin")
+                            @if (Rol == "Admin" || Rol == "AdminChempro" || Rol == "PrimeUser" || Rol == "SuperUser" || Rol == "SemiAdmin")
                             {
                                 <BSTD>
                                     <button class="btn btn-success" @onclick="(() => Editar(d.IdReuDia))">
