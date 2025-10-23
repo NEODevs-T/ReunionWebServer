@@ -322,7 +322,7 @@ else
                                                         }
                                                         </BSCol>
                                                         <BSCol>
-                                                            @if (UsrAdmin != "PrimeUser")
+                                                            @if (UsrAdmin == "Admin")
                                                         {
                                                             <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => GetHistory(d.IdReuDia))" Target="History"><i class="oi oi-eye"></i></BSButton>
                                                         }
@@ -644,10 +644,17 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
         {
             
             case "Admin":
+                UsrAdmin = "Admin";
+                await MaestraData.GetCentrosxEmpresa("All" + claims.FirstOrDefault(c => c.Type.Contains("IdEmpresa"))?.Value);
+                break;
+
             case "PrimeUser":
+                UsrAdmin = "PrimeUser";
+                await MaestraData.GetCentrosxEmpresa("All" + claims.FirstOrDefault(c => c.Type.Contains("IdEmpresa"))?.Value);
+                break;
+
             case "SuperAdmin":
                 UsrAdmin = "SuperAdmin";
-                UsrAdmin = "PrimeUser";
                 await MaestraData.GetCentrosxEmpresa("All" + claims.FirstOrDefault(c => c.Type.Contains("IdEmpresa"))?.Value);
                 break;
 
