@@ -167,25 +167,25 @@ else
                                         {
                                             <BSTD>@textoTraducido</BSTD>
                                         }
-                                        @{
-                                            var estadoTraducido = d.Rdstatus switch
-                                            {
-                                                "Listo" => idPais == 5 ? "Ready" : "Listo",
-                                                "Cerrado" => idPais == 5 ? "Closed" : "Cerrado",
-                                                _ => idPais == 5 ? "Pending" : "Pendiente"
-                                            };
+                                                @{
+                                                    var clavee = ValidationMessages.MapStatusKey(d.Rdstatus);
+                                                    var estadoTraducido = DiccionarioTraduccionesService.Traducciones.ContainsKey(clavee)
+                                                        ? DiccionarioTraduccionesService.Traducciones[clavee]
+                                                        : clavee;
 
-                                            var claseEstado = d.Rdstatus switch
-                                            {
-                                                "Listo" => "listo",
-                                                "Cerrado" => "Cerrado",
-                                                _ => "pendiente"
-                                                };
+                                                    var claseEstado = d.Rdstatus switch
+                                                    {
+                                                        "Listo" => "listo",
+                                                        "Cerrado" => "Cerrado",
+                                                        _ => "pendiente"
+                                                    };
+                                                }
+                                                <BSTD Class="@claseEstado">@estadoTraducido</BSTD>
 
-                                            var codRequiTexto = d.RdcodRequi == null ? "N/A" : d.RdcodRequi;
-                                        }
-                                        <BSTD Class="@claseEstado">@estadoTraducido</BSTD>
-                                        <BSTD>@codRequiTexto</BSTD>
+                                                @{
+                                                    var codRequiTexto = d.RdcodRequi == null ? "N/A" : d.RdcodRequi;
+                                                }
+                                                <BSTD>@codRequiTexto</BSTD>
                                         <BSTD>@d.Rdodt</BSTD>
                                         <BSTD>@d.RdfecReu.ToString("dd/MM/yyyy")</BSTD>
                                         <BSTD>@d.RdfecTra.ToString("dd/MM/yyyy")</BSTD>
