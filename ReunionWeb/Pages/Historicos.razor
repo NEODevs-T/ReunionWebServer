@@ -123,9 +123,9 @@ else
 
             <BSCol ColumnSmall="2" Column="1">
                 <BSRow>
-                    <BSLabel> @DiccionarioTraduccionesService.Traducciones["FiltroFechaDeReunion"]</BSLabel>
+                    <BSLabel>@DiccionarioTraduccionesService.Traducciones["FiltroFechaDeReunion"]</BSLabel>
                 </BSRow>
-                <BSInputRadio CheckedValue="@("1")" @bind-Value="tipoconsulta" IsToggle="true" Size="Size.ExtraSmall"
+                <BSInputRadio CheckedValue="@("0")" @bind-Value="tipoconsulta" IsToggle="true" Size="Size.ExtraSmall"
                     Color="BSColor.Success" IsOutlined="true">
                     @DiccionarioTraduccionesService.Traducciones["FReunion"]
                     <span class="oi oi-people"></span>
@@ -453,17 +453,6 @@ else if (dataIsLoaded == 2 && tabla.Count() == 0)
             mensaje = "Error: " + ex.Message;
         }
     }
-    private async Task FiltrarPorFechaTrabajo()
-{
-    tipoconsulta = "0";
-    await Get();
-}
-
-private async Task FiltrarPorFechaReunion()
-{
-    tipoconsulta = "1";
-    await Get();
-}
     protected async Task Get()
     {
         if (IdCentro != 0 & IdDiv != 0)
@@ -471,7 +460,7 @@ private async Task FiltrarPorFechaReunion()
             if (dataIsLoaded != 1)
             {
                 dataIsLoaded = 1;
-                tabla = await PizarraData.GetHistoricos(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, Uri.EscapeDataString(Status));
+                tabla = await PizarraData.GetHistoricos(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, Status);
                 foreach (var d in tabla)
                 {
                     d.Ksf = KsfData.ksfs.Where(x => x.Idksf == d.Idksf).Select(x => idPais == 5 ? x.KsfEnglish : x.KsfNombre).FirstOrDefault();
@@ -479,6 +468,10 @@ private async Task FiltrarPorFechaReunion()
                     var clave = ValidationMessages.MapResponsableKey(nombreOriginal);
                     d.Responsable = clave; 
                 }
+                
+                tabla = tipoconsulta == "0"
+                ? tabla.OrderBy(x => x.RdfecReu).ToList()
+                : tabla.OrderBy(x => x.RdfecTra).ToList();
 
                 dataIsLoaded = 2;
             }
