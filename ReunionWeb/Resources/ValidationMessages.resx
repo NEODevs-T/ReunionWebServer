@@ -19,7 +19,7 @@
 <data name="Asistentes" xml:space="preserve"><value>Asistentes</value></data>
 <data name="Asuntos" xml:space="preserve"><value>Asuntos</value></data>
 <data name="Atencion" xml:space="preserve"><value>Atención</value></data>
-<data name="Atras" xml:space="preserve"><value>Atras</value></data>
+<data name="Atras" xml:space="preserve"><value>Atrás</value></data>
 <data name="Bloque" xml:space="preserve"><value>Bloque</value></data>
 <data name="Borrar" xml:space="preserve"><value>Borrar</value></data>
 <data name="Buscar" xml:space="preserve"><value>Buscar</value></data>
@@ -56,7 +56,7 @@
 <data name="ErrorConexion" xml:space="preserve"><value>Error de Conexión</value></data>
 <data name="ErrorConexionM" xml:space="preserve"><value>Error de conexión de datos. Intente de nuevo.</value></data>
 <data name="Estado" xml:space="preserve"><value>Estado</value></data>
-<data name="Exito" xml:space="preserve"><value>exito</value></data>
+<data name="Exito" xml:space="preserve"><value>Exito</value></data>
 <data name="FReunion" xml:space="preserve"><value>F. Reunión</value></data>
 <data name="FechaDeReunion" xml:space="preserve"><value>Fecha de Reunión</value></data>
 <data name="Ficha" xml:space="preserve"><value>Ficha</value></data>
@@ -69,7 +69,7 @@
 <data name="Hasta" xml:space="preserve"><value>Hasta</value></data>
 <data name="hay_registros_vencidos" xml:space="preserve"><value>Hay registros vencidos.</value></data>
 <data name="Hoy" xml:space="preserve"><value>Ho7</value></data>
-<data name="Historicos" xml:space="preserve"><value>Historicos</value></data>
+<data name="Historicos" xml:space="preserve"><value>Históricos</value></data>
 <data name="Imprimir" xml:space="preserve"><value>Imprimir</value></data>
 <data name="Linea" xml:space="preserve"><value>Línea</value></data>
 <data name="Listo" xml:space="preserve"><value>Listo</value></data>
@@ -86,7 +86,7 @@
 <data name="NoCargadoP" xml:space="preserve"><value>No se ha cargado personal a este centro.</value></data>
 <data name="NoHayDatos" xml:space="preserve"><value>No hay datos para esta fecha.</value></data>
 <data name="NoHayDatos2" xml:space="preserve"><value>No hay datos para mostrar.</value></data>
-<data name="NoHayDescrip" xml:space="preserve"><value>No hay desctripción.</value></data>
+<data name="NoHayDescrip" xml:space="preserve"><value>No hay descripción.</value></data>
 <data name="NoHayEquipos" xml:space="preserve"><value>No hay equipos.</value></data>
 <data name="NoHayRegistros" xml:space="preserve"><value>No hay registros disponibles.</value></data>
 <data name="NoHayRegistros2" xml:space="preserve"><value>No hay registros aún...</value></data>
@@ -174,12 +174,12 @@
 <data name="Revisar" xml:space="preserve"><value>Revisar</value></data>
 <data name="CambiosDeFechaDeTrabajoRestantes" xml:space="preserve"><value>Cambios de Fecha de Trabajo Restantes:</value></data>
 <data name="Agregar" xml:space="preserve"><value>Agregar</value></data>
-<data name="SeleccioneBuscar" xml:space="preserve"><value>Selecione que Buscar</value></data>
+<data name="SeleccioneBuscar" xml:space="preserve"><value>Seleccione qué buscar</value></data>
 <data name="VencidasTurno" xml:space="preserve"><value>Vencidas Turno</value></data>
 <data name="PendientesLibro" xml:space="preserve"><value>Pendientes Libro</value></data>
-<data name="KsfReunionDiaria" xml:space="preserve"><value>Ksf Reunion Diaria</value></data>
+<data name="KsfReunionDiaria" xml:space="preserve"><value>Ksf Reunión Diaria</value></data>
 <data name="NoRechazada" xml:space="preserve"><value>No pudo ser rechazada</value></data>
-<data name="DiscrepanciaRechazada" xml:space="preserve"><value>La discrepancia a sido rechazada</value></data>
+<data name="DiscrepanciaRechazada" xml:space="preserve"><value>La discrepancia ha sido rechazada</value></data>
 <data name="NoAgregada" xml:space="preserve"><value>No pudo ser Agregada</value></data>
 <data name="ReunionDiariaAgregada" xml:space="preserve"><value>Se agregó correctamente a la Reunión diaria</value></data>
 <data name="VerifiqueCampos" xml:space="preserve"><value>Verifique todos los campos</value></data>
@@ -204,14 +204,14 @@
 <data name="ConsultarFechaProgramada" xml:space="preserve"><value>Consultar Fecha Programada</value></data>
 <data name="Activo" xml:space="preserve"><value>Activo</value></data>
 <data name="Inactivo" xml:space="preserve"><value>Inactivo</value></data>
-<data name="GuardarFechaN" xml:space="preserve"><value>Se aguardado con exito la nueva fecha</value></data> 
-<data name="SegundaFechaN" xml:space="preserve"><value>la segunda fecha no puede ser menor que la primera</value></data>
-<data name="ColocarFecha" xml:space="preserve"><value>debe colocar las dos fechas</value></data>
-<data name="CamposNecesarios" xml:space="preserve"><value>por favor ingrese los campos necesarios</value></data> 
-<data name="MExito" xml:space="preserve"><value>Se logro modificar con exito</value></data> 
+<data name="GuardarFechaN" xml:space="preserve"><value>Se ha guardado con éxito la nueva fecha</value></data> 
+<data name="SegundaFechaN" xml:space="preserve"><value>La segunda fecha no puede ser menor que la primera</value></data>
+<data name="ColocarFecha" xml:space="preserve"><value>Debe colocar las dos fechas</value></data>
+<data name="CamposNecesarios" xml:space="preserve"><value>Por favor ingrese los campos necesarios</value></data> 
+<data name="MExito" xml:space="preserve"><value>Se logró modificar con éxito</value></data> 
 <data name="Nequipos" xml:space="preserve"><value>No se encontraron equipos para la línea seleccionada.</value></data>
 <data name="TodosCampos" xml:space="preserve"><value>Todos los campos son obligatorios.</value></data>
-<data name="AExitoso" xml:space="preserve"><value>Se añadió Exitosamente</value></data>
+<data name="AExitoso" xml:space="preserve"><value>Se añadió exitosamente</value></data>
 <data name="Horas" xml:space="preserve"><value>Horas</value></data>
 </root>
 
