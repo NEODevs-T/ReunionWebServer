@@ -56,7 +56,7 @@
 <data name="ErrorConexion" xml:space="preserve"><value>Error de Conexión</value></data>
 <data name="ErrorConexionM" xml:space="preserve"><value>Error de conexión de datos. Intente de nuevo.</value></data>
 <data name="Estado" xml:space="preserve"><value>Estado</value></data>
-<data name="Exito" xml:space="preserve"><value>Exito</value></data>
+<data name="Exito" xml:space="preserve"><value>Éxito</value></data>
 <data name="FReunion" xml:space="preserve"><value>F. Reunión</value></data>
 <data name="FechaDeReunion" xml:space="preserve"><value>Fecha de Reunión</value></data>
 <data name="Ficha" xml:space="preserve"><value>Ficha</value></data>
@@ -118,7 +118,7 @@
 <data name="SEstado" xml:space="preserve"><value>Seleccione el estado.</value></data>
 <data name="SSuplente" xml:space="preserve"><value>Si hay un suplente debe marcar la asistencia.</value></data>
 <data name="SVCentro" xml:space="preserve"><value>Seleccione un valor en la columna de Centro.</value></data>
-<data name="SVDivision" xml:space="preserve"><value>Seleccione un valor en la columna de Division.</value></data>
+<data name="SVDivision" xml:space="preserve"><value>Seleccione un valor en la columna de División.</value></data>
 <data name="SVLista" xml:space="preserve"><value>Seleccione los valores en las listas.</value></data>
 <data name="Seguridad" xml:space="preserve"><value>Seguridad</value></data>
 <data name="Seleccione" xml:space="preserve"><value>Seleccione</value></data>
