@@ -575,13 +575,41 @@
                 </BSTHead>
                 <BSTBody>
 
+                
+@{
+    var equivalencias = new Dictionary<string, List<string>>
+    {
+        { "PERFORADORA 1", new List<string> { "PERFORADORA 1", "Celda Higienico 1" } },
+        { "PERFORADORA 2", new List<string> { "PERFORADORA 2", "Celda Higienico 2" } },
+        { "PERFORADORA 3", new List<string> { "PERFORADORA 3", "Celda Higienico 3" } },
+        { "PERFORADORA 4", new List<string> { "PERFORADORA 4", "Celda Higienico 4" } },
+        { "PERFORADORA 5", new List<string> { "PERFORADORA 5", "Celda Higienico 5" } },
+        { "PERFORADORA 6", new List<string> { "PERFORADORA 6", "Celda Higienico 6" } },
+        { "PERFORADORA 7", new List<string> { "PERFORADORA 7", "Celda Higienico 7" } },
+        { "PERFORADORA 8", new List<string> { "PERFORADORA 8", "Celda Higienico 8" } },
+        { "PLEGADORA 1", new List<string> {"PLEGADORA 1", "Servilleta A"}},
+        { "PLEGADORA 2", new List<string> {"PLEGADORA 2", "Servilleta B"}},
+        { "PLEGADORA 3", new List<string> {"PLEGADORA 3", "Servilleta C"}},
+        { "PLEGADORA 5", new List<string> {"PLEGADORA 5", "Celda Servilleta 01"}},
+        { "MOLINO NRO 1", new List<string> {"MOLINO NRO 1", "Molino 1"}},
+        { "MOLINO 3", new List<string> {"MOLINO 3", "Molino 3"}},
+        { "MOLINO 5", new List<string> {"MOLINO 5", "Molino 5"}},
+        { "MOLINO 6", new List<string> {"MOLINO 6", "Molino 6"}}        
+
+    };
+
+    var nombresValidos = equivalencias.ContainsKey(NombreLinea)
+        ? equivalencias[NombreLinea]
+        : new List<string> { NombreLinea };
+}
+
+
 
                     @foreach (var d in listareu)
                     {
                         @if (Codigo == d.RdcodDis | Codigo == "Todo")
                         {
-
-                            @if (NombreLinea == "Todo" | NombreLinea == d.Rdarea)
+                            @if (NombreLinea == "Todo" || nombresValidos.Contains(d.Rdarea))
                             {
                                 @if (idrespo == 0 | idrespo == d.IdResReu)
                                 {
@@ -896,6 +924,7 @@
     List<CambFec> cambiofechas = new List<CambFec>();
     List<CambStat> cambiostatuss = new List<CambStat>();
     List<Division> divisiones = new List<Division>();
+    
     private NotifiRadzen Notificar = new NotifiRadzen();//Logic para crear las noyificaciones radzen
     private bool isEditar { get; set; } = true;
     private List<Claim> claims { get; set; }
