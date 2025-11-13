@@ -60,17 +60,16 @@ else
         </BSCol>
         @if (PizarraData.reudiatablas.Count() > 0 && dataIsLoaded == 2)
         {
-            <BSCol ColumnLarge="3" ColumnSmall="6">
-                <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
-                <BSInput InputType="InputType.Select" @bind-Value="NombreLinea" IsDisabled=@valueodt>
-                    <option value="Todo">@DiccionarioTraduccionesService.Traducciones["Todo"]</option>
-                    @foreach (var d in MaestraData.lineas)
-                    {
-                                <option value="@d.Linea">@d.Linea</option>
-                    }
-                </BSInput>
-            </BSCol>
-
+        <BSCol ColumnLarge="3" ColumnSmall="6">
+            <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
+            <BSInput InputType="InputType.Select" TValue="int" Value="LineaSeleccionada" ValueChanged="@(async e => await OnLineaChanged(e))" IsDisabled="@valueodt">
+                <option value="0">@DiccionarioTraduccionesService.Traducciones["Todo"]</option>
+                @foreach (var d in MaestraData.lineas)
+                {
+                    <option value="@d.IdLinea">@d.Linea</option>
+                }
+            </BSInput>
+        </BSCol>
         }
         <BSCol ColumnLarge="3" ColumnSmall="6">
             <BSLabel>@DiccionarioTraduccionesService.Traducciones["Estado"]</BSLabel>
@@ -250,7 +249,7 @@ else
                         @if (Codigo == d.RdcodDis | Codigo == "Todo")
                         {
 
-                            @if (NombreLinea == "Todo" | NombreLinea == d.Rdarea)
+                            @if (IdMasterSeleccionado == 0 | IdMasterSeleccionado == d.IdMaster)
                             {
                                 @if (idrespo == 0 | idrespo == d.IdResReu)
                                 {
@@ -603,7 +602,9 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
     private List<Claim> claims { get; set; }
     private int idPais {get; set;}
     private bool traduccionesCargadas = false;
- 
+    private int IdMasterSeleccionado { get; set; } = 0;
+
+    private int LineaSeleccionada { get; set; } = 0;
 
 
     private async Task CreateData()
@@ -716,38 +717,53 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
 
 
     protected async Task BuscarDivision(ChangeEventArgs e)
+{
+    IdCentro = int.Parse(e.Value.ToString());
+    IdDiv = 0;
+
+    // ✅ Reiniciar filtro de línea
+    IdMasterSeleccionado = 0;
+    NombreLinea = "Todo";
+
+    try
     {
-            IdCentro = int.Parse(e.Value.ToString());
-            IdDiv = 0;
-            try{
-                if(IdCentro != 0){
-                    MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(IdCentro);
-                }
-            }catch(Exception ex){
-                mensaje = "Error: " + ex.Message;
-            }
+        if (IdCentro != 0)
+        {
+            MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(IdCentro);
+        }
     }
+    catch (Exception ex)
+    {
+        mensaje = "Error: " + ex.Message;
+    }
+}
 
 
     protected async Task Get()
     {
-        if (IdCentro != 0 & IdDiv != 0)
+        if (IdCentro != 0 && IdDiv != 0)
         {
-            // error = null;
             if (dataIsLoaded != 1)
             {
                 dataIsLoaded = 1;
                 await PizarraData.GetPendientes(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, Status);
-                ObtenerReunionesPorRol();//actualizar tabla
+                ObtenerReunionesPorRol();
+                if (IdMasterSeleccionado > 0)
+                {
+                    listareu = listareu
+                        .Where(r => r.IdMaster == IdMasterSeleccionado)
+                        .ToList();
+                }
                 dataIsLoaded = 2;
-
             }
-
         }
         else
         {
-
-            NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["SVLista"]));
+            NotificationService.Notify(Notificar.Notificacion(
+                "advertencia",
+                DiccionarioTraduccionesService.Traducciones["Atencion"],
+                DiccionarioTraduccionesService.Traducciones["SVLista"]
+            ));
         }
     }
 
@@ -803,19 +819,21 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
 
 
     }
-    private Task DivReset(int idcentro)
-    {
+private Task DivReset(int idcentro)
+{
+    IdCentro = idcentro;
+    IdDiv = 0;
 
-        IdCentro = idcentro;
-        IdDiv = 0;
+    // ✅ Reiniciar filtro de línea
+    IdMasterSeleccionado = 0;
+    NombreLinea = "Todo";
 
-        MaestraData.divisions = MaestraData.divisions
+    MaestraData.divisions = MaestraData.divisions
         .Where(c => c.IdCentro == idcentro)
-        @* .SelectMany(c => c.Divisions) *@
         .ToList();
 
-        return Task.CompletedTask;
-    }
+    return Task.CompletedTask;
+}
     protected async Task GetHistory(int idreu)
     {
         cargandocambio = false;
@@ -843,60 +861,61 @@ void Editar(int id)
 }
 
     protected override async Task OnParametersSetAsync()
+{
+    try
     {
-        try
+        if (accion != null)
         {
+            BuscarOdt = await LocalStorage.GetItemAsStringAsync("ReunionDiariaOdtValue");
 
-
-            if (accion != null)
+            if (string.IsNullOrEmpty(BuscarOdt) && !valueodt)
             {
-                //Si esta filtrando por ODT se consulta la odt si el campo es vacio se procede normal
-                BuscarOdt = await LocalStorage.GetItemAsStringAsync("ReunionDiariaOdtValue");
+                valuvisualeodt = valueodt = false;
 
-                if (string.IsNullOrEmpty(BuscarOdt) && !valueodt)
+                string[] fec1 = f1.Split('-');
+                string[] fec2 = f2.Split('-');
+
+                DateTime date1 = new DateTime(int.Parse(fec1[2]), int.Parse(fec1[1]), int.Parse(fec1[0]));
+                DateTime date2 = new DateTime(int.Parse(fec2[2]), int.Parse(fec2[1]), int.Parse(fec2[0]));
+
+                fecha1 = date1;
+                fecha2 = date2;
+
+                IdCentro = int.Parse(accion);
+                IdDiv = int.Parse(division);
+                Status = est;
+                Codigo = codigo;
+                idrespo = (int)responsable;
+                IdKsf = (int)ksfF;
+                tipoconsulta = tipo;
+
+                // ✅ Mantener línea si ya está seleccionada
+                if (!string.IsNullOrEmpty(linea) && linea != "Todo")
                 {
-                    valuvisualeodt = valueodt = false;
-
-
-                    string[] fec1 = f1.Split('-');
-                    string[] fec2 = f2.Split('-');
-
-                    //año, mes dia
-                    DateTime date1 = new DateTime(int.Parse(fec1[2]), int.Parse(fec1[1]), int.Parse(fec1[0]));
-                    DateTime date2 = new DateTime(int.Parse(fec2[2]), int.Parse(fec2[1]), int.Parse(fec2[0]));
-                    fecha1 = date1;
-                    fecha2 = date2;
-                    IdCentro = int.Parse(accion);
-                    IdDiv = int.Parse(division);
-                    Status = est;
-                    Codigo = codigo; 
-                    idrespo = (int)responsable; 
-                    IdKsf = (int)ksfF;
                     NombreLinea = linea;
-                    NombreLinea = linea;
-                    tipoconsulta = tipo;
-                    dataIsLoaded = 1;
-                    await PizarraData.GetPendientes(accion, division, date1, date2, tipo, est);
-                    ObtenerReunionesPorRol();//actualizar tabla
-
-                    dataIsLoaded = 2;
-                }
-                else
-                {
-                    valuvisualeodt = valueodt;
-                    await BuscarxOdt();
-
                 }
 
+                dataIsLoaded = 1;
+                await PizarraData.GetPendientes(accion, division, date1, date2, tipo, est);
+                ObtenerReunionesPorRol();
+                dataIsLoaded = 2;
+            }
+            else
+            {
+                valuvisualeodt = valueodt;
+                await BuscarxOdt();
             }
         }
-        catch (Exception ex)
-        {
-            NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["ErrorInesp"], DiccionarioTraduccionesService.Traducciones["Reload"]));
-
-        }
-
-    }   
+    }
+    catch (Exception ex)
+    {
+        NotificationService.Notify(Notificar.Notificacion(
+            "error",
+            DiccionarioTraduccionesService.Traducciones["ErrorInesp"],
+            DiccionarioTraduccionesService.Traducciones["Reload"]
+        ));
+    }
+}   
     public void ObtenerReunionesPorRol()
     {
         if (!string.IsNullOrEmpty(UsrRol))
@@ -929,19 +948,54 @@ void Editar(int id)
     }
 
     protected async Task BuscarLineas(ChangeEventArgs e)
-{
-    IdDiv = int.Parse(e.Value.ToString());
-    try
     {
-        if (IdDiv != 0)
+        IdDiv = int.Parse(e.Value.ToString());
+        try
         {
-            MaestraData.lineas = await MaestraData.ObtenerLasLineasPorDivision(IdDiv);
+            if (IdDiv != 0)
+            {
+                MaestraData.lineas = await MaestraData.ObtenerLasLineasPorDivision(IdDiv);
+            }
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(Notificar.Notificacion("error", "Error", DiccionarioTraduccionesService.Traducciones["SLinea"]));
         }
     }
-    catch (Exception ex)
+
+    private void SeleccionarLinea(int valor)
     {
-        NotificationService.Notify(Notificar.Notificacion("error", "Error", DiccionarioTraduccionesService.Traducciones["SLinea"]));
+        LineaSeleccionada = valor;
+
+        if (LineaSeleccionada == 0)
+        {
+            IdMasterSeleccionado = 0;
+            NombreLinea = "Todo";
+        }
+        else
+        {
+            var lineaSeleccionada = MaestraData.lineas.FirstOrDefault(x => x.IdLinea == LineaSeleccionada);
+            IdMasterSeleccionado = lineaSeleccionada?.IdMaster ?? 0;
+            NombreLinea = lineaSeleccionada?.Linea ?? "Todo";
+        }
+    }
+
+    private async Task OnLineaChanged(int valor)
+    {
+        LineaSeleccionada = valor;
+
+        if (LineaSeleccionada == 0)
+        {
+            IdMasterSeleccionado = 0;
+            NombreLinea = "Todo";
+        }
+        else
+        {
+            var lineaSeleccionada = MaestraData.lineas.FirstOrDefault(x => x.IdLinea == LineaSeleccionada);
+            IdMasterSeleccionado = lineaSeleccionada?.IdMaster ?? 0;
+            NombreLinea = lineaSeleccionada?.Linea ?? "Todo";
+        }
+
+        await Get();
     }
 }
-}
-
