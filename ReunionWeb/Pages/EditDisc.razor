@@ -587,7 +587,7 @@ else
                 @foreach (var d in CambiosFecha)
                 {
                     <BSTR>
-                        <BSTD>@(CambiosFecha.IndexOf(d) + 1)</BSTD>
+                        <BSTD>@(CambiosFecha.IndexOf(d) + +1)</BSTD>
                         <BSTD>@d.Cffec.ToString("yyyy/MM/dd")</BSTD>
                             <BSTD>@d.CffecNew.ToString("yyyy/MM/dd")</BSTD>
                             <BSTD>@d.Cfuser</BSTD>
@@ -762,7 +762,7 @@ else
             if (DiscForm.RdfecTra >= DiscForm.RdfecReu && ((int)tipo == 0 || (int)tipo == 1 || (int)tipo == 2))
             {
                 // Validación de límite de cambios de fecha
-                if (CambiosFecha.Count() >= 3 && camFec != DiscForm.RdfecTra)
+                if (CambiosFecha.Count() >= 4 && camFec != DiscForm.RdfecTra)
                 {
                     NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["Limite"]));
                     return;
