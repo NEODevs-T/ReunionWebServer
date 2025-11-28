@@ -35,7 +35,7 @@ else
 <h3>@DiccionarioTraduccionesService.Traducciones["EditarDiscrepancia"]</h3>
 
 <h4></h4>
-<AuthorizeView Roles="Admin,AdminChempro, SuperUser, PrimeUser">
+<AuthorizeView Roles="Admin,AdminChempro, SuperUser, PrimeUser, Planificador">
 
     <Authorized>
 
@@ -245,26 +245,21 @@ else
                             </BSInput>
                         </BSCol>
                     }
-                        @if(DiscForm.RdcodDis == "3")
-                        {
-                            if (planificador == "Admin" || planificador == "Planificador" || planificador == "SuperAdmin")
+                    @if (!loader && DiscForm.RdcodDis == "3")
+                    {
+                        <BSCol Column="2">
+                            <BSLabel>@DiccionarioTraduccionesService.Traducciones["Requisicion"]</BSLabel>
+
+                            @if (EsAdmin || EsSuperUser || EsPlanificador)  
                             {
-                                <BSCol Column="2">
-                                    <BSLabel>@DiccionarioTraduccionesService.Traducciones["Requisicion"]</BSLabel>
-                                    <BSInput InputType="InputType.Number" Min="0" @bind-Value="DiscForm.RdcodRequi"  ValidateOnInput="true" />
-                                </BSCol>
-
-                            }  
-                            else{
-
-                                <BSCol Column="2">
-                                    <BSLabel>@DiccionarioTraduccionesService.Traducciones["Requisicion"]</BSLabel>
-                                    <BSInput InputType="InputType.Number" Min="0" IsDisabled @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
-                                </BSCol>
+                                <BSInput InputType="InputType.Number" Min="0" @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
                             }
-                        } 
-
-
+                            else  
+                            {
+                                <BSInput InputType="InputType.Number" Min="0" IsDisabled @bind-Value="DiscForm.RdcodRequi" ValidateOnInput="true" />
+                            }
+                        </BSCol>
+                    }
                     <BSCol ColumnSmall="2">
                         <BSLabel>Status</BSLabel>
                         <BSInput InputType="InputType.Select" @bind-Value="DiscForm.Rdstatus">
@@ -656,7 +651,7 @@ else
     private DateTime? camFec;//Variable para verificar si es el usuario cambio la Fecha;
     private bool EsSuperUser; //Variable para verificar que el usuario sea SuperIntendente
     private bool EsAdmin; // Variable para verificar que el usuario sea Administrador
-
+    private bool EsPlanificador;
     private List<Claim> claims { get; set; }//obtener datos del token
     int dataIsLoaded = 0;
     private bool traduccionesCargadas = false;
@@ -668,6 +663,7 @@ else
         var user = authState.User;
         EsSuperUser = user.IsInRole("SuperUser");
         EsAdmin = user.IsInRole("Admin");
+        EsPlanificador = user.IsInRole("Planificador");
 
         await LocalizationService.EstablecerCulturaDesdeTokenAsync();
         CultureInfo.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
@@ -710,6 +706,7 @@ else
         await getFecha();
         RespoReuData.resporeus = RespoReuData.resporeus.Where(a => a.Rrdesc == claims.FirstOrDefault(c => c.Type.Contains("Empresa"))?.Value || string.IsNullOrEmpty(a.Rrdesc)).ToList();
         loader = false;
+        DiscForm.RdcodRequi ??="0";
     }
 
     async Task AgregarFecha(FechaProgDTO e)
