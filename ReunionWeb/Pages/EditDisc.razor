@@ -751,102 +751,116 @@ else
         DiscForm.IdCausaCal = currentIdCausaCal;
     }
 
-    private async Task Editar()
+private async Task Editar()
+{
+    try
     {
-        try
+        // Antes de la edición, opcionalmente puedes loggear el tipo y fechas
+        // Console.WriteLine o ILogger si quieres depurar
+
+        // --- Validación de fechas y tipo deshabilitada ---
+        // Todo el bloque que antes estaba dentro del 'if' ahora se ejecuta siempre
+
+        // Validación de límite de cambios de fecha
+        if (CambiosFecha.Count() >= 4 && camFec != DiscForm.RdfecTra)
         {
-            // Validación de fechas y tipo
-            if (DiscForm.RdfecTra >= DiscForm.RdfecReu && ((int)tipo == 0 || (int)tipo == 1 || (int)tipo == 2))
-            {
-                // Validación de límite de cambios de fecha
-                if (CambiosFecha.Count() >= 4 && camFec != DiscForm.RdfecTra)
-                {
-                    NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["Limite"]));
-                    return;
-                }
-
-                // Validación de plan de acción vacío al cerrar
-                if (string.IsNullOrEmpty(DiscForm.RdplanAcc) && DiscForm.Rdstatus == "Cerrado")
-                {
-                    NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["NPA1"]));
-                    return;
-                }
-
-                // Validación de cambio de plan de acción a vacío
-                if (PlanOld != DiscForm.RdplanAcc && string.IsNullOrEmpty(DiscForm.RdplanAcc))
-                {
-                    NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["NPA2"]));
-                    DiscForm.RdplanAcc = PlanOld;
-                    return;
-                }
-
-                // Registro de cambio de status
-                if (camStat != DiscForm.Rdstatus)
-                {
-                    CambStat.IdReuDia = DiscForm.IdReuDia;
-                    CambStat.Cbfecha = DateTime.Now;
-                    CambStat.Cbstat = DiscForm.Rdstatus;
-                    CambStat.Cbuser = $"{claims[2].Value} {claims[3].Value}";
-                }
-
-                // Registro de cambio de fecha
-                if (camFec != DiscForm.RdfecTra)
-                {
-                    CambFec.IdReuDia = DiscForm.IdReuDia;
-                    CambFec.Cffec = DateTime.Now;
-                    CambFec.CffecNew = DiscForm.RdfecTra;
-                    CambFec.Cfuser = $"{claims[2].Value} {claims[3].Value}";
-                }
-
-                // Guardar cambios
-                var resultado = await PizarraData.UpdateDiscrepancia2(DiscForm, (int)Id);
-                cambio = resultado.success;
-
-                if (cambio)
-                {
-                    await AvisadorData.InsertCambioStatus(CambStat);
-                    await AvisadorData.InsertCambioFec(CambFec);
-
-                    // Construcción manual de la ruta
-                    string lang = idPais == 5 ? "en" : "es";
-                    string accion = resultado.centro ?? "1";
-                    string division = resultado.division ?? "1";
-                    string lineaFinal = linea ?? "Todo";
-                    string f1Final = f1 ?? DateTime.Today.ToString("dd-MM-yyyy");
-                    string f2Final = f2 ?? DateTime.Today.ToString("dd-MM-yyyy");
-                    string estFinal = est ?? "Todo";
-                    string codigoFinal = string.IsNullOrWhiteSpace(codigo) ? "Total Pendiente" : codigo;
-                    int responsableFinal = responsable ?? 0;
-                    int ksfFFinal = KsfF ?? 0;
-
-                    string ruta = "";
-
-                    if (tipo == 0 || tipo == 2)
-                    {
-                        ruta = $"{lang}/{(lang == "en" ? "remaining" : "pendientes")}/{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estFinal}/{codigoFinal}/{responsableFinal}/{ksfFFinal}";
-                    }
-                    else if (tipo == 1)
-                    {
-                        ruta = $"{lang}/{(lang == "en" ? "meeting" : "reunion")}/{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estFinal}";
-                    }
-
-                    NavigationManager.NavigateTo(ruta);
-                }
-                else
-                {
-                    NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["FalloR"], DiccionarioTraduccionesService.Traducciones["ErrorP"]));
-                }
-            }
-            else
-            {
-                NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["ERevisar"], DiccionarioTraduccionesService.Traducciones["FechaMenor"]));
-            }
+            NotificationService.Notify(Notificar.Notificacion(
+                "error",
+                DiccionarioTraduccionesService.Traducciones["Atencion"],
+                DiccionarioTraduccionesService.Traducciones["Limite"]));
+            return;
         }
-        catch (Exception)
+
+        // Validación de plan de acción vacío al cerrar
+        if (string.IsNullOrEmpty(DiscForm.RdplanAcc) && DiscForm.Rdstatus == "Cerrado")
         {
-            NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["ErrorInesp"], DiccionarioTraduccionesService.Traducciones["Reload"]));
+            NotificationService.Notify(Notificar.Notificacion(
+                "advertencia",
+                DiccionarioTraduccionesService.Traducciones["Atencion"],
+                DiccionarioTraduccionesService.Traducciones["NPA1"]));
+            return;
         }
+
+        // Validación de cambio de plan de acción a vacío
+        if (PlanOld != DiscForm.RdplanAcc && string.IsNullOrEmpty(DiscForm.RdplanAcc))
+        {
+            NotificationService.Notify(Notificar.Notificacion(
+                "advertencia",
+                DiccionarioTraduccionesService.Traducciones["Atencion"],
+                DiccionarioTraduccionesService.Traducciones["NPA2"]));
+            DiscForm.RdplanAcc = PlanOld;
+            return;
+        }
+
+        // Registro de cambio de status
+        if (camStat != DiscForm.Rdstatus)
+        {
+            CambStat.IdReuDia = DiscForm.IdReuDia;
+            CambStat.Cbfecha = DateTime.Now;
+            CambStat.Cbstat = DiscForm.Rdstatus;
+            CambStat.Cbuser = $"{claims[2].Value} {claims[3].Value}";
+        }
+
+        // Registro de cambio de fecha
+        if (camFec != DiscForm.RdfecTra)
+        {
+            CambFec.IdReuDia = DiscForm.IdReuDia;
+            CambFec.Cffec = DateTime.Now;
+            CambFec.CffecNew = DiscForm.RdfecTra;
+            CambFec.Cfuser = $"{claims[2].Value} {claims[3].Value}";
+        }
+
+        // Guardar cambios
+        var resultado = await PizarraData.UpdateDiscrepancia2(DiscForm, (int)Id);
+        cambio = resultado.success;
+
+        if (cambio)
+        {
+            await AvisadorData.InsertCambioStatus(CambStat);
+            await AvisadorData.InsertCambioFec(CambFec);
+
+            // Construcción manual de la ruta
+            string lang = idPais == 5 ? "en" : "es";
+            string accion = resultado.centro ?? "1";
+            string division = resultado.division ?? "1";
+            string lineaFinal = linea ?? "Todo";
+            string f1Final = f1 ?? DateTime.Today.ToString("dd-MM-yyyy");
+            string f2Final = f2 ?? DateTime.Today.ToString("dd-MM-yyyy");
+            string estFinal = est ?? "Todo";
+            string codigoFinal = string.IsNullOrWhiteSpace(codigo) ? "Total Pendiente" : codigo;
+            int responsableFinal = responsable ?? 0;
+            int ksfFFinal = KsfF ?? 0;
+
+            string ruta = "";
+
+            if (tipo == 0 || tipo == 2)
+            {
+                ruta = $"{lang}/{(lang == "en" ? "remaining" : "pendientes")}/{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estFinal}/{codigoFinal}/{responsableFinal}/{ksfFFinal}";
+            }
+            else if (tipo == 1)
+            {
+                ruta = $"{lang}/{(lang == "en" ? "meeting" : "reunion")}/{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estFinal}";
+            }
+
+            NavigationManager.NavigateTo(ruta);
+        }
+        else
+        {
+            NotificationService.Notify(Notificar.Notificacion(
+                "advertencia",
+                DiccionarioTraduccionesService.Traducciones["FalloR"],
+                DiccionarioTraduccionesService.Traducciones["ErrorP"]));
+        }
+    }
+    catch (Exception)
+    {
+        NotificationService.Notify(Notificar.Notificacion(
+            "error",
+            DiccionarioTraduccionesService.Traducciones["ErrorInesp"],
+            DiccionarioTraduccionesService.Traducciones["Reload"]));
+    }
 }
+
 
 
 
