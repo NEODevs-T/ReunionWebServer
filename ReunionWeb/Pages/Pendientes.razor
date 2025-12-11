@@ -848,6 +848,14 @@ private Task DivReset(int idcentro)
 
     }
 
+    bool EsVencido(DateTime fechaTrabajo, string estadoRaw)
+    {
+        var estado = (estadoRaw ?? string.Empty).Trim());
+        return fechaTrabajo.Date < DateTime.Today
+            && estado.StartsWith("Pendiente", 
+            StringComparison.InvariantCultureIgnoreCase);
+    }
+
 
 void Editar(int id)
 {
@@ -930,7 +938,18 @@ void Editar(int id)
         else
         {
             listareu = PizarraData.reudiatablas;
+        }
+        var statusNormalized = (Status ?? string.Empty).Trim();
+        var vencidosTextoUI = DiccionarioTraduccionesService.Traducciones
+            .TryGetValue("Vencidos", out var traducidoVencidos)
+                ? traducidoVencidos
+                : "Vencidos";
 
+        if (statusNormalized.Equals(vencidosTextoUI, StringComparison.InvariantCultureIgnoreCase))
+        {
+            listareu = listareu
+                .Where(d => EsVencido(d.RdfecTra, d.Rdstatus))
+                .ToList();
         }
     }
 
