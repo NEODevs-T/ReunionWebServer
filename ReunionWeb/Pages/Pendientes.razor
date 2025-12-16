@@ -290,17 +290,23 @@ else
                                                 }
                                                 <BSTD class="@(nombreResponsable == "Por Definir" ? "Definir" : "")">@nombreResponsable</BSTD>
                                                 @{
-                                                    var clavee = ValidationMessages.MapStatusKey(d.Rdstatus);
-                                                    var estadoTraducido = DiccionarioTraduccionesService.Traducciones.ContainsKey(clavee)
-                                                        ? DiccionarioTraduccionesService.Traducciones[clavee]
-                                                        : clavee;
+                                                    var esVencido = d.RdfecTra.Date < DateTime.Now.Date
+                                                                    && (d.Rdstatus?.StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase) ?? false);
 
-                                                    var claseEstado = d.Rdstatus switch
-                                                    {
-                                                        "Listo" => "listo",
-                                                        "Cerrado" => "Cerrado",
-                                                        _ => "pendiente"
-                                                    };
+                                                    var claveMostrada = esVencido ? "Vencidos" : ValidationMessages.MapStatusKey(d.Rdstatus);
+
+                                                    var estadoTraducido = DiccionarioTraduccionesService.Traducciones.ContainsKey(claveMostrada)
+                                                        ? DiccionarioTraduccionesService.Traducciones[claveMostrada]
+                                                        : claveMostrada;
+
+                                                    var claseEstado = esVencido
+                                                        ? "Vencido"
+                                                        : d.Rdstatus switch
+                                                        {
+                                                            "Listo"   => "listo",
+                                                            "Cerrado" => "Cerrado",
+                                                            _         => "pendiente"
+                                                        };
                                                 }
                                                 <BSTD Class="@claseEstado">@estadoTraducido</BSTD>
 
@@ -848,13 +854,33 @@ private Task DivReset(int idcentro)
 
     }
 
-    bool EsVencido(DateTime fechaTrabajo, string estadoRaw)
+    
+// Indica si la fila está vencida (solo para UI)
+bool EsVencido(DateTime fechaTrabajo, string estadoOriginal)
+{
+    return fechaTrabajo.Date < DateTime.Now.Date &&
+            (estadoOriginal?.StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase) ?? false);
+}
+
+// Devuelve el texto de estado a mostrar (visual), sin cambiar el modelo
+string GetVisualStatus(DateTime fechaTrabajo, string estadoOriginal)
+{
+    if (EsVencido(fechaTrabajo, estadoOriginal))
     {
-        var estado = (estadoRaw ?? string.Empty).Trim());
-        return fechaTrabajo.Date < DateTime.Today
-            && estado.StartsWith("Pendiente", 
-            StringComparison.InvariantCultureIgnoreCase);
+        // Si tienes traducción para "Vencido" en tu diccionario, úsala
+        var clave = "Vencidos"; // o la clave exacta que uses en tu .resx
+        return DiccionarioTraduccionesService.Traducciones.ContainsKey(clave)
+                ? DiccionarioTraduccionesService.Traducciones[clave]
+                : "Vencido";
     }
+
+    // Tu lógica actual de traducción del estado original
+    var claveEstado = ValidationMessages.MapStatusKey(estadoOriginal);
+    return DiccionarioTraduccionesService.Traducciones.ContainsKey(claveEstado)
+            ? DiccionarioTraduccionesService.Traducciones[claveEstado]
+            : estadoOriginal;
+}
+
 
 
 void Editar(int id)
@@ -938,18 +964,7 @@ void Editar(int id)
         else
         {
             listareu = PizarraData.reudiatablas;
-        }
-        var statusNormalized = (Status ?? string.Empty).Trim();
-        var vencidosTextoUI = DiccionarioTraduccionesService.Traducciones
-            .TryGetValue("Vencidos", out var traducidoVencidos)
-                ? traducidoVencidos
-                : "Vencidos";
 
-        if (statusNormalized.Equals(vencidosTextoUI, StringComparison.InvariantCultureIgnoreCase))
-        {
-            listareu = listareu
-                .Where(d => EsVencido(d.RdfecTra, d.Rdstatus))
-                .ToList();
         }
     }
 
