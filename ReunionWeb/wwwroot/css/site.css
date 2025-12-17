@@ -345,7 +345,6 @@ table th {
     z-index: 2;
 }
 
-
 @media (max-width: 768px) {
     .tabla-contenedor {
         width: 100%;

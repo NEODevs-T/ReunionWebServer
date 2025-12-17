@@ -290,17 +290,23 @@ else
                                                 }
                                                 <BSTD class="@(nombreResponsable == "Por Definir" ? "Definir" : "")">@nombreResponsable</BSTD>
                                                 @{
-                                                    var clavee = ValidationMessages.MapStatusKey(d.Rdstatus);
-                                                    var estadoTraducido = DiccionarioTraduccionesService.Traducciones.ContainsKey(clavee)
-                                                        ? DiccionarioTraduccionesService.Traducciones[clavee]
-                                                        : clavee;
+                                                    var esVencido = d.RdfecTra.Date < DateTime.Now.Date
+                                                                    && (d.Rdstatus?.StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase) ?? false);
 
-                                                    var claseEstado = d.Rdstatus switch
-                                                    {
-                                                        "Listo" => "listo",
-                                                        "Cerrado" => "Cerrado",
-                                                        _ => "pendiente"
-                                                    };
+                                                    var claveMostrada = esVencido ? "Vencidos" : ValidationMessages.MapStatusKey(d.Rdstatus);
+
+                                                    var estadoTraducido = DiccionarioTraduccionesService.Traducciones.ContainsKey(claveMostrada)
+                                                        ? DiccionarioTraduccionesService.Traducciones[claveMostrada]
+                                                        : claveMostrada;
+
+                                                    var claseEstado = esVencido
+                                                        ? "Vencido"
+                                                        : d.Rdstatus switch
+                                                        {
+                                                            "Listo"   => "listo",
+                                                            "Cerrado" => "Cerrado",
+                                                            _         => "pendiente"
+                                                        };
                                                 }
                                                 <BSTD Class="@claseEstado">@estadoTraducido</BSTD>
 
@@ -717,27 +723,26 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
 
 
     protected async Task BuscarDivision(ChangeEventArgs e)
-{
-    IdCentro = int.Parse(e.Value.ToString());
-    IdDiv = 0;
-
-    // ✅ Reiniciar filtro de línea
-    IdMasterSeleccionado = 0;
-    NombreLinea = "Todo";
-
-    try
     {
-        if (IdCentro != 0)
+        IdCentro = int.Parse(e.Value.ToString());
+        IdDiv = 0;
+
+        // ✅ Reiniciar filtro de línea
+        IdMasterSeleccionado = 0;
+        NombreLinea = "Todo";
+
+        try
         {
-            MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(IdCentro);
+            if (IdCentro != 0)
+            {
+                MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(IdCentro);
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = "Error: " + ex.Message;
         }
     }
-    catch (Exception ex)
-    {
-        mensaje = "Error: " + ex.Message;
-    }
-}
-
 
     protected async Task Get()
     {
@@ -746,14 +751,37 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
             if (dataIsLoaded != 1)
             {
                 dataIsLoaded = 1;
-                await PizarraData.GetPendientes(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, Status);
+                var estConsulta = Status;
+                if (EsOpcionVencidos(estConsulta))
+                {
+                    estConsulta = "Todo";
+                }
+
+                await PizarraData.GetPendientes(
+                    IdCentro.ToString(),
+                    IdDiv.ToString(),
+                    fecha1,
+                    fecha2,
+                    tipoconsulta,
+                    estConsulta
+                );
+
                 ObtenerReunionesPorRol();
+
                 if (IdMasterSeleccionado > 0)
                 {
                     listareu = listareu
                         .Where(r => r.IdMaster == IdMasterSeleccionado)
                         .ToList();
                 }
+
+                if (EsOpcionVencidos(Status))
+                {
+                    listareu = listareu
+                        .Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
+                        .ToList();
+                }
+
                 dataIsLoaded = 2;
             }
         }
@@ -766,6 +794,21 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
             ));
         }
     }
+
+    private bool EsOpcionVencidos(string? s)
+    {
+        var valor = (s ?? string.Empty).Trim();
+
+        var traducidoVencidos = DiccionarioTraduccionesService.Traducciones.ContainsKey("Vencidos")
+            ? DiccionarioTraduccionesService.Traducciones["Vencidos"]
+            : "Vencidos";
+
+        // Contempla claves y traducciones (Español/English)
+        return valor.Equals("Vencidos", StringComparison.OrdinalIgnoreCase)
+            || valor.Equals("Expired", StringComparison.OrdinalIgnoreCase)
+            || valor.Equals(traducidoVencidos, StringComparison.OrdinalIgnoreCase);
+    }
+
 
     private async Task BuscarxOdt()
     {
@@ -819,21 +862,23 @@ else if (dataIsLoaded == 2 && PizarraData.reudiatablas.Count() == 0)
 
 
     }
-private Task DivReset(int idcentro)
-{
-    IdCentro = idcentro;
-    IdDiv = 0;
 
-    // ✅ Reiniciar filtro de línea
-    IdMasterSeleccionado = 0;
-    NombreLinea = "Todo";
+    private Task DivReset(int idcentro)
+    {
+        IdCentro = idcentro;
+        IdDiv = 0;
 
-    MaestraData.divisions = MaestraData.divisions
-        .Where(c => c.IdCentro == idcentro)
-        .ToList();
+        // ✅ Reiniciar filtro de línea
+        IdMasterSeleccionado = 0;
+        NombreLinea = "Todo";
 
-    return Task.CompletedTask;
-}
+        MaestraData.divisions = MaestraData.divisions
+            .Where(c => c.IdCentro == idcentro)
+            .ToList();
+
+        return Task.CompletedTask;
+    }
+
     protected async Task GetHistory(int idreu)
     {
         cargandocambio = false;
@@ -848,74 +893,128 @@ private Task DivReset(int idcentro)
 
     }
 
+    bool EsVencido(DateTime fechaTrabajo, string? estadoOriginal)
+    {
+        var estado = estadoOriginal ?? string.Empty;
+        return fechaTrabajo.Date < DateTime.Now.Date
+                && estado.StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase);
+    }
 
-void Editar(int id)
-{
-    var ruta = idPais == 5 ? "en" : "es";
-    var f1 = fecha1.ToString("dd-MM-yyyy");
-    var f2 = fecha2.ToString("dd-MM-yyyy");
-    var lineaEncoded = Uri.EscapeDataString(NombreLinea ?? "");
-    var estEncoded = Uri.EscapeDataString(Status ?? "");
-    var url = $"{ruta}/EditDisc/{id}/{tipoconsulta}/{lineaEncoded}/{f1}/{f2}/{estEncoded}/{Codigo}/{idrespo}/{IdKsf}";
-    NavigationManager.NavigateTo(url);
-}
+    string GetVisualStatus(DateTime fechaTrabajo, string estadoOriginal)
+    {
+        if (EsVencido(fechaTrabajo, estadoOriginal))
+        {
+            // Si tienes traducción para "Vencido" en tu diccionario, úsala
+            var clave = "Vencidos"; // o la clave exacta que uses en tu .resx
+            return DiccionarioTraduccionesService.Traducciones.ContainsKey(clave)
+                    ? DiccionarioTraduccionesService.Traducciones[clave]
+                    : "Vencido";
+        }
+
+        // Tu lógica actual de traducción del estado original
+        var claveEstado = ValidationMessages.MapStatusKey(estadoOriginal);
+        return DiccionarioTraduccionesService.Traducciones.ContainsKey(claveEstado)
+                ? DiccionarioTraduccionesService.Traducciones[claveEstado]
+                : estadoOriginal;
+    }
+
+    void Editar(int id)
+    {
+        var ruta = idPais == 5 ? "en" : "es";
+        var f1 = fecha1.ToString("dd-MM-yyyy");
+        var f2 = fecha2.ToString("dd-MM-yyyy");
+        var lineaEncoded = Uri.EscapeDataString(NombreLinea ?? "");
+        var estEncoded = Uri.EscapeDataString(Status ?? "");
+        var url = $"{ruta}/EditDisc/{id}/{tipoconsulta}/{lineaEncoded}/{f1}/{f2}/{estEncoded}/{Codigo}/{idrespo}/{IdKsf}";
+        NavigationManager.NavigateTo(url);
+    }
 
     protected override async Task OnParametersSetAsync()
-{
-    try
     {
-        if (accion != null)
+        try
         {
-            BuscarOdt = await LocalStorage.GetItemAsStringAsync("ReunionDiariaOdtValue");
-
-            if (string.IsNullOrEmpty(BuscarOdt) && !valueodt)
+            if (accion != null)
             {
-                valuvisualeodt = valueodt = false;
+                BuscarOdt = await LocalStorage.GetItemAsStringAsync("ReunionDiariaOdtValue");
 
-                string[] fec1 = f1.Split('-');
-                string[] fec2 = f2.Split('-');
-
-                DateTime date1 = new DateTime(int.Parse(fec1[2]), int.Parse(fec1[1]), int.Parse(fec1[0]));
-                DateTime date2 = new DateTime(int.Parse(fec2[2]), int.Parse(fec2[1]), int.Parse(fec2[0]));
-
-                fecha1 = date1;
-                fecha2 = date2;
-
-                IdCentro = int.Parse(accion);
-                IdDiv = int.Parse(division);
-                Status = est;
-                Codigo = codigo;
-                idrespo = (int)responsable;
-                IdKsf = (int)ksfF;
-                tipoconsulta = tipo;
-
-                // ✅ Mantener línea si ya está seleccionada
-                if (!string.IsNullOrEmpty(linea) && linea != "Todo")
+                if (string.IsNullOrEmpty(BuscarOdt) && !valueodt)
                 {
-                    NombreLinea = linea;
-                }
+                    valuvisualeodt = valueodt = false;
 
-                dataIsLoaded = 1;
-                await PizarraData.GetPendientes(accion, division, date1, date2, tipo, est);
-                ObtenerReunionesPorRol();
-                dataIsLoaded = 2;
-            }
-            else
-            {
-                valuvisualeodt = valueodt;
-                await BuscarxOdt();
+                    string[] fec1 = f1.Split('-');
+                    string[] fec2 = f2.Split('-');
+
+                    DateTime date1 = new DateTime(int.Parse(fec1[2]), int.Parse(fec1[1]), int.Parse(fec1[0]));
+                    DateTime date2 = new DateTime(int.Parse(fec2[2]), int.Parse(fec2[1]), int.Parse(fec2[0]));
+
+                    fecha1 = date1;
+                    fecha2 = date2;
+
+                    IdCentro = int.Parse(accion);
+                    IdDiv = int.Parse(division);
+                    Status = est;
+                    Codigo = codigo;
+                    idrespo = (int)responsable;
+                    IdKsf = (int)ksfF;
+                    tipoconsulta = tipo;
+
+                    if (!string.IsNullOrEmpty(linea) && linea != "Todo")
+                    {
+                        NombreLinea = linea;
+                    }
+
+                    dataIsLoaded = 1;
+
+                    // 1) Normalizar 'est' para la llamada al servicio
+                    var estConsulta = est;
+                    if (EsOpcionVencidos(estConsulta))
+                    {
+                        estConsulta = "Todo";
+                    }
+
+                    await PizarraData.GetPendientes(accion, division, date1, date2, tipo, estConsulta);
+                    ObtenerReunionesPorRol();
+
+                    // 2) Filtro visual "Vencidos"
+                    if (EsOpcionVencidos(Status))
+                    {
+                        listareu = listareu
+                            .Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
+                            .ToList();
+                    }
+
+                    dataIsLoaded = 2;
+                }
+                else
+                {
+                    valuvisualeodt = valueodt;
+                    await BuscarxOdt();
+
+                    // Aplicar el mismo filtro/orden tras la búsqueda por ODT, para coherencia
+                    if (EsOpcionVencidos(Status))
+                    {
+                        listareu = listareu
+                            .Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
+                            .ToList();
+                    }
+
+                    listareu = listareu
+                        .OrderByDescending(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
+                        .ThenBy(d => d.RdfecTra)
+                        .ToList();
+                }
             }
         }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(Notificar.Notificacion(
+                "error",
+                DiccionarioTraduccionesService.Traducciones["ErrorInesp"],
+                DiccionarioTraduccionesService.Traducciones["Reload"]
+            ));
+        }
     }
-    catch (Exception ex)
-    {
-        NotificationService.Notify(Notificar.Notificacion(
-            "error",
-            DiccionarioTraduccionesService.Traducciones["ErrorInesp"],
-            DiccionarioTraduccionesService.Traducciones["Reload"]
-        ));
-    }
-}   
+
     public void ObtenerReunionesPorRol()
     {
         if (!string.IsNullOrEmpty(UsrRol))
@@ -933,7 +1032,6 @@ void Editar(int id)
 
         }
     }
-
 
     public async Task PrintDocument()
     {
