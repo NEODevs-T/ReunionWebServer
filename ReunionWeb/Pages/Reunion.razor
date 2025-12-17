@@ -134,7 +134,7 @@ else
                 {
                     @if (Codigo == d.RdcodDis || Codigo == "Todo")
                     {
-                        <BSTR>
+                        <BSTR class="@GetRowClass(d)">
                             @*<BSTD>@d.IdReuDia</BSTD>*@
                             @* <BSTD>@d.Rddiv</BSTD>*@
                             <BSTD>@d.Rdarea</BSTD>
@@ -287,7 +287,9 @@ List<ReunionDTO> registrosVisibles
                          (d.RdfecReu.Date >= fechaInicio.Date && d.RdfecReu.Date <= fechaFin.Date)
                      )
             )
+            .OrderBy(d => TienePlanYResponsable(d)) // FALSE primero, TRUE al final
             .ToList();
+
     }
 }
 
@@ -359,6 +361,7 @@ List<ReunionDTO> registrosVisibles
                 dataIsLoaded = 1;
                 await PizarraData.GetPendientes(IdCentro.ToString(), IdDiv.ToString(), DateTime.Now.AddDays(-1), DateTime.Now, "1",
                 "Reunion");
+                            PizarraData.reudiatablas = PizarraData.reudiatablas.OrderBy(d => TienePlanYResponsable(d)).ToList();
                 dataIsLoaded = 2;
             }
         }
@@ -386,10 +389,34 @@ List<ReunionDTO> registrosVisibles
             IdCentro = int.Parse(accion);
             IdDiv = int.Parse(division);
             await PizarraData.GetPendientes(accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo, "Reunion");
+                    PizarraData.reudiatablas = PizarraData.reudiatablas.OrderBy(d => TienePlanYResponsable(d)).ToList();
             dataIsLoaded = 2;
         }
 
     }
+    private bool TienePlanYResponsable(dynamic d)
+    {
+        var plan = d?.RdplanAcc ?? string.Empty;
+
+        var responsable = RespoReuData.resporeus
+            .FirstOrDefault(x => x.IdResReu == d?.IdResReu);
+        
+        var nombreResponsable = idPais == 5 ?
+        responsable?.Rrenglish : responsable?.Rrnombre;
+
+        bool tienePlan =
+        !string.IsNullOrWhiteSpace(plan);
+        bool tieneResposable =
+        !string.IsNullOrWhiteSpace(nombreResponsable);
+
+            return tienePlan && tieneResposable;
+    }
+
+    private string GetRowClass(dynamic d)
+    {
+        return TienePlanYResponsable(d) ? "con-plan-resp" : string.Empty;
+    }
+
     public async Task PrintDocument()
     {
         string idiomaRuta = idPais == 5 ? "en" : "es";
