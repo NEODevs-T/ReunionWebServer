@@ -67,7 +67,7 @@
         user.Proyecto = "ReunionWeb";
         if (e.Validate())
         {
-            var result = await Http.PostAsJsonAsync("http://operaciones.papeleslatinos.com/Authentication/api/Auth/Login", user);
+            var result = await Http.PostAsJsonAsync("http://operaciones.papeleslatinos.com/AuthenticationP/api/Auth/Login", user);
             var ValidarToken = await result.Content.ReadAsStringAsync();
 
             if (ValidarToken != null)
