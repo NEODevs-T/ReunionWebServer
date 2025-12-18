@@ -345,6 +345,10 @@ table th {
     z-index: 2;
 }
 
+.con-plan-resp{
+    background-color: #e6ffe6;
+}
+
 @media (max-width: 768px) {
     .tabla-contenedor {
         width: 100%;

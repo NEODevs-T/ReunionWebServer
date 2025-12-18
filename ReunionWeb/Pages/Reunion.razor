@@ -46,11 +46,15 @@ else
             <BSCol Column="3" ColumnSmall="2">
                 <BSLabel>@DiccionarioTraduccionesService.Traducciones["Centro"]</BSLabel>
                 <BSInput InputType="InputType.Select" @onchange="BuscarDivision" @bind-Value="IdCentro">
+                @if (Rol == "Admin" || Rol == "PrimeUser" || IdCentro == 0)
+                {
                     <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
-                    @foreach (var d in MaestraData.centro)
-                    {
-                        <option value="@d.IdCentro">@d.Centro</option>
-                    }
+                }
+
+                @foreach (var d in MaestraData.centro)
+                {
+                    <option value="@d.IdCentro">@d.Centro</option>
+                }
                 </BSInput>
             </BSCol>
 
@@ -134,7 +138,7 @@ else
                 {
                     @if (Codigo == d.RdcodDis || Codigo == "Todo")
                     {
-                        <BSTR>
+                        <BSTR class="@GetRowClass(d)">
                             @*<BSTD>@d.IdReuDia</BSTD>*@
                             @* <BSTD>@d.Rddiv</BSTD>*@
                             <BSTD>@d.Rdarea</BSTD>
@@ -287,7 +291,9 @@ List<ReunionDTO> registrosVisibles
                          (d.RdfecReu.Date >= fechaInicio.Date && d.RdfecReu.Date <= fechaFin.Date)
                      )
             )
+            .OrderBy(d => TienePlanYResponsable(d)) // FALSE primero, TRUE al final
             .ToList();
+
     }
 }
 
@@ -306,34 +312,76 @@ List<ReunionDTO> registrosVisibles
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    
+private async Task SetCentroInicialAsync()
     {
-        await CreateData();
-        await LocalizationService.EstablecerCulturaDesdeTokenAsync();
-        CultureInfo.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
-        CultureInfo.CurrentUICulture = CultureInfo.DefaultThreadCurrentUICulture;
-        await DiccionarioTraduccionesService.CargarTraduccionesAsync();
-        traduccionesCargadas = true;
-        Rol = claims.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
+        // Confirmar que hay centros cargados
+        if (MaestraData?.centro == null || !MaestraData.centro.Any())
+            return;
 
+        // Tomar IdCentro del claim (evita usar índices frágiles como claims[11])
+        var idCentroClaimStr = claims?.FirstOrDefault(c => c.Type.Contains("IdCentro"))?.Value;
+        int.TryParse(idCentroClaimStr, out var idCentroClaim);
 
-        if (Rol == "Admin" || Rol == "SuperAdmin" || Rol == "PrimeUser" || Rol == "MttoAdmin" || Rol == "SeguridadAdmin" || Rol == "CalidadAdmin" ||
-        Rol == "Auditores")
+        // Usa el claim si coincide; si no, el primero de la lista
+        if (idCentroClaim > 0 && MaestraData.centro.Any(x => x.IdCentro == idCentroClaim))
         {
-            // await apiclass.GetCentros("All");
-            await MaestraData.GetCentrosxEmpresa("All" + claims[10].Value);
+            IdCentro = idCentroClaim;
         }
         else
         {
-            //await apiclass.GetCentros(claims[6].Value.ToString());
-            await MaestraData.GetCentrosxEmpresa(claims[11].Value);
+            IdCentro = MaestraData.centro.First().IdCentro;
         }
 
+        // Disparar lógica dependiente manualmente
+        await BuscarDivision(new ChangeEventArgs { Value = IdCentro });
 
-        await KsfData.Getksf();
-        await RespoReuData.GetResReu();
-
+        StateHasChanged();
     }
+
+
+
+protected override async Task OnInitializedAsync()
+{
+    await CreateData();
+    await LocalizationService.EstablecerCulturaDesdeTokenAsync();
+    CultureInfo.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
+    CultureInfo.CurrentUICulture = CultureInfo.DefaultThreadCurrentUICulture;
+    await DiccionarioTraduccionesService.CargarTraduccionesAsync();
+    traduccionesCargadas = true;
+
+    Rol = claims?.FirstOrDefault(c => c.Type.Contains("role"))?.Value;
+    var idEmpresa = claims?.FirstOrDefault(c => c.Type.Contains("IdEmpresa"))?.Value;
+    var idCentroClaim = claims?.FirstOrDefault(c => c.Type.Contains("IdCentro"))?.Value;
+
+    // Roles que ven "All + Empresa"
+    bool rolMantienePlaceholder = Rol is "Admin" or "SuperAdmin" or "PrimeUser" or "MttoAdmin" or "SeguridadAdmin" or "CalidadAdmin" or "Auditores";
+
+    if (rolMantienePlaceholder && !string.IsNullOrWhiteSpace(idEmpresa))
+    {
+        await MaestraData.GetCentrosxEmpresa("All" + idEmpresa);
+    }
+    else
+    {
+        await MaestraData.GetCentrosxEmpresa(idCentroClaim);
+    }
+
+    await KsfData.Getksf();
+    await RespoReuData.GetResReu();
+
+    // --- AQUÍ va la decisión y el llamado ---
+    if (rolMantienePlaceholder)
+    {
+        // Estos roles: mostrar "Seleccione", no auto-seleccionar
+        IdCentro = 0;
+        // No llamamos BuscarDivision aún (no hay centro escogido)
+    }
+    else
+    {
+        // Otros roles: auto-selección
+        await SetCentroInicialAsync();
+    }
+}
 
     protected async Task BuscarDivision(ChangeEventArgs e)
     {
@@ -359,6 +407,7 @@ List<ReunionDTO> registrosVisibles
                 dataIsLoaded = 1;
                 await PizarraData.GetPendientes(IdCentro.ToString(), IdDiv.ToString(), DateTime.Now.AddDays(-1), DateTime.Now, "1",
                 "Reunion");
+                            PizarraData.reudiatablas = PizarraData.reudiatablas.OrderBy(d => TienePlanYResponsable(d)).ToList();
                 dataIsLoaded = 2;
             }
         }
@@ -386,10 +435,34 @@ List<ReunionDTO> registrosVisibles
             IdCentro = int.Parse(accion);
             IdDiv = int.Parse(division);
             await PizarraData.GetPendientes(accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo, "Reunion");
+                    PizarraData.reudiatablas = PizarraData.reudiatablas.OrderBy(d => TienePlanYResponsable(d)).ToList();
             dataIsLoaded = 2;
         }
 
     }
+    private bool TienePlanYResponsable(dynamic d)
+    {
+        var plan = d?.RdplanAcc ?? string.Empty;
+
+        var responsable = RespoReuData.resporeus
+            .FirstOrDefault(x => x.IdResReu == d?.IdResReu);
+        
+        var nombreResponsable = idPais == 5 ?
+        responsable?.Rrenglish : responsable?.Rrnombre;
+
+        bool tienePlan =
+        !string.IsNullOrWhiteSpace(plan);
+        bool tieneResposable =
+        !string.IsNullOrWhiteSpace(nombreResponsable);
+
+            return tienePlan && tieneResposable;
+    }
+
+    private string GetRowClass(dynamic d)
+    {
+        return TienePlanYResponsable(d) ? "con-plan-resp" : string.Empty;
+    }
+
     public async Task PrintDocument()
     {
         string idiomaRuta = idPais == 5 ? "en" : "es";
