@@ -69,6 +69,14 @@ th {
     box-sizing: border-box !important;
 }
 
+.Revisar, td > .Revisar, .Revisar, tr > .Revisar, span > .Revisar {
+    background-color: rgba(0, 172, 120, 0.808) !important;
+    border-radius: 5px;
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+}
+
 td > .pendiente, .pendiente, tr > .pendiente, span > .pendiente {
     background-color: rgba(225, 196, 23, 0.77) !important;
     border-radius:5px;
@@ -346,7 +354,7 @@ table th {
 }
 
 .con-plan-resp{
-    background-color: #e6ffe6;
+    background-color: #a9f7a9f3;
 }
 
 @media (max-width: 768px) {
