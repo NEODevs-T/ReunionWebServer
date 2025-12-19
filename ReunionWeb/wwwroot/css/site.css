@@ -353,9 +353,23 @@ table th {
     z-index: 2;
 }
 
-.con-plan-resp{
-    background-color: #a9f7a9f3;
+
+
+
+
+/* Pinta TODO el <td> si dentro tiene un hijo con .con-plan-resp */
+td:has(> .con-plan-resp) {
+    background-color: #a0f3a0f3 !important;
+    border-radius: 5px;
 }
+
+/* Si además quieres que el texto sea oscuro para contraste */
+td:has(> .con-plan-resp) {
+    color: #000;
+}
+
+
+
 
 @media (max-width: 768px) {
     .tabla-contenedor {
