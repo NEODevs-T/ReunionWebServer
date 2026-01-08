@@ -159,11 +159,11 @@ else
                             </BSTD>
                             <BSTD ColSpan="4">@d.Rddisc.ToUpper()</BSTD>
                             <BSTD>@d.RdcodDis</BSTD>
-<BSTD Class="textotabla">
-    <span class="@(TienePlanYResponsable(d) ? "con-plan-resp" : "")">
-        @d.RdplanAcc
-    </span>
-</BSTD>
+                            <BSTD Class="textotabla">
+                                <span class="@(TienePlanYResponsable(d) ? "con-plan-resp" : "")">
+                                    @d.RdplanAcc
+                                </span>
+                            </BSTD>
                             <BSTD>@d.Rdtiempo</BSTD>
                             @{
                                 var responsable = RespoReuData.resporeus.FirstOrDefault(x => x.IdResReu == d.IdResReu);
@@ -269,40 +269,55 @@ else if (dataIsLoaded == 2 && registrosVisibles.Count == 0)
     private int idPais {get; set;}
     private bool traduccionesCargadas = false;
 
-List<ReunionDTO> registrosVisibles
-{
-    get
+
+    List<ReunionDTO> registrosVisibles
     {
-        DateTime fechaInicio;
-        DateTime fechaFin;
-
-        // Lógica de lunes igual que en la API
-        if (DateTime.Today.DayOfWeek == DayOfWeek.Monday)
+        get
         {
-            fechaInicio = DateTime.Now.AddDays(-3);
-            fechaFin = DateTime.Now.AddDays(+1);
-        }
-        else
-        {
-            fechaInicio = DateTime.Now.AddDays(-1);
-            fechaFin = DateTime.Now.AddDays(+1);
-        }
+            DateTime fechaInicio;
+            DateTime fechaFin;
 
-        return PizarraData.reudiatablas
-            .Where(d => d.Rdstatus != "Rechazada"
-                     && d.Rdstatus != "Listo"
-                     && d.Rdstatus != "Cerrado"
-                     &&
-                     (
-                         (d.RdfecReu.Date >= fechaInicio.Date && d.RdfecReu.Date <= fechaFin.Date)
-                     )
-            )
-            .OrderBy(d => TienePlanYResponsable(d)) // FALSE primero, TRUE al final
-            .ToList();
+            // Lógica de lunes igual que en la API
+            if (DateTime.Today.DayOfWeek == DayOfWeek.Monday)
+            {
+                fechaInicio = DateTime.Now.AddDays(-3);
+                fechaFin = DateTime.Now.AddDays(+1);
+            }
+            else
+            {
+                fechaInicio = DateTime.Now.AddDays(-1);
+                fechaFin = DateTime.Now.AddDays(+1);
+            }
 
+            bool EsOdtVacia(string s) =>
+                string.IsNullOrWhiteSpace(s) || s.Trim().Length == 0;
+
+            return PizarraData.reudiatablas
+                .Where(d =>
+                    d.Rdstatus != "Rechazada"
+                    && d.Rdstatus != "Listo"
+                    && d.Rdstatus != "Cerrado"
+                    &&
+                    (
+                        // PASADO: solo si la ODT está vacía
+                        (d.RdfecReu.Date < DateTime.Today && EsOdtVacia(d.Rdodt))
+
+                        // HOY: siempre que esté dentro del rango
+                        || (d.RdfecReu.Date == DateTime.Today
+                            && d.RdfecReu.Date >= fechaInicio.Date
+                            && d.RdfecReu.Date <= fechaFin.Date)
+
+                        // FUTURO: dentro del rango y con ODT vacía
+                        || (d.RdfecReu.Date > DateTime.Today
+                            && d.RdfecReu.Date >= fechaInicio.Date
+                            && d.RdfecReu.Date <= fechaFin.Date
+                            && EsOdtVacia(d.Rdodt))
+                    )
+                )
+                .OrderBy(d => TienePlanYResponsable(d)) // FALSE primero, TRUE al final
+                .ToList();
+        }
     }
-}
-
 
     private async Task CreateData()
 
