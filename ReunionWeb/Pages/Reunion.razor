@@ -306,12 +306,6 @@ else if (dataIsLoaded == 2 && registrosVisibles.Count == 0)
                         || (d.RdfecReu.Date == DateTime.Today
                             && d.RdfecReu.Date >= fechaInicio.Date
                             && d.RdfecReu.Date <= fechaFin.Date)
-
-                        // FUTURO: dentro del rango y con ODT vacía
-                        || (d.RdfecReu.Date > DateTime.Today
-                            && d.RdfecReu.Date >= fechaInicio.Date
-                            && d.RdfecReu.Date <= fechaFin.Date
-                            && EsOdtVacia(d.Rdodt))
                     )
                 )
                 .OrderBy(d => TienePlanYResponsable(d)) // FALSE primero, TRUE al final
