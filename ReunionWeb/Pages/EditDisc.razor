@@ -718,6 +718,12 @@ else
     {
         MaestraData.fechaProg = MaestraData.fechaProg.Where(f => f.Fpprogra >= DateTime.Now).OrderBy(f => f.Fpprogra).ToList();
     }
+
+    private static string DoubleEncode(string? s)
+    {
+        s ??= string.Empty;
+        return Uri.EscapeDataString(Uri.EscapeDataString(s));
+    }
     
     async Task Back()
     {
@@ -733,7 +739,9 @@ else
         string lineaFinal = linea ?? "Todo";
         string f1Final = f1 ?? DateTime.Today.ToString("dd-MM-yyyy");
         string f2Final = f2 ?? DateTime.Today.ToString("dd-MM-yyyy");
+        //string estFinal = est ?? "Todo";
         string estFinal = est ?? "Todo";
+        string estEncoded = DoubleEncode(estFinal);
         string codigoFinal = string.IsNullOrWhiteSpace(codigo) ? "Total Pendiente" : codigo;
         int responsableFinal = responsable ?? 0;
         int ksfFFinal = KsfF ?? 0;
@@ -741,13 +749,21 @@ else
 
         if (tipo == 0 || tipo == 2)
         {
-            ruta = $"{lang}/{(lang == "en" ? "remaining" : "pendientes")}/{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estFinal}/{codigoFinal}/{responsableFinal}/{ksfFFinal}";
+            ruta = $"{lang}/" +
+                $"{(lang == "en" ? "remaining" : "pendientes")}/" +
+                $"{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/" +
+                $"{estEncoded}/{codigoFinal}/{responsableFinal}/{ksfFFinal}";
         }
         else if (tipo == 1)
         {
-            ruta = $"{lang}/{(lang == "en" ? "meeting" : "reunion")}/{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estFinal}";
+            var estEncodedMeeting = DoubleEncode(estFinal);
+            ruta = $"{lang}/" +
+                $"{(lang == "en" ? "meeting" : "reunion")}/" +
+                $"{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estEncodedMeeting}";
         }
+
         NavigationManager.NavigateTo(ruta);
+
         DiscForm.IdCausaCal = currentIdCausaCal;
     }
 
@@ -826,24 +842,33 @@ private async Task Editar()
             string lineaFinal = linea ?? "Todo";
             string f1Final = f1 ?? DateTime.Today.ToString("dd-MM-yyyy");
             string f2Final = f2 ?? DateTime.Today.ToString("dd-MM-yyyy");
+            //string estFinal = est ?? "Todo"; 
             string estFinal = est ?? "Todo";
+            string estEncoded = DoubleEncode(estFinal);
             string codigoFinal = string.IsNullOrWhiteSpace(codigo) ? "Total Pendiente" : codigo;
             int responsableFinal = responsable ?? 0;
             int ksfFFinal = KsfF ?? 0;
 
             string ruta = "";
-
+            
             if (tipo == 0 || tipo == 2)
             {
-                ruta = $"{lang}/{(lang == "en" ? "remaining" : "pendientes")}/{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estFinal}/{codigoFinal}/{responsableFinal}/{ksfFFinal}";
+                ruta = $"{lang}/" +
+                    $"{(lang == "en" ? "remaining" : "pendientes")}/" +
+                    $"{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/" +
+                    $"{estEncoded}/{codigoFinal}/{responsableFinal}/{ksfFFinal}";
             }
             else if (tipo == 1)
             {
-                ruta = $"{lang}/{(lang == "en" ? "meeting" : "reunion")}/{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estFinal}";
+                var estEncodedMeeting = DoubleEncode(estFinal);
+                ruta = $"{lang}/" +
+                    $"{(lang == "en" ? "meeting" : "reunion")}/" +
+                    $"{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estEncodedMeeting}";
             }
 
             NavigationManager.NavigateTo(ruta);
         }
+
         else
         {
             NotificationService.Notify(Notificar.Notificacion(
