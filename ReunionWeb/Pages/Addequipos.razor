@@ -620,8 +620,8 @@ protected async Task SaveEquipo(EditContext e)
                 EnombreEam = equipo.EnombreEam,
                 Efecha = DateTime.Now
             };
-
-            mensaje = await MaestraData.AddEquipo(eq);
+            
+            mensaje = await MaestraData.UpdateEquipo(eq);
 
             if (mensaje == DiccionarioTraduccionesService.Traducciones["RExitoso"])
             {

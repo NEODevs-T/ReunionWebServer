@@ -113,6 +113,21 @@ public class MaestraData : IMaestraData
         return "Error al registrar el equipo";
     }
 
+    public async Task<string> UpdateEquipo(EquipoEamDTO equipo)
+{
+    var url = $"{BaseUrl}/UpdateEquipo";
+    var cliente = _clientFactory.CreateClient();
+    var respuesta = await cliente.PostAsJsonAsync(url, equipo);
+
+    if (respuesta.IsSuccessStatusCode)
+        return "Registro Exitoso";
+
+    var detalle = await respuesta.Content.ReadAsStringAsync();
+    return string.IsNullOrWhiteSpace(detalle)
+        ? "Error al actualizar el equipo"
+        : $"Error al actualizar el equipo: {detalle}";
+}
+
     public async Task<List<EquipoEamDTO>> GetEquiposCentro(string idCentro)
     {
         url = $"{BaseUrl}/GetEquipos/{idCentro}";
