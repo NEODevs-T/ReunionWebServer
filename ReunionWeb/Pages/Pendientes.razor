@@ -1049,103 +1049,105 @@ private bool EsOpcionTotalPendiente(string? s)
         NavigationManager.NavigateTo(url);
     }
     
-    protected override async Task OnParametersSetAsync()
+protected override async Task OnParametersSetAsync()
+{
+    try
     {
-        try
+        if (string.IsNullOrEmpty(accion))
         {
-            if (string.IsNullOrEmpty(accion))
-            {
-                return;
-            }
-
-            BuscarOdt = await LocalStorage.GetItemAsStringAsync("ReunionDiariaOdtValue");
-            if (string.IsNullOrEmpty(BuscarOdt) && !valueodt)
-            {
-                valuvisualeodt = valueodt = false;
-
-                // Parse fechas de forma segura (esperado dd-MM-yyyy)
-                if (!DateTime.TryParseExact(f1 ?? string.Empty, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date1))
-                {
-                    date1 = DateTime.Now;
-                }
-                if (!DateTime.TryParseExact(f2 ?? string.Empty, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date2))
-                {
-                    date2 = DateTime.Now;
-                }
-
-                fecha1 = date1;
-                fecha2 = date2;
-
-                if (!int.TryParse(accion, out var centroParse)) centroParse = 0;
-                IdCentro = centroParse;
-
-                if (!int.TryParse(division, out var divParse)) divParse = 0;
-                IdDiv = divParse;
-
-                Status = est ?? Status;
-                Codigo = codigo ?? Codigo;
-                idrespo = responsable ?? 0;
-                IdKsf = ksfF ?? 0;
-                tipoconsulta = tipo ?? tipoconsulta;
-                if (!string.IsNullOrEmpty(linea) && linea != "Todo")
-                {
-                    NombreLinea = Uri.UnescapeDataString(linea);
-                }
-
-                dataIsLoaded = 1;
-                var estConsulta = est;
-                if (EsOpcionVencidos(estConsulta) || EsOpcionTotalPendiente(estConsulta))
-                {
-                    estConsulta = "Todo";
-                }
-
-                await PizarraData.GetPendientes(accion, division, date1, date2, tipo, estConsulta);
-                ObtenerReunionesPorRol();
-
-                if (EsOpcionVencidos(Status))
-                {
-                    listareu = listareu?.Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty)).ToList() ?? new List<ReunionDTO>();
-                }
-
-                if (EsOpcionTotalPendiente(Status))
-                {
-                    listareu = listareu?.Where(d => (d.Rdstatus ?? string.Empty).StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<ReunionDTO>();
-                }
-
-                ConstruirCatalogoEquiposPorNombre();
-                AplicarFiltroPorCodigoSeleccionado();
-
-                dataIsLoaded = 2;
-            }
-            else
-            {
-                valuvisualeodt = valueodt;
-                await BuscarxOdt();
-
-                listareu = listareu ?? new List<ReunionDTO>();
-
-                if (EsOpcionVencidos(Status))
-                {
-                    listareu = listareu.Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty)).ToList();
-                }
-
-                if (EsOpcionTotalPendiente(Status))
-                {
-                    listareu = listareu.Where(d => (d.Rdstatus ?? string.Empty).StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase)).ToList();
-                }
-
-                listareu = listareu.OrderByDescending(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty)).ThenBy(d => d.RdfecTra).ToList();
-            }
+            return;
         }
-        catch (Exception)
+
+        BuscarOdt = await LocalStorage.GetItemAsStringAsync("ReunionDiariaOdtValue");
+
+        if (string.IsNullOrEmpty(BuscarOdt) && !valueodt)
         {
-            NotificationService.Notify(Notificar.Notificacion(
-                "error",
-                DiccionarioTraduccionesService.Traducciones["ErrorInesp"],
-                DiccionarioTraduccionesService.Traducciones["Reload"]
-            ));
+            valuvisualeodt = valueodt = false;
+
+            // ✅ Fechas (formato dd-MM-yyyy)
+            if (!DateTime.TryParseExact(f1 ?? string.Empty, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date1))
+                date1 = DateTime.Now;
+            if (!DateTime.TryParseExact(f2 ?? string.Empty, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date2))
+                date2 = DateTime.Now;
+
+            fecha1 = date1;
+            fecha2 = date2;
+
+            // ✅ Centro y División
+            IdCentro = int.TryParse(accion, out var centroParse) ? centroParse : 0;
+            IdDiv    = int.TryParse(division, out var divParse)  ? divParse   : 0;
+
+            // ✅ Decodificación simétrica de segmentos string
+            if (!string.IsNullOrEmpty(linea) && !string.Equals(linea, "Todo", StringComparison.OrdinalIgnoreCase))
+                NombreLinea = Uri.UnescapeDataString(linea);
+            else
+                NombreLinea = "Todo";
+
+            Status = est is null ? Status : Uri.UnescapeDataString(est);
+            Codigo = string.IsNullOrEmpty(codigo) ? Codigo : Uri.UnescapeDataString(codigo);
+
+            idrespo      = responsable ?? 0;
+            IdKsf        = ksfF ?? 0;
+            tipoconsulta = tipo ?? tipoconsulta;
+
+            dataIsLoaded = 1;
+
+            // ✅ Para la consulta al backend, normalizar 'est'
+            var estConsulta = Status;
+            if (EsOpcionVencidos(estConsulta) || EsOpcionTotalPendiente(estConsulta))
+            {
+                estConsulta = "Todo";
+            }
+
+            await PizarraData.GetPendientes(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, estConsulta);
+            ObtenerReunionesPorRol();
+
+            // ✅ Filtros derivados de 'Status' decodificado
+            if (EsOpcionVencidos(Status))
+            {
+                listareu = listareu?.Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty)).ToList() ?? new List<ReunionDTO>();
+            }
+            if (EsOpcionTotalPendiente(Status))
+            {
+                listareu = listareu?.Where(d => (d.Rdstatus ?? string.Empty).StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<ReunionDTO>();
+            }
+
+            ConstruirCatalogoEquiposPorNombre();
+            AplicarFiltroPorCodigoSeleccionado();
+
+            dataIsLoaded = 2;
+        }
+        else
+        {
+            // ✅ Rama ODT
+            valuvisualeodt = valueodt;
+            await BuscarxOdt();
+            listareu = listareu ?? new List<ReunionDTO>();
+
+            if (EsOpcionVencidos(Status))
+            {
+                listareu = listareu.Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty)).ToList();
+            }
+            if (EsOpcionTotalPendiente(Status))
+            {
+                listareu = listareu.Where(d => (d.Rdstatus ?? string.Empty).StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            listareu = listareu
+                .OrderByDescending(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
+                .ThenBy(d => d.RdfecTra)
+                .ToList();
         }
     }
+    catch (Exception)
+    {
+        NotificationService.Notify(Notificar.Notificacion(
+            "error",
+            DiccionarioTraduccionesService.Traducciones["ErrorInesp"],
+            DiccionarioTraduccionesService.Traducciones["Reload"]
+        ));
+    }
+}
     private class EquipoOpcion
     {
         public string Codigo { get; set;} = string.Empty;

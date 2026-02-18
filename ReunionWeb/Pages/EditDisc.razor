@@ -656,6 +656,7 @@ else
     int dataIsLoaded = 0;
     private bool traduccionesCargadas = false;
     private int idPais { get; set; }
+    private static string E(string? s) => Uri.EscapeDataString(s ?? string.Empty);
 
     protected override async Task OnInitializedAsync()
     {
@@ -725,164 +726,159 @@ else
         return Uri.EscapeDataString(Uri.EscapeDataString(s));
     }
     
-    async Task Back()
+    private async Task Back()
+{
+    string backcentro = DiscForm?.Rdcentro ?? "1";
+    string backdiv    = DiscForm?.Rddiv    ?? "1";
+
+    // Mantener IdCausaCal del formulario
+    int currentIdCausaCal = DiscForm?.IdCausaCal ?? 0;
+
+    // Obtener IDs numéricos de centro/división
+    CentroDivisionDTO centrodiv = await PizarraData.GetCentroDivi(backcentro, backdiv, 1);
+
+    string lang          = idPais == 5 ? "en" : "es";
+    string accionEnc     = E(centrodiv.IdCentro.ToString());
+    string divisionEnc   = E(centrodiv.IdDivision.ToString());
+    string lineaEnc      = E(linea ?? "Todo");
+    string f1Enc         = E(f1 ?? DateTime.Today.ToString("dd-MM-yyyy"));
+    string f2Enc         = E(f2 ?? DateTime.Today.ToString("dd-MM-yyyy"));
+    string estEnc        = E(est ?? "Todo");
+    string codigoEnc     = E(string.IsNullOrWhiteSpace(codigo) ? "Total Pendiente" : codigo);
+    string responsableEnc= E((responsable ?? 0).ToString());
+    string ksfEnc        = E((KsfF ?? 0).ToString());
+
+    string ruta;
+    if (tipo == 0 || tipo == 2)
     {
-        string backcentro = DiscForm?.Rdcentro ?? "1";
-        string backdiv = DiscForm?.Rddiv ?? "1";
-        int currentIdCausaCal = DiscForm?.IdCausaCal ?? 0;
-
-        CentroDivisionDTO centrodiv = await PizarraData.GetCentroDivi(backcentro, backdiv, 1);
-
-        string lang = idPais == 5 ? "en" : "es";
-        string accion = centrodiv.IdCentro.ToString();
-        string division = centrodiv.IdDivision.ToString();
-        string lineaFinal = linea ?? "Todo";
-        string f1Final = f1 ?? DateTime.Today.ToString("dd-MM-yyyy");
-        string f2Final = f2 ?? DateTime.Today.ToString("dd-MM-yyyy");
-        //string estFinal = est ?? "Todo";
-        string estFinal = est ?? "Todo";
-        string estEncoded = DoubleEncode(estFinal);
-        string codigoFinal = string.IsNullOrWhiteSpace(codigo) ? "Total Pendiente" : codigo;
-        int responsableFinal = responsable ?? 0;
-        int ksfFFinal = KsfF ?? 0;
-        string ruta = "";
-
-        if (tipo == 0 || tipo == 2)
-        {
-            ruta = $"{lang}/" +
-                $"{(lang == "en" ? "remaining" : "pendientes")}/" +
-                $"{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/" +
-                $"{estEncoded}/{codigoFinal}/{responsableFinal}/{ksfFFinal}";
-        }
-        else if (tipo == 1)
-        {
-            var estEncodedMeeting = DoubleEncode(estFinal);
-            ruta = $"{lang}/" +
-                $"{(lang == "en" ? "meeting" : "reunion")}/" +
-                $"{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estEncodedMeeting}";
-        }
-
-        NavigationManager.NavigateTo(ruta);
-
-        DiscForm.IdCausaCal = currentIdCausaCal;
+        ruta = $"{lang}/{(lang == "en" ? "remaining" : "pendientes")}/" +
+               $"{accionEnc}/{divisionEnc}/{lineaEnc}/{f1Enc}/{f2Enc}/{tipo}/" +
+               $"{estEnc}/{codigoEnc}/{responsableEnc}/{ksfEnc}";
     }
+    else // tipo == 1 (reunión)
+    {
+        ruta = $"{lang}/{(lang == "en" ? "meeting" : "reunion")}/" +
+               $"{accionEnc}/{divisionEnc}/{lineaEnc}/{f1Enc}/{f2Enc}/{tipo}/{estEnc}";
+    }
+
+    NavigationManager.NavigateTo(ruta);
+
+    // Restaurar valor que preservabas
+    DiscForm.IdCausaCal = currentIdCausaCal;
+}
 
 private async Task Editar()
 {
     try
     {
-        // Antes de la edición, opcionalmente puedes loggear el tipo y fechas
-        // Console.WriteLine o ILogger si quieres depurar
-
-        // --- Validación de fechas y tipo deshabilitada ---
-        // Todo el bloque que antes estaba dentro del 'if' ahora se ejecuta siempre
-
-        // Validación de límite de cambios de fecha
-        if (CambiosFecha.Count() >= 4 && camFec != DiscForm.RdfecTra)
+        // ✅ Límite de cambios de fecha: máximo 3 por registro
+        if (CambiosFecha.Count() >= 3 && camFec != DiscForm.RdfecTra)
         {
             NotificationService.Notify(Notificar.Notificacion(
                 "error",
                 DiccionarioTraduccionesService.Traducciones["Atencion"],
-                DiccionarioTraduccionesService.Traducciones["Limite"]));
+                DiccionarioTraduccionesService.Traducciones["Limite"]
+            ));
             return;
         }
 
-        // Validación de plan de acción vacío al cerrar
+        // ✅ Validación de plan de acción en cierre
         if (string.IsNullOrEmpty(DiscForm.RdplanAcc) && DiscForm.Rdstatus == "Cerrado")
         {
             NotificationService.Notify(Notificar.Notificacion(
                 "advertencia",
                 DiccionarioTraduccionesService.Traducciones["Atencion"],
-                DiccionarioTraduccionesService.Traducciones["NPA1"]));
+                DiccionarioTraduccionesService.Traducciones["NPA1"]
+            ));
             return;
         }
 
-        // Validación de cambio de plan de acción a vacío
+        // ✅ Evitar cambio a vacío si antes había plan
         if (PlanOld != DiscForm.RdplanAcc && string.IsNullOrEmpty(DiscForm.RdplanAcc))
         {
             NotificationService.Notify(Notificar.Notificacion(
                 "advertencia",
                 DiccionarioTraduccionesService.Traducciones["Atencion"],
-                DiccionarioTraduccionesService.Traducciones["NPA2"]));
+                DiccionarioTraduccionesService.Traducciones["NPA2"]
+            ));
             DiscForm.RdplanAcc = PlanOld;
             return;
         }
 
-        // Registro de cambio de status
-        if (camStat != DiscForm.Rdstatus)
+        // Flags de cambios
+        bool huboCambioStat = camStat != DiscForm.Rdstatus;
+        bool huboCambioFec  = camFec  != DiscForm.RdfecTra;
+
+        // ✅ Trazabilidad de cambio de status
+        if (huboCambioStat)
         {
             CambStat.IdReuDia = DiscForm.IdReuDia;
-            CambStat.Cbfecha = DateTime.Now;
-            CambStat.Cbstat = DiscForm.Rdstatus;
-            CambStat.Cbuser = $"{claims[2].Value} {claims[3].Value}";
+            CambStat.Cbfecha  = DateTime.Now;
+            CambStat.Cbstat   = DiscForm.Rdstatus;
+            CambStat.Cbuser   = $"{claims[2].Value} {claims[3].Value}";
         }
 
-        // Registro de cambio de fecha
-        if (camFec != DiscForm.RdfecTra)
+        // ✅ Trazabilidad de cambio de fecha
+        if (huboCambioFec)
         {
-            CambFec.IdReuDia = DiscForm.IdReuDia;
-            CambFec.Cffec = DateTime.Now;
-            CambFec.CffecNew = DiscForm.RdfecTra;
-            CambFec.Cfuser = $"{claims[2].Value} {claims[3].Value}";
+            CambFec.IdReuDia  = DiscForm.IdReuDia;
+            CambFec.Cffec     = DateTime.Now;
+            CambFec.CffecNew  = DiscForm.RdfecTra;
+            CambFec.Cfuser    = $"{claims[2].Value} {claims[3].Value}";
         }
 
-        // Guardar cambios
+        // ✅ Guardar cambios
         var resultado = await PizarraData.UpdateDiscrepancia2(DiscForm, (int)Id);
         cambio = resultado.success;
 
-        if (cambio)
-        {
-            await AvisadorData.InsertCambioStatus(CambStat);
-            await AvisadorData.InsertCambioFec(CambFec);
-
-            // Construcción manual de la ruta
-            string lang = idPais == 5 ? "en" : "es";
-            string accion = resultado.centro ?? "1";
-            string division = resultado.division ?? "1";
-            string lineaFinal = linea ?? "Todo";
-            string f1Final = f1 ?? DateTime.Today.ToString("dd-MM-yyyy");
-            string f2Final = f2 ?? DateTime.Today.ToString("dd-MM-yyyy");
-            //string estFinal = est ?? "Todo"; 
-            string estFinal = est ?? "Todo";
-            string estEncoded = DoubleEncode(estFinal);
-            string codigoFinal = string.IsNullOrWhiteSpace(codigo) ? "Total Pendiente" : codigo;
-            int responsableFinal = responsable ?? 0;
-            int ksfFFinal = KsfF ?? 0;
-
-            string ruta = "";
-            
-            if (tipo == 0 || tipo == 2)
-            {
-                ruta = $"{lang}/" +
-                    $"{(lang == "en" ? "remaining" : "pendientes")}/" +
-                    $"{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/" +
-                    $"{estEncoded}/{codigoFinal}/{responsableFinal}/{ksfFFinal}";
-            }
-            else if (tipo == 1)
-            {
-                var estEncodedMeeting = DoubleEncode(estFinal);
-                ruta = $"{lang}/" +
-                    $"{(lang == "en" ? "meeting" : "reunion")}/" +
-                    $"{accion}/{division}/{lineaFinal}/{f1Final}/{f2Final}/{tipo}/{estEncodedMeeting}";
-            }
-
-            NavigationManager.NavigateTo(ruta);
-        }
-
-        else
+        if (!cambio)
         {
             NotificationService.Notify(Notificar.Notificacion(
                 "advertencia",
                 DiccionarioTraduccionesService.Traducciones["FalloR"],
-                DiccionarioTraduccionesService.Traducciones["ErrorP"]));
+                DiccionarioTraduccionesService.Traducciones["ErrorP"]
+            ));
+            return;
         }
+
+        // ✅ Persistir trazas solo si aplican
+        if (huboCambioStat) await AvisadorData.InsertCambioStatus(CambStat);
+        if (huboCambioFec)  await AvisadorData.InsertCambioFec(CambFec);
+
+        // ✅ Navegación: codificar TODOS los segmentos UNA SOLA VEZ
+        string lang          = idPais == 5 ? "en" : "es";
+        string accionEnc     = E(resultado.centro   ?? "1");
+        string divisionEnc   = E(resultado.division ?? "1");
+        string lineaEnc      = E(linea ?? "Todo");
+        string f1Enc         = E(f1 ?? DateTime.Today.ToString("dd-MM-yyyy"));
+        string f2Enc         = E(f2 ?? DateTime.Today.ToString("dd-MM-yyyy"));
+        string estEnc        = E(est ?? "Todo");
+        string codigoEnc     = E(string.IsNullOrWhiteSpace(codigo) ? "Total Pendiente" : codigo);
+        string responsableEnc= E((responsable ?? 0).ToString());
+        string ksfEnc        = E((KsfF ?? 0).ToString());
+
+        string ruta;
+        if (tipo == 0 || tipo == 2)
+        {
+            ruta = $"{lang}/{(lang == "en" ? "remaining" : "pendientes")}/" +
+                    $"{accionEnc}/{divisionEnc}/{lineaEnc}/{f1Enc}/{f2Enc}/{tipo}/" +
+                    $"{estEnc}/{codigoEnc}/{responsableEnc}/{ksfEnc}";
+        }
+        else // tipo == 1 (reunión)
+        {
+            ruta = $"{lang}/{(lang == "en" ? "meeting" : "reunion")}/" +
+                    $"{accionEnc}/{divisionEnc}/{lineaEnc}/{f1Enc}/{f2Enc}/{tipo}/{estEnc}";
+        }
+
+        NavigationManager.NavigateTo(ruta);
     }
     catch (Exception)
     {
         NotificationService.Notify(Notificar.Notificacion(
             "error",
             DiccionarioTraduccionesService.Traducciones["ErrorInesp"],
-            DiccionarioTraduccionesService.Traducciones["Reload"]));
+            DiccionarioTraduccionesService.Traducciones["Reload"]
+        ));
     }
 }
 
