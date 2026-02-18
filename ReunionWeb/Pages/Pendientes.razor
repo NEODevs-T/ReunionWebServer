@@ -1050,32 +1050,48 @@ private bool EsOpcionTotalPendiente(string? s)
     }
     
     protected override async Task OnParametersSetAsync()
-{
-    try
     {
-        if (accion != null)
+        try
         {
+            if (string.IsNullOrEmpty(accion))
+            {
+                return;
+            }
+
             BuscarOdt = await LocalStorage.GetItemAsStringAsync("ReunionDiariaOdtValue");
             if (string.IsNullOrEmpty(BuscarOdt) && !valueodt)
             {
                 valuvisualeodt = valueodt = false;
-                string[] fec1 = f1.Split('-');
-                string[] fec2 = f2.Split('-');
-                DateTime date1 = new DateTime(int.Parse(fec1[2]), int.Parse(fec1[1]), int.Parse(fec1[0]));
-                DateTime date2 = new DateTime(int.Parse(fec2[2]), int.Parse(fec2[1]), int.Parse(fec2[0]));
+
+                // Parse fechas de forma segura (esperado dd-MM-yyyy)
+                if (!DateTime.TryParseExact(f1 ?? string.Empty, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date1))
+                {
+                    date1 = DateTime.Now;
+                }
+                if (!DateTime.TryParseExact(f2 ?? string.Empty, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date2))
+                {
+                    date2 = DateTime.Now;
+                }
+
                 fecha1 = date1;
                 fecha2 = date2;
-                IdCentro = int.Parse(accion);
-                IdDiv = int.Parse(division);
-                Status = est;
-                Codigo = codigo;
-                idrespo = (int)responsable;
-                IdKsf = (int)ksfF;
-                tipoconsulta = tipo;
+
+                if (!int.TryParse(accion, out var centroParse)) centroParse = 0;
+                IdCentro = centroParse;
+
+                if (!int.TryParse(division, out var divParse)) divParse = 0;
+                IdDiv = divParse;
+
+                Status = est ?? Status;
+                Codigo = codigo ?? Codigo;
+                idrespo = responsable ?? 0;
+                IdKsf = ksfF ?? 0;
+                tipoconsulta = tipo ?? tipoconsulta;
                 if (!string.IsNullOrEmpty(linea) && linea != "Todo")
                 {
-                    NombreLinea = linea;
+                    NombreLinea = Uri.UnescapeDataString(linea);
                 }
+
                 dataIsLoaded = 1;
                 var estConsulta = est;
                 if (EsOpcionVencidos(estConsulta) || EsOpcionTotalPendiente(estConsulta))
@@ -1088,16 +1104,12 @@ private bool EsOpcionTotalPendiente(string? s)
 
                 if (EsOpcionVencidos(Status))
                 {
-                    listareu = listareu
-                        .Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
-                        .ToList();
+                    listareu = listareu?.Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty)).ToList() ?? new List<ReunionDTO>();
                 }
+
                 if (EsOpcionTotalPendiente(Status))
                 {
-                    listareu = listareu
-                        .Where(d => (d.Rdstatus ?? string.Empty)
-                            .StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase))
-                        .ToList();
+                    listareu = listareu?.Where(d => (d.Rdstatus ?? string.Empty).StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<ReunionDTO>();
                 }
 
                 ConstruirCatalogoEquiposPorNombre();
@@ -1110,37 +1122,30 @@ private bool EsOpcionTotalPendiente(string? s)
                 valuvisualeodt = valueodt;
                 await BuscarxOdt();
 
+                listareu = listareu ?? new List<ReunionDTO>();
+
                 if (EsOpcionVencidos(Status))
                 {
-                    listareu = listareu
-                        .Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
-                        .ToList();
+                    listareu = listareu.Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty)).ToList();
                 }
 
                 if (EsOpcionTotalPendiente(Status))
                 {
-                    listareu = listareu
-                        .Where(d => (d.Rdstatus ?? string.Empty)
-                            .StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase))
-                        .ToList();
+                    listareu = listareu.Where(d => (d.Rdstatus ?? string.Empty).StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase)).ToList();
                 }
 
-                listareu = listareu
-                    .OrderByDescending(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
-                    .ThenBy(d => d.RdfecTra)
-                    .ToList();
+                listareu = listareu.OrderByDescending(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty)).ThenBy(d => d.RdfecTra).ToList();
             }
         }
+        catch (Exception)
+        {
+            NotificationService.Notify(Notificar.Notificacion(
+                "error",
+                DiccionarioTraduccionesService.Traducciones["ErrorInesp"],
+                DiccionarioTraduccionesService.Traducciones["Reload"]
+            ));
+        }
     }
-    catch (Exception ex)
-    {
-        NotificationService.Notify(Notificar.Notificacion(
-            "error",
-            DiccionarioTraduccionesService.Traducciones["ErrorInesp"],
-            DiccionarioTraduccionesService.Traducciones["Reload"]
-        ));
-    }
-}
     private class EquipoOpcion
     {
         public string Codigo { get; set;} = string.Empty;
@@ -1153,10 +1158,12 @@ private bool EsOpcionTotalPendiente(string? s)
         if (!string.IsNullOrEmpty(UsrRol))
         {
             foreach (var e in PizarraData.reudiatablas)
-                {
-                    e.Responsable = RespoReuData.resporeus.Where(x => x.IdResReu == e.IdResReu).FirstOrDefault().Rrnombre;
-                }
-            listareu = PizarraData.reudiatablas.Where(r => r.Responsable.StartsWith(UsrRol)).ToList();
+            {
+                var resp = RespoReuData.resporeus.FirstOrDefault(x => x.IdResReu == e.IdResReu);
+                e.Responsable = resp?.Rrnombre ?? string.Empty;
+            }
+
+            listareu = PizarraData.reudiatablas.Where(r => !string.IsNullOrEmpty(r.Responsable) && r.Responsable.StartsWith(UsrRol)).ToList();
 
         }
         else
