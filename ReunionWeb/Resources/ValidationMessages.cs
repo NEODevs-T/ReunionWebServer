@@ -205,6 +205,10 @@ namespace ReunionWeb.Resources
         public static string TodosCampos => _resourceManager.GetString("TodosCampos", CultureInfo.CurrentUICulture);
         public static string AExitoso => _resourceManager.GetString("AExitoso", CultureInfo.CurrentUICulture);
         public static string Horas => _resourceManager.GetString("Horas", CultureInfo.CurrentUICulture);
+        public static string Verificando => _resourceManager.GetString("Verificando", CultureInfo.CurrentUICulture);
+        public static string CodigoYaExiste => _resourceManager.GetString("CodigoYaExiste", CultureInfo.CurrentUICulture);
+        public static string CodigoDisponible => _resourceManager.GetString("CodigoDisponible", CultureInfo.CurrentUICulture);
+        public static string YaRegistradoEn => _resourceManager.GetString("YaRegistradoEn", CultureInfo.CurrentUICulture);
         public static string MapResponsableKey(string nombre)
         {
             return nombre switch

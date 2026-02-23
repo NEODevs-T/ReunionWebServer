@@ -215,5 +215,9 @@
 <data name="TodosCampos" xml:space="preserve"><value>Todos los campos son obligatorios.</value></data>
 <data name="AExitoso" xml:space="preserve"><value>Se añadió exitosamente</value></data>
 <data name="Horas" xml:space="preserve"><value>Horas</value></data>
+<data name="Verificando" xml:space="preserve"><value>Verificando…</value></data>
+<data name="CodigoYaExiste" xml:space="preserve"><value>El código ya se encuentra registrado para esta Línea.</value></data>
+<data name="CodigoDisponible" xml:space="preserve"><value>Código disponible.</value></data>
+<data name="YaRegistradoEn" xml:space="preserve"><value>Ya registrado</value></data>
 </root>
 

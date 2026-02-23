@@ -379,4 +379,34 @@ td:has(> .con-plan-resp) {
     .tabla-scroll table {
         font-size: 14px;
     }
+
+    .input-icon-group { position: relative; }
+    .codigo-input {
+        padding-right: 36px !important;
+        border-radius: 6px !important;
+        transition: border-color .2s ease;
+    }
+    .input-icon { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); }
+    .input-icon-group.success .codigo-input { border-color: #28a745 !important; }
+    .input-icon-group.error   .codigo-input { border-color: #dc3545 !important; }
+
+    /* Layout del preview a la derecha */
+    .input-with-preview { display: block; }
+    .codigo-preview {
+        background: #fff; border: 1px solid #e9ecef; border-radius: 8px; padding: 10px 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    }
+    .preview-title {
+        font-weight: 600; font-size: 0.95rem; color: #444; margin-bottom: 8px;
+    }
+    .preview-card {
+        border: 1px solid #f1f3f5; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; background: #fcfcfc;
+    }
+    .preview-header { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .preview-header .equiponame { font-weight: 600; color: #212529; }
+    .preview-body { font-size: 0.9rem; color: #495057; }
+    .preview-row { display: flex; gap: 6px; margin-bottom: 2px; }
+    .preview-row .label { min-width: 70px; color: #6c757d; }
+    .preview-row .value { font-weight: 500; }
+
 }

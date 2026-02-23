@@ -214,4 +214,8 @@
 <data name="TodosCampos" xml:space="preserve"><value>All fields are required.</value></data>
 <data name="AExitoso" xml:space="preserve"><value>Successfully added.</value></data>
 <data name="Horas" xml:space="preserve"><value>Hours</value></data>
+<data name="Verificando" xml:space="preserve"><value>Checking…</value></data>
+<data name="CodigoYaExiste" xml:space="preserve"><value>The code is already registered for this Line.</value></data>
+<data name="CodigoDisponible" xml:space="preserve"><value>Code available.</value></data>
+<data name="YaRegistradoEn" xml:space="preserve"><value>Already registered</value></data>
 </root>

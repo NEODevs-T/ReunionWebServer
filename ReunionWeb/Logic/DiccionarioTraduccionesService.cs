@@ -29,7 +29,7 @@ namespace ReunionWeb.Services
                 "Buscar", "BuscarCargo", "BuscarCargo2", "C_Equipo", "Calendario",
                 "CambiosDeEstados", "CambiosDeFechaDeTrabajoRestantes", "CambiosDeFechaTrabajo", "CamposNecesarios", "Cancelar",
                 "Cargo", "Centro", "Cerrado", "CerrarSesion", "Codigo", "PendienteResponsable",
-                "CodigosDeEquipos", "CodigoDeEquipo", "CodigoEAM", "ColocarFecha", "Consolidacion", "ConsolidacionDeDiscrepancia",
+                "CodigosDeEquipos", "CodigoDeEquipo", "CodigoDisponible", "CodigoEAM", "CodigoYaExiste", "ColocarFecha", "Consolidacion", "ConsolidacionDeDiscrepancia",
                 "Consultar", "ConsultarEquipos", "ConsultarFechaProgramada", "Correcto", "Desactivar",
                 "Descripcion", "Desde", "DetallesCalidad", "DetallesDeCalidad", "Dia",
                 "DiasNoLaborables", "Discrepancia", "DiscrepanciaRechazada", "Discrepancias", "Division",
@@ -59,8 +59,8 @@ namespace ReunionWeb.Services
                 "Seleccione", "SeleccioneBuscar", "SeleccioneDML", "SeleccioneUnCentro", "SeleccioneUnaDivision",
                 "SeleccioneUnaEmpresa", "Semana", "StatusNuevo", "Suplencia", "TCargos",
                 "Tiempo", "Todo", "Todos", "TodosCampos", "TotalPendiente",
-                "Trazabilidad", "Usuario", "VencidasTurno", "Vencidos", "VerifiqueCampos", "Horas",
-                "hay_registros_vencidos"
+                "Trazabilidad", "Usuario", "VencidasTurno", "Vencidos", "Verificando", "VerifiqueCampos", "Horas",
+                "hay_registros_vencidos", "YaRegistradoEn"
             };
 
             foreach (var clave in claves)
