@@ -303,16 +303,16 @@ else
                                                 }
                                                 <BSTD class="@(nombreResponsable == "Por Definir" ? "Definir" : "")">@nombreResponsable</BSTD>
                                                 @{
-                                                    var esVencido = d.RdfecTra.Date < DateTime.Now.Date
-                                                                    && (d.Rdstatus?.StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase) ?? false);
+                                                    // Usa la misma regla para clasificar el estado mostrado y el filtrado
+                                                    var estadoEf = EstadoEfectivo(d); // "Vencidos" o el estado original
 
-                                                    var claveMostrada = esVencido ? "Vencidos" : ValidationMessages.MapStatusKey(d.Rdstatus);
+                                                    // Intenta mapear la clave de traducción en base al estado efectivo
+                                                    var claveTrad = ValidationMessages.MapStatusKey(estadoEf);
+                                                    var estadoTraducido = DiccionarioTraduccionesService.Traducciones.ContainsKey(claveTrad)
+                                                        ? DiccionarioTraduccionesService.Traducciones[claveTrad]
+                                                        : estadoEf;
 
-                                                    var estadoTraducido = DiccionarioTraduccionesService.Traducciones.ContainsKey(claveMostrada)
-                                                        ? DiccionarioTraduccionesService.Traducciones[claveMostrada]
-                                                        : claveMostrada;
-
-                                                    var claseEstado = esVencido
+                                                    var claseEstado = estadoEf == "Vencidos"
                                                         ? "Vencido"
                                                         : d.Rdstatus switch
                                                         {
@@ -322,7 +322,6 @@ else
                                                         };
                                                 }
                                                 <BSTD Class="@claseEstado">@estadoTraducido</BSTD>
-
                                                 @{
                                                     var codRequiTexto = d.RdcodRequi == null ? "N/A" : d.RdcodRequi;
                                                 }
@@ -765,6 +764,7 @@ private async Task SetCentroInicialAsync()
         {
             valuvisualeodt= valueodt = false;
             await LocalStorage.RemoveItemAsync("ReunionDiariaOdtValue");
+            
         }
         else
         {
@@ -842,6 +842,14 @@ private async Task SetCentroInicialAsync()
 
                 ConstruirCatalogoEquiposPorNombre();
                 AplicarFiltroPorCodigoSeleccionado();
+
+                var permitirVencidos = EsOpcionVencidos(Status) || EsOpcionTotalPendiente(Status) || EsOpcionTodo(Status);
+                if (!permitirVencidos)
+                {
+                    listareu = listareu
+                        .Where(d => EstadoEfectivo(d) != "Vencidos")
+                        .ToList();
+                }
 
                 dataIsLoaded = 2;
             }
@@ -1022,21 +1030,14 @@ private bool EsOpcionTotalPendiente(string? s)
 
     string GetVisualStatus(DateTime fechaTrabajo, string estadoOriginal)
     {
-        if (EsVencido(fechaTrabajo, estadoOriginal))
-        {
-            // Si tienes traducción para "Vencido" en tu diccionario, úsala
-            var clave = "Vencidos"; // o la clave exacta que uses en tu .resx
-            return DiccionarioTraduccionesService.Traducciones.ContainsKey(clave)
-                    ? DiccionarioTraduccionesService.Traducciones[clave]
-                    : "Vencido";
-        }
-
-        // Tu lógica actual de traducción del estado original
-        var claveEstado = ValidationMessages.MapStatusKey(estadoOriginal);
-        return DiccionarioTraduccionesService.Traducciones.ContainsKey(claveEstado)
-                ? DiccionarioTraduccionesService.Traducciones[claveEstado]
-                : estadoOriginal;
+        var d = new ReunionDTO { RdfecTra = fechaTrabajo, Rdstatus = estadoOriginal };
+        var estadoEf = EstadoEfectivo(d);
+        var clave = ValidationMessages.MapStatusKey(estadoEf);
+        return DiccionarioTraduccionesService.Traducciones.ContainsKey(clave)
+                ? DiccionarioTraduccionesService.Traducciones[clave]
+                : estadoEf;
     }
+
 
     void Editar(int id)
     {
@@ -1115,6 +1116,14 @@ protected override async Task OnParametersSetAsync()
             ConstruirCatalogoEquiposPorNombre();
             AplicarFiltroPorCodigoSeleccionado();
 
+            var permitirVencidos = EsOpcionVencidos(Status) || EsOpcionTotalPendiente(Status) || EsOpcionTodo(Status);
+            if (!permitirVencidos)
+            {
+                listareu = listareu
+                    .Where(d => EstadoEfectivo(d) != "Vencidos")
+                    .ToList();
+            }
+
             dataIsLoaded = 2;
         }
         else
@@ -1131,6 +1140,14 @@ protected override async Task OnParametersSetAsync()
             if (EsOpcionTotalPendiente(Status))
             {
                 listareu = listareu.Where(d => (d.Rdstatus ?? string.Empty).StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            var permitirVencidos = EsOpcionVencidos(Status) || EsOpcionTotalPendiente(Status) || EsOpcionTodo(Status);
+            if (!permitirVencidos)
+            {
+                listareu = listareu
+                    .Where(d => EstadoEfectivo(d) != "Vencidos")
+                    .ToList();
             }
 
             listareu = listareu
@@ -1238,4 +1255,24 @@ protected override async Task OnParametersSetAsync()
 
         await Get();
     }
+
+    private string EstadoEfectivo(ReunionDTO d)
+    {
+        var original = d.Rdstatus ?? string.Empty;
+        return EsVencido(d.RdfecTra, original) ? "Vencidos" : original;
+    }
+    
+    private bool EsOpcionTodo(string? s)
+    {
+        var valor = (s ?? string.Empty).Trim();
+
+        // Intenta extraer traducción desde el diccionario; usa "Todo" como fallback
+        var traducidoTodo = DiccionarioTraduccionesService.Traducciones.ContainsKey("Todo")
+            ? DiccionarioTraduccionesService.Traducciones["Todo"]
+            : "Todo";
+
+        return valor.Equals("Todo", StringComparison.OrdinalIgnoreCase)
+            || valor.Equals(traducidoTodo, StringComparison.OrdinalIgnoreCase);
+    }
+
 }
