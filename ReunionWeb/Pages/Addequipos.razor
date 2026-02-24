@@ -36,7 +36,7 @@ else
 
     @if (tipo == 1)
     {
-        <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+        <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true" @onclick="Atras">
             @DiccionarioTraduccionesService.Traducciones["Atras"]
             <span class="oi oi-arrow-circle-left"></span>
         </BSInputRadio>
@@ -215,7 +215,7 @@ else
     }
     else if (tipo == 2)
     {
-        <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true">
+        <BSInputRadio CheckedValue="@(0)" @bind-Value="tipo" IsToggle="true" Size="Size.ExtraSmall" Color="BSColor.Success" IsOutlined="true" @onclick="Atras">
             @DiccionarioTraduccionesService.Traducciones["Atras"]
             <span class="oi oi-arrow-circle-left"></span>
         </BSInputRadio>
@@ -610,6 +610,29 @@ else
         }
     }
 
+    private async Task Atras()
+    {
+
+        await Reset();
+
+        dataIsLoaded = 0;
+        EquipoFiltro = string.Empty;
+        MaestraData.equiposlinea?.Clear();
+
+        idequipoeditar = 0;
+        _snapshots.Clear();
+
+        IdCent = 0;
+        IdDiv  = 0;
+        IdLin  = 0;
+        MaestraData.divisions?.Clear();
+        MaestraData.lineas?.Clear();
+
+        tipo = 0;
+
+        StateHasChanged();
+    }
+
 
     private async Task ValidarCodigoEquipoCoreAsync(CancellationToken ct)
     {
@@ -666,7 +689,6 @@ else
 
     private static void SetEestaString(EquipoEamDTO d, string v)
     {
-        // Acepta "true"/"false" sin distinción de mayúsculas
         d.EestaEam = string.Equals(v, "true", StringComparison.OrdinalIgnoreCase);
     }
 
