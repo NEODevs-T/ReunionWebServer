@@ -816,14 +816,25 @@ else
 
                 mensaje = await MaestraData.AddEquipo(EquipoForm);
 
-                if (mensaje == DiccionarioTraduccionesService.Traducciones["RExitoso"])
+                if (mensaje == "OK")
                 {
-                    NotificationService.Notify(Notificar.Notificacion("exito", mensaje, ""));
+                    NotificationService.Notify(Notificar.Notificacion(
+                        "exito",
+                        DiccionarioTraduccionesService.Traducciones["RExitoso"],
+                        ""
+                    ));
+
                     await Reset();
+
+                    tipo = 0;
                 }
                 else
                 {
-                    NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], mensaje));
+                    NotificationService.Notify(Notificar.Notificacion(
+                        "advertencia",
+                        DiccionarioTraduccionesService.Traducciones["Atencion"],
+                        mensaje
+                    ));
                 }
             }
             catch (Exception ex)
@@ -928,13 +939,27 @@ else
 
     protected async Task Reset()
     {
-        EquipoForm = new EquipoEamDTO();
-        IdCent = 0;
 
+        EquipoForm = new EquipoEamDTO();
+
+        IdCent = 0;
+        IdDiv  = 0;
+        IdLin  = 0;
+
+        MaestraData.divisions?.Clear();
+        MaestraData.lineas?.Clear();
+
+        EquipoFiltro = string.Empty;
         _ctsCodigo?.Cancel();
         isCheckingCode = false;
         codeExists = false;
         EquiposConCodigo.Clear();
+
+        idequipoeditar = 0;
+
+        dataIsLoaded = 0;
+
+        StateHasChanged();
     }
 
     private IEnumerable<EquipoEamDTO> EquiposFiltrados =>
