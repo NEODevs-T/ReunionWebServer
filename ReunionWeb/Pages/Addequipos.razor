@@ -78,7 +78,11 @@ else
 
                     <BSCol Column="4">
                         <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
-                        <BSInput InputType="InputType.Select" @bind-Value="IdLin">
+                        <BSInput InputType="InputType.Select"
+                                TValue="int"
+                                Value="IdLin"
+                                ValueChanged="OnLineaChanged"
+                                ValueExpression="@(()=> IdLin)">
                             <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                             @foreach (var d in MaestraData.lineas)
                             {
@@ -245,7 +249,11 @@ else
 
             <BSCol Column="3">
                 <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
-                <BSInput InputType="InputType.Select" @bind-Value="IdLin">
+                <BSInput InputType="InputType.Select"
+                        TValue="int"
+                        Value="IdLin"
+                        ValueChanged="OnLineaChanged"
+                        ValueExpression="@(()=> IdLin)">
                     <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                     @foreach (var d in MaestraData.lineas)
                     {
@@ -700,12 +708,17 @@ else
         if (!string.IsNullOrWhiteSpace(e.Value?.ToString()) && int.TryParse(e.Value.ToString(), out int selectedCentro))
         {
             IdCent = selectedCentro;
+
             try
             {
                 if (IdCent != 0)
                 {
                     MaestraData.divisions = await MaestraData.ObtenerDivisionDelCentro(IdCent);
                 }
+
+                IdDiv = 0;
+                IdLin = 0;
+                MaestraData.lineas?.Clear();
             }
             catch (Exception ex)
             {
@@ -715,6 +728,7 @@ else
             codeExists = false;
             isCheckingCode = false;
             EquiposConCodigo.Clear();
+
             if (!string.IsNullOrWhiteSpace(EquipoForm?.EcodEquiEam))
             {
                 await ValidarCodigoEquipoAsync();
@@ -731,12 +745,14 @@ else
         if (!string.IsNullOrWhiteSpace(e.Value?.ToString()) && int.TryParse(e.Value.ToString(), out int selectedDivision))
         {
             IdDiv = selectedDivision;
+
             try
             {
                 if (IdDiv != 0)
                 {
                     MaestraData.lineas = await MaestraData.ObtenerLasLineasPorDivision(IdDiv);
                 }
+                IdLin = 0;
             }
             catch (Exception ex)
             {
@@ -746,6 +762,7 @@ else
             codeExists = false;
             isCheckingCode = false;
             EquiposConCodigo.Clear();
+
             if (!string.IsNullOrWhiteSpace(EquipoForm?.EcodEquiEam))
             {
                 await ValidarCodigoEquipoAsync();
@@ -768,6 +785,24 @@ else
         if (claims != null && claims.Count > 10)
         {
             await MaestraData.GetCentrosxEmpresa("All" + claims[10].Value);
+        }
+    }
+
+    private async Task SeleccionarLinea(ChangeEventArgs e)
+    {
+        if (int.TryParse(e?.Value?.ToString(), out var lineaId))
+        {
+            IdLin = lineaId;
+
+            if (tipo == 2 && IdLin != 0)
+            {
+                dataIsLoaded = 0;
+                await Get();
+            }
+        }
+        else
+        {
+            IdLin = 0;
         }
     }
 
@@ -934,6 +969,25 @@ else
         catch (Exception ex)
         {
             NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["EDato"], ex.Message));
+        }
+    }
+
+    private async Task OnLineaChanged(int lineaId)
+    {
+        IdLin = lineaId;
+
+        if (tipo == 2 && IdLin != 0)
+        {
+            dataIsLoaded = 0;
+            await Get();
+        }
+
+        codeExists = false;
+        isCheckingCode = false;
+        EquiposConCodigo.Clear();
+        if (tipo == 1 && !string.IsNullOrWhiteSpace(EquipoForm?.EcodEquiEam))
+        {
+            await ValidarCodigoEquipoAsync();
         }
     }
 
