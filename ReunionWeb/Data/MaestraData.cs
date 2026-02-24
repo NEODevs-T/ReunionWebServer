@@ -104,13 +104,7 @@ public class MaestraData : IMaestraData
         url = $"{BaseUrl}/AddEquipo";
         cliente = _clientFactory.CreateClient();
         var respuesta = await cliente.PostAsJsonAsync(url, equipo);
-
-        if (respuesta.IsSuccessStatusCode)
-        {
-            return "Registro Exitoso";
-        }
-
-        return "Error al registrar el equipo";
+        return respuesta.IsSuccessStatusCode ? "OK" : "ERROR";
     }
 
     public async Task<string> UpdateEquipo(EquipoEamDTO equipo)
