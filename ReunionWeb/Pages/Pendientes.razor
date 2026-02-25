@@ -1194,11 +1194,18 @@ protected override async Task OnParametersSetAsync()
 
     public async Task PrintDocument()
     {
-        string idiomaRuta = idPais == 5 ? "en" : "es";
+        string idiomaRuta   = idPais == 5 ? "en" : "es";
         string nombrePagina = idPais == 5 ? "TablePending" : "TablaPendientes";
-        string url = $"{idiomaRuta}/{nombrePagina}/{IdCentro}/{IdDiv}/{NombreLinea}/{fecha1:dd-MM-yyyy}/{fecha2:dd-MM-yyyy}/{tipoconsulta}/{Status}/{idrespo}";
-        await IJS.InvokeAsync<object>("open", new object[] { url, "_blank" });
+
+        var lineaSeg  = Uri.EscapeDataString(string.IsNullOrWhiteSpace(NombreLinea) ? "Todo" : NombreLinea);
+        var statusSeg = Uri.EscapeDataString(string.IsNullOrWhiteSpace(Status)      ? "Todo" : Status);
+        var tipoSeg   = Uri.EscapeDataString(string.IsNullOrWhiteSpace(tipoconsulta)? "0"    : tipoconsulta);
+
+        string url = $"{idiomaRuta}/{nombrePagina}/{IdCentro}/{IdDiv}/{lineaSeg}/{fecha1:dd-MM-yyyy}/{fecha2:dd-MM-yyyy}/{tipoSeg}/{statusSeg}/{idrespo}";
+
+        await IJS.InvokeVoidAsync("open", url, "_blank");
     }
+
     string GetClassVencido(DateTime ft, string estado)
     {
         return ft.Date < DateTime.Now.Date && estado.StartsWith("Pendiente") ? "Vencido" : "";

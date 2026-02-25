@@ -484,7 +484,6 @@ protected override async Task OnInitializedAsync()
         string nombrePagina = idPais == 5 ? "TableMeeting" : "TablaReunion";
         string url = $"{idiomaRuta}/{nombrePagina}/{IdCentro}/{IdDiv}/{DateTime.Now.AddDays(-1):dd-MM-yyyy}/{DateTime.Now:dd-MM-yyyy}/1";
         
-        await IJS.InvokeAsync<object>("open", new object[] { url, "_blank" });
+        await IJS.InvokeVoidAsync("open", url, "_blank");
     }
-
 }
