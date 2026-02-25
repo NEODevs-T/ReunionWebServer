@@ -1197,12 +1197,14 @@ protected override async Task OnParametersSetAsync()
         string idiomaRuta   = idPais == 5 ? "en" : "es";
         string nombrePagina = idPais == 5 ? "TablePending" : "TablaPendientes";
 
-        var lineaSeg  = Uri.EscapeDataString(string.IsNullOrWhiteSpace(NombreLinea) ? "Todo" : NombreLinea);
-        var statusSeg = Uri.EscapeDataString(string.IsNullOrWhiteSpace(Status)      ? "Todo" : Status);
-        var tipoSeg   = Uri.EscapeDataString(string.IsNullOrWhiteSpace(tipoconsulta)? "0"    : tipoconsulta);
+        // Codificar TODOS los segmentos críticos
+        string segLinea   = Uri.EscapeDataString(NombreLinea ?? "Todo");
+        string segEstado  = Uri.EscapeDataString(Status ?? "Todo");
+        string segTipo    = Uri.EscapeDataString(tipoconsulta ?? "0");
+        string segCodigo  = Uri.EscapeDataString(Codigo ?? "Todo");
+        string segResp    = (idrespo).ToString();
 
-        string url = $"{idiomaRuta}/{nombrePagina}/{IdCentro}/{IdDiv}/{lineaSeg}/{fecha1:dd-MM-yyyy}/{fecha2:dd-MM-yyyy}/{tipoSeg}/{statusSeg}/{idrespo}";
-
+        string url = $"{idiomaRuta}/{nombrePagina}/{IdCentro}/{IdDiv}/{segLinea}/{fecha1:dd-MM-yyyy}/{fecha2:dd-MM-yyyy}/{segTipo}/{segEstado}/{segResp}";
         await IJS.InvokeVoidAsync("open", url, "_blank");
     }
 

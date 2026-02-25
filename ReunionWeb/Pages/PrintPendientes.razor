@@ -49,6 +49,7 @@ else
             <option value="Todo">@DiccionarioTraduccionesService.Traducciones["Todo"]</option>
             <option value="Pendiente">@DiccionarioTraduccionesService.Traducciones["Pendiente"]</option>
             <option value="Pendiente/Responsable">@DiccionarioTraduccionesService.Traducciones["Pendiente"]/ @DiccionarioTraduccionesService.Traducciones["Responsable"]</option>
+            <option value="No Conforme">@DiccionarioTraduccionesService.Traducciones["NoConforme"]</option>
             <option value="Listo">@DiccionarioTraduccionesService.Traducciones["Listo"]</option>
             <option value="Cerrado">@DiccionarioTraduccionesService.Traducciones["Cerrado"]</option>
             <option value="Vencidos">@DiccionarioTraduccionesService.Traducciones["Vencidos"]</option>
@@ -235,6 +236,7 @@ else
     private List<CalendarioTrabajoDTO> calentrabajo { get; set; }
     private List<CambFecDTO> cambiofecha { get; set; }
     private List<ReunionDTO> reudiatablas { get; set; }
+    private List<ReunionDTO> _sourceAll = new();
 
     List<ReunionDTO> listareu = new List<ReunionDTO>();//filtar los responsables
 
@@ -403,13 +405,10 @@ else
 
                 dataIsLoaded = 1;
 
-                var estConsulta = Status;
-                if (EsOpcionVencidos(estConsulta) || EsOpcionTotalPendiente(estConsulta))
-                {
-                    estConsulta = "Todo";
-                }
+                var estConsulta = "Todo";
 
                 await PizarraData.GetPendientes(accion, division, date1, date2, tipo, estConsulta);
+
                 dataIsLoaded = 2;
 
                 if (PizarraData?.reudiatablas is null)
@@ -424,7 +423,8 @@ else
                     e.Responsable = RespoReuData.resporeus.Where(x => x.IdResReu == e.IdResReu).FirstOrDefault()?.Rrnombre ?? string.Empty;
                 }
 
-                // Base por rol + filtros en memoria
+                _sourceAll = PizarraData.reudiatablas.ToList();
+
                 ConstruirListaBase();
                 AplicarFiltrosEnMemoria();
             }
@@ -447,18 +447,18 @@ else
 
     private void ConstruirListaBase()
     {
-        if (PizarraData?.reudiatablas is null)
+        if (_sourceAll is null)
         {
             listareu = new();
             return;
         }
 
         if (!string.IsNullOrEmpty(UsrRol))
-            listareu = PizarraData.reudiatablas
+            listareu = _sourceAll
                 .Where(r => !string.IsNullOrEmpty(r.Responsable) && r.Responsable.StartsWith(UsrRol))
                 .ToList();
         else
-            listareu = PizarraData.reudiatablas.ToList();
+            listareu = _sourceAll.ToList();
     }
 
     private void AplicarFiltrosEnMemoria()
@@ -499,6 +499,14 @@ else
                 listareu = listareu
                     .Where(d => string.Equals(d.Rdstatus ?? string.Empty,
                                             "Pendiente/Responsable",
+                                            StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+            else if (s.Equals("No Conforme", StringComparison.OrdinalIgnoreCase))
+            {
+                listareu = listareu
+                    .Where(d => string.Equals(d.Rdstatus ?? string.Empty,
+                                            "No Conforme",
                                             StringComparison.OrdinalIgnoreCase))
                     .ToList();
             }
