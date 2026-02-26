@@ -793,76 +793,81 @@ private async Task SetCentroInicialAsync()
         }
     }
 
-    protected async Task Get()
+protected async Task Get()
+{
+    if (IdCentro != 0 && IdDiv != 0)
     {
-        if (IdCentro != 0 && IdDiv != 0)
+        if (dataIsLoaded != 1)
         {
-            if (dataIsLoaded != 1)
+            dataIsLoaded = 1;
+
+            var estConsulta = Status;
+            if (EsOpcionVencidos(estConsulta) || EsOpcionTotalPendiente(estConsulta))
             {
-                dataIsLoaded = 1;
-
-                var estConsulta = Status;
-                if (EsOpcionVencidos(estConsulta) || EsOpcionTotalPendiente(estConsulta))
-                {
-                    estConsulta = "Todo";
-                }
-
-                await PizarraData.GetPendientes(
-                    IdCentro.ToString(),
-                    IdDiv.ToString(),
-                    fecha1,
-                    fecha2,
-                    tipoconsulta,
-                    estConsulta
-                );
-
-                ObtenerReunionesPorRol();
-
-                if (IdMasterSeleccionado > 0)
-                {
-                    listareu = listareu
-                        .Where(r => r.IdMaster == IdMasterSeleccionado)
-                        .ToList();
-                }
-
-                if (EsOpcionVencidos(Status))
-                {
-                    listareu = listareu
-                        .Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
-                        .ToList();
-                }
-
-                if (EsOpcionTotalPendiente(Status))
-                {
-                    listareu = listareu
-                        .Where(d => (d.Rdstatus ?? string.Empty)
-                            .StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                }
-
-                ConstruirCatalogoEquiposPorNombre();
-                AplicarFiltroPorCodigoSeleccionado();
-
-                var permitirVencidos = EsOpcionVencidos(Status) || EsOpcionTotalPendiente(Status) || EsOpcionTodo(Status);
-                if (!permitirVencidos)
-                {
-                    listareu = listareu
-                        .Where(d => EstadoEfectivo(d) != "Vencidos")
-                        .ToList();
-                }
-
-                dataIsLoaded = 2;
+                estConsulta = "Todo";
             }
-        }
-        else
-        {
-            NotificationService.Notify(Notificar.Notificacion(
-                "advertencia",
-                DiccionarioTraduccionesService.Traducciones["Atencion"],
-                DiccionarioTraduccionesService.Traducciones["SVLista"]
-            ));
+
+            // ⬇️ 1) CARGA la fuente compartida para toda la vista
+            PizarraData.reudiatablas = await PizarraData.GetPendientes(
+                IdCentro.ToString(),
+                IdDiv.ToString(),
+                fecha1,
+                fecha2,
+                tipoconsulta,
+                estConsulta
+            ) ?? new List<ReunionDTO>();
+
+            // ⬇️ 2) Construye listareu a partir de la fuente, según tu rol
+            ObtenerReunionesPorRol();
+
+            // ⬇️ 3) Filtros adicionales locales
+            if (IdMasterSeleccionado > 0)
+            {
+                listareu = listareu
+                    .Where(r => r.IdMaster == IdMasterSeleccionado)
+                    .ToList();
+            }
+
+            if (EsOpcionVencidos(Status))
+            {
+                listareu = listareu
+                    .Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
+                    .ToList();
+            }
+
+            if (EsOpcionTotalPendiente(Status))
+            {
+                listareu = listareu
+                    .Where(d => (d.Rdstatus ?? string.Empty)
+                        .StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            ConstruirCatalogoEquiposPorNombre();
+            AplicarFiltroPorCodigoSeleccionado();
+
+            var permitirVencidos = EsOpcionVencidos(Status) || EsOpcionTotalPendiente(Status) || EsOpcionTodo(Status);
+            if (!permitirVencidos)
+            {
+                listareu = listareu
+                    .Where(d => EstadoEfectivo(d) != "Vencidos")
+                    .ToList();
+            }
+
+            dataIsLoaded = 2;
+            StateHasChanged();
         }
     }
+    else
+    {
+        NotificationService.Notify(Notificar.Notificacion(
+            "advertencia",
+            DiccionarioTraduccionesService.Traducciones["Atencion"],
+            DiccionarioTraduccionesService.Traducciones["SVLista"]
+        ));
+    }
+}
+
         
 
 private bool EsOpcionTotalPendiente(string? s)
@@ -1093,24 +1098,40 @@ protected override async Task OnParametersSetAsync()
 
             dataIsLoaded = 1;
 
-            // ✅ Para la consulta al backend, normalizar 'est'
             var estConsulta = Status;
             if (EsOpcionVencidos(estConsulta) || EsOpcionTotalPendiente(estConsulta))
             {
                 estConsulta = "Todo";
             }
 
-            await PizarraData.GetPendientes(IdCentro.ToString(), IdDiv.ToString(), fecha1, fecha2, tipoconsulta, estConsulta);
+            dataIsLoaded = 1;
+
+            // ⬇️ 1) CARGA la fuente
+            PizarraData.reudiatablas = await PizarraData.GetPendientes(
+                IdCentro.ToString(),
+                IdDiv.ToString(),
+                fecha1,
+                fecha2,
+                tipoconsulta,
+                estConsulta
+            ) ?? new List<ReunionDTO>();
+
+            // ⬇️ 2) Construye listareu desde la fuente según rol
             ObtenerReunionesPorRol();
 
-            // ✅ Filtros derivados de 'Status' decodificado
+            // ⬇️ 3) Aplica filtros derivados de 'Status'
             if (EsOpcionVencidos(Status))
             {
-                listareu = listareu?.Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty)).ToList() ?? new List<ReunionDTO>();
+                listareu = listareu
+                    .Where(d => EsVencido(d.RdfecTra, d.Rdstatus ?? string.Empty))
+                    .ToList();
             }
             if (EsOpcionTotalPendiente(Status))
             {
-                listareu = listareu?.Where(d => (d.Rdstatus ?? string.Empty).StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<ReunionDTO>();
+                listareu = listareu
+                    .Where(d => (d.Rdstatus ?? string.Empty)
+                        .StartsWith("Pendiente", StringComparison.OrdinalIgnoreCase))
+                    .ToList();
             }
 
             ConstruirCatalogoEquiposPorNombre();
