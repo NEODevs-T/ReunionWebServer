@@ -159,7 +159,7 @@ else
                             </BSTD>
                             <BSTD ColSpan="4">@d.Rddisc.ToUpper()</BSTD>
                             <BSTD>@d.RdcodDis</BSTD>
-                            <BSTD Class="textotabla @(TienePlanYResponsable(d) ? "con-plan-resp" : "")">
+                            <BSTD Class="@GetPlanTdClass(d)">
                                 @d.RdplanAcc
                             </BSTD>
                             <BSTD>@d.Rdtiempo</BSTD>
@@ -266,6 +266,9 @@ else if (dataIsLoaded == 2 && registrosVisibles.Count == 0)
     private List<Claim> claims { get; set; }
     private int idPais {get; set;}
     private bool traduccionesCargadas = false;
+
+    private string GetPlanTdClass(ReunionDTO d)
+    => $"textotabla {(TienePlanYResponsable(d) ? "con-plan-resp" : "")}";
 
 
     List<ReunionDTO> registrosVisibles
