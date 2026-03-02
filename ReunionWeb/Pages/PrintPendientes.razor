@@ -407,7 +407,8 @@ else
 
                 var estConsulta = "Todo";
 
-                await PizarraData.GetPendientes(accion, division, date1, date2, tipo, estConsulta);
+                PizarraData.reudiatablas = await PizarraData.GetPendientes
+                (accion, division, date1, date2, tipo, estConsulta) ?? new List<ReunionDTO>();
 
                 dataIsLoaded = 2;
 

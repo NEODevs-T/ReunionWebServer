@@ -274,7 +274,9 @@ else
         if (accion != null)
         {
             dataIsLoaded = 1;
-            await PizarraData.GetPendientes(accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo, "Reunion");
+            PizarraData.reudiatablas = await PizarraData.GetPendientes
+            (accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo, "Reunion")
+            ?? new List<ReunionDTO>();
             dataIsLoaded = 2;
 
             foreach (var e in PizarraData.reudiatablas)

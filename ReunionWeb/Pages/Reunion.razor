@@ -159,10 +159,8 @@ else
                             </BSTD>
                             <BSTD ColSpan="4">@d.Rddisc.ToUpper()</BSTD>
                             <BSTD>@d.RdcodDis</BSTD>
-                            <BSTD Class="textotabla">
-                                <span class="@(TienePlanYResponsable(d) ? "con-plan-resp" : "")">
-                                    @d.RdplanAcc
-                                </span>
+                            <BSTD Class="textotabla @(TienePlanYResponsable(d) ? "con-plan-resp" : "")">
+                                @d.RdplanAcc
                             </BSTD>
                             <BSTD>@d.Rdtiempo</BSTD>
                             @{
@@ -294,10 +292,10 @@ else if (dataIsLoaded == 2 && registrosVisibles.Count == 0)
 
             return PizarraData.reudiatablas
                 .Where(d =>
-                    d.Rdstatus != "Rechazada"
-                    && d.Rdstatus != "Listo"
-                    && d.Rdstatus != "Cerrado"
-                    &&
+                    d.Idksf != 29 &&                             // <<--- EXCLUIR KSF 29
+                    d.Rdstatus != "Rechazada" &&
+                    d.Rdstatus != "Listo" &&
+                    d.Rdstatus != "Cerrado" &&
                     (
                         // PASADO: solo si la ODT está vacía
                         (d.RdfecReu.Date < DateTime.Today && EsOdtVacia(d.Rdodt))
@@ -420,8 +418,9 @@ protected override async Task OnInitializedAsync()
             if (dataIsLoaded != 1)
             {
                 dataIsLoaded = 1;
-                await PizarraData.GetPendientes(IdCentro.ToString(), IdDiv.ToString(), DateTime.Now.AddDays(-1), DateTime.Now, "1",
-                "Reunion");
+                PizarraData.reudiatablas = await PizarraData.GetPendientes
+                (IdCentro.ToString(), IdDiv.ToString(), DateTime.Now.AddDays(-1), 
+                DateTime.Now, "1","Reunion") ?? new List<ReunionDTO>();
                             PizarraData.reudiatablas = PizarraData.reudiatablas.OrderBy(d => TienePlanYResponsable(d)).ToList();
                 dataIsLoaded = 2;
             }
@@ -449,7 +448,8 @@ protected override async Task OnInitializedAsync()
             dataIsLoaded = 1;
             IdCentro = int.Parse(accion);
             IdDiv = int.Parse(division);
-            await PizarraData.GetPendientes(accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo, "Reunion");
+            PizarraData.reudiatablas = await PizarraData.GetPendientes
+            (accion, division, DateTime.Now.AddDays(-1), DateTime.Now, tipo, "Reunion") ?? new List<ReunionDTO>();
                     PizarraData.reudiatablas = PizarraData.reudiatablas.OrderBy(d => TienePlanYResponsable(d)).ToList();
             dataIsLoaded = 2;
         }

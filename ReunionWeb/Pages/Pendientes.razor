@@ -807,7 +807,7 @@ protected async Task Get()
                 estConsulta = "Todo";
             }
 
-            // ⬇️ 1) CARGA la fuente compartida para toda la vista
+            // 1) Carga la fuente
             PizarraData.reudiatablas = await PizarraData.GetPendientes(
                 IdCentro.ToString(),
                 IdDiv.ToString(),
@@ -817,10 +817,15 @@ protected async Task Get()
                 estConsulta
             ) ?? new List<ReunionDTO>();
 
-            // ⬇️ 2) Construye listareu a partir de la fuente, según tu rol
+            // 🚫 1.a) EXCLUIR KSF 29 EN LA FUENTE COMPARTIDA
+            PizarraData.reudiatablas = PizarraData.reudiatablas
+                .Where(d => d.Idksf != 29)
+                .ToList();
+
+            // 2) Construye listareu a partir de la fuente, según tu rol
             ObtenerReunionesPorRol();
 
-            // ⬇️ 3) Filtros adicionales locales
+            // 3) Filtros adicionales locales
             if (IdMasterSeleccionado > 0)
             {
                 listareu = listareu
@@ -867,6 +872,7 @@ protected async Task Get()
         ));
     }
 }
+
 
         
 
@@ -1116,10 +1122,15 @@ protected override async Task OnParametersSetAsync()
                 estConsulta
             ) ?? new List<ReunionDTO>();
 
-            // ⬇️ 2) Construye listareu desde la fuente según rol
+            // 🚫 EXCLUIR KSF 29 EN LA FUENTE COMPARTIDA
+            PizarraData.reudiatablas = PizarraData.reudiatablas
+                .Where(d => d.Idksf != 29)
+                .ToList();
+
+            // 2) Construye listareu desde la fuente según rol
             ObtenerReunionesPorRol();
 
-            // ⬇️ 3) Aplica filtros derivados de 'Status'
+            // 3) Aplica filtros derivados de 'Status'
             if (EsOpcionVencidos(Status))
             {
                 listareu = listareu
