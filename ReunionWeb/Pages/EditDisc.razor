@@ -152,7 +152,7 @@ else
                         <BSCol Column="2">
                             <BSLabel>@DiccionarioTraduccionesService.Traducciones["Tiempo"] (@DiccionarioTraduccionesService.Traducciones["Horas"])</BSLabel>
                             <BSInput InputType="InputType.Number" Min="0" IsDisabled @bind-Value="DiscForm.Rdtiempo" />
-                     </BSCol>
+                    </BSCol>
 
                     }
                     else
@@ -169,7 +169,7 @@ else
                             <BSCol Column="2">
                                 <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaDeTrabajo"]</BSLabel>
 
-                                @if (tipo == 1 && (EsSuperUser || EsAdmin))
+                                @if (tipo == 1 && (EsSuperUser || EsAdmin || EsPrimeUser))
                                 {
                                     <BSInput InputType="InputType.Date" @bind-Value="DiscForm.RdfecTra" />
                                 }
@@ -652,6 +652,7 @@ else
     private bool EsSuperUser; //Variable para verificar que el usuario sea SuperIntendente
     private bool EsAdmin; // Variable para verificar que el usuario sea Administrador
     private bool EsPlanificador;
+    private bool EsPrimeUser;
     private List<Claim> claims { get; set; }//obtener datos del token
     int dataIsLoaded = 0;
     private bool traduccionesCargadas = false;
@@ -665,6 +666,7 @@ else
         EsSuperUser = user.IsInRole("SuperUser");
         EsAdmin = user.IsInRole("Admin");
         EsPlanificador = user.IsInRole("Planificador");
+        EsPrimeUser = user.IsInRole("PrimeUser");
 
         await LocalizationService.EstablecerCulturaDesdeTokenAsync();
         CultureInfo.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
