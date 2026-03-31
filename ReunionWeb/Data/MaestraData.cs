@@ -33,7 +33,7 @@ public class MaestraData : IMaestraData
     public List<DivisionesVDTO> divisions { get; set; } = new List<DivisionesVDTO>();
     public List<EquipoEamDTO> equipos { get; set; } = new List<EquipoEamDTO>();
     public List<EquipoEamDTO> equiposlinea { get; set; } = new List<EquipoEamDTO>();
-    public List<FechaProgDTO> fechaProg { get; set; } = new List<FechaProgDTO>();
+    public List<FechaProgDTO> fechaProg { get; set; } = new();
 
 
     public async Task<List<MaestraVDTO>> GetMaestraXLinea(int idlinea)
@@ -156,12 +156,15 @@ public class MaestraData : IMaestraData
         return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
     }
 
-    public async Task<List<FechaProgDTO>> GetFechaTrabajoXIdMaster(int IdMaster)
+    public async Task<List<FechaProgDTO>> GetFechaTrabajoXIdMaster(
+        int idMaster,
+        bool incluirInactivos = false)
     {
-        url = $"{BaseUrl}/GetFechaTrabajoXIdMaster/{IdMaster}";
-        cliente = _clientFactory.CreateClient();
-        return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
+        var url = $"{BaseUrl}/GetFechaTrabajoXIdMaster/{idMaster}?incluirInactivos={incluirInactivos}";
+        var cliente = _clientFactory.CreateClient();
 
+        return await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url)
+            ?? new List<FechaProgDTO>();
     }
 
     public async Task<List<FechaProgDTO>> GetFechaTrabajoXFecha(DateTime f1, DateTime f2, int idMaster)

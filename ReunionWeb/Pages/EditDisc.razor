@@ -98,7 +98,7 @@ else
                         @if (DiscForm.RdcodDis == "2")
                         {
                             <div class="box__absolute">
-                            <RadzenDataGrid Data="@MaestraData.fechaProg" TItem="FechaProgDTO" Class="w-100">
+                            <RadzenDataGrid Data="@fechasProgramadas" TItem="FechaProgDTO" Class="w-100">
                                 <Columns>
                                     <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="@DiccionarioTraduccionesService.Traducciones["ProximaFecha"]" FormatString="{0:dd/MM/yyyy}" />
                                     <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpdesc" Title="@DiccionarioTraduccionesService.Traducciones["Descripcion"]" />
@@ -378,7 +378,7 @@ else
                         @if (DiscForm.RdcodDis == "2")
                         {
                             <div class="box__absolute">
-                            <RadzenDataGrid Data="@MaestraData.fechaProg" TItem="FechaProgDTO" Class="w-100">
+                            <RadzenDataGrid Data="@fechasProgramadas" TItem="FechaProgDTO" Class="w-100">
                                 <Columns>
                                     <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpprogra" Title="@DiccionarioTraduccionesService.Traducciones["ProximaFecha"]" FormatString="{0:dd/MM/yyyy}" />
                                     <RadzenDataGridColumn TItem="FechaProgDTO" Property="Fpcrea" Title="@DiccionarioTraduccionesService.Traducciones["Descripcion"]" />
@@ -658,6 +658,7 @@ else
     private bool traduccionesCargadas = false;
     private int idPais { get; set; }
     private static string E(string? s) => Uri.EscapeDataString(s ?? string.Empty);
+    private List<FechaProgDTO> fechasProgramadas = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -705,8 +706,16 @@ else
 
         await KsfData.Getksf();
         await RespoReuData.GetResReu();
-        await MaestraData.GetFechaTrabajoXIdMaster((int)DiscForm.IdMaster);
-        await getFecha();
+        var todas = await MaestraData.GetFechaTrabajoXIdMaster(
+            (int)DiscForm.IdMaster,
+            incluirInactivos: true
+        );
+
+        fechasProgramadas = todas
+            .Where(f => f.Fpestado)               // ✅ solo activas
+            .Where(f => f.Fpprogra >= DateTime.Now)
+            .OrderBy(f => f.Fpprogra)
+            .ToList();
         RespoReuData.resporeus = RespoReuData.resporeus.Where(a => a.Rrdesc == claims.FirstOrDefault(c => c.Type.Contains("Empresa"))?.Value || string.IsNullOrEmpty(a.Rrdesc)).ToList();
         loader = false;
         DiscForm.RdcodRequi ??="0";
@@ -715,11 +724,6 @@ else
     async Task AgregarFecha(FechaProgDTO e)
     {
         DiscForm.RdfecTra = e.Fpprogra;
-    }
-
-    async Task getFecha()
-    {
-        MaestraData.fechaProg = MaestraData.fechaProg.Where(f => f.Fpprogra >= DateTime.Now).OrderBy(f => f.Fpprogra).ToList();
     }
 
     private static string DoubleEncode(string? s)

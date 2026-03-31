@@ -259,12 +259,9 @@ else
 
                 <p></p>
                 <BSContainer>
-
-
                     <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
                         <BSTHead Class="cabecera">
                             <BSTR>
-
                                 @* <BSTD>ID</BSTD> *@
                                 <BSTD>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSTD>
                                 <BSTD>@DiccionarioTraduccionesService.Traducciones["FechaProgramada"]</BSTD>
@@ -274,93 +271,76 @@ else
                                 {
                                     <BSTD>@DiccionarioTraduccionesService.Traducciones["Editar"]</BSTD>
                                 }
-
-
-
                             </BSTR>
                         </BSTHead>
-                        <BSTBody>
+<BSTBody>
+    @foreach (var d in MaestraData.fechaProg)
+    {
+        <BSTR>
+            <BSTD>@d.linea</BSTD>
 
+            @if (idFechaPro == d.IdFechaPr)
+            {
+                <BSTD>
+                    <BSInput InputType="InputType.Date" @bind-Value="d.Fpprogra" />
+                </BSTD>
 
+                <BSTD>
+                    <BSInput InputType="InputType.Text" @bind-Value="d.Fpdesc" />
+                </BSTD>
 
+                <BSTD>
+                    <BSInput InputType="InputType.Select"
+                             TValue="string"
+                             Value="@GetFpEstadoString(d)"
+                             ValueChanged="@(v => SetFpEstadoString(d, v))"
+                             ValueExpression="@(() => GetFpEstadoString(d))">
+                        <option value="true">@DiccionarioTraduccionesService.Traducciones["Activar"]</option>
+                        <option value="false">@DiccionarioTraduccionesService.Traducciones["Desactivar"]</option>
+                    </BSInput>
+                </BSTD>
 
-                            @foreach (var d in MaestraData.fechaProg)
-                            {
-                                <BSTR>
-                                    <BSTD>@d.linea</BSTD>
-                                    @if (idFechaPro == d.IdFechaPr)
-                                    {
-                                        <BSTD>
+                <BSTD>
+                    <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))">
+                        <i class="oi oi-circle-check"></i>
+                    </BSButton>
+                    <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar">
+                        <i class="oi oi-circle-x"></i>
+                    </BSButton>
+                </BSTD>
+            }
+            else
+            {
+                <BSTD>@d.Fpprogra.ToString("dd/MM/yyyy")</BSTD>
+                <BSTD>@d.Fpdesc</BSTD>
+                <BSTD>
+                    @if (d.Fpestado)
+                    {
+                        <span class="badge bg-success">
+                            @DiccionarioTraduccionesService.Traducciones["Activo"]
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            @DiccionarioTraduccionesService.Traducciones["Inactivo"]
+                        </span>
+                    }
+                </BSTD>
 
-                                            <BSInput InputType="InputType.Date" @bind-Value="d.Fpprogra" />
-                                            <BSFeedback For="@(() => d.Fpprogra)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
-
-                                        </BSTD>
-
-                                        <BSTD>
-
-                                            <BSInput InputType="InputType.Text" @bind-Value="d.Fpdesc" />
-                                            <BSFeedback For="@(() => d.Fpdesc)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
-
-                                        </BSTD>
-
-                                        <BSTD>
-
-                                            <BSInput InputType="InputType.Select" @bind-Value="d.Fpestado">
-                                                <option value="true">@DiccionarioTraduccionesService.Traducciones["Activar"]</option>
-                                                <option value="false">@DiccionarioTraduccionesService.Traducciones["Desactivar"]</option>
-                                            </BSInput>
-                                            <BSFeedback For="@(() => d.Fpestado)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
-
-                                        </BSTD>
-                                        <BSTD>
-
-                                            @* <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))" Target="History"><i
-                                                    class="oi oi-circle-check"></i></BSButton>
-                                            <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar" Target="History"><i
-                                                    class="oi oi-circle-x"></i></BSButton> *@
-                                            <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))" Target="History"><i
-                                                    class="oi oi-circle-check"></i></BSButton>
-                                            <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar" Target="History"><i
-                                                    class="oi oi-circle-x"></i></BSButton>
-                                        </BSTD>
-
-                                    }
-                                    else
-                                    {
-                                        <BSTD>
-                                            @d.Fpprogra.ToString("dd/MM/yyyy")
-                                        </BSTD>
-
-
-                                        <BSTD>
-                                            @d.Fpdesc
-                                        </BSTD>
-
-                                        <BSTD>
-                                            @if (d.Fpestado == true)
-                                            {
-                                                <p>@DiccionarioTraduccionesService.Traducciones["Activo"]</p>
-                                            }
-                                            else
-                                            {
-                                                <p>@DiccionarioTraduccionesService.Traducciones["Inactivo"]</p>
-                                            }
-                                        </BSTD>
-                                        @if (UsrRol == "Admin" || UsrRol == "SuperAdmin" || UsrRol == "Planificador")
-                                        {
-                                            <BSTD>
-                                                <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdFechaPr))"
-                                                    Target="History"><i class="oi oi-pencil"></i></BSButton>
-                                            </BSTD>
-                                        }
-
-                                    }
-                                </BSTR>
-
-                            }
-
-                        </BSTBody>
+                @if (UsrRol == "Admin" || UsrRol == "SuperAdmin" || UsrRol == "Planificador")
+                {
+                    <BSTD>
+                        <BSButton Color="BSColor.Success" IsOutlined
+                                  @onclick="(() => Habilitar(d.IdFechaPr))">
+                            <i class="oi oi-pencil"></i>
+                        </BSButton>
+                    </BSTD>
+                }
+            }
+        </BSTR>
+    }
+</BSTBody>
 
                     </BSTable>
                 </BSContainer>
@@ -542,6 +522,28 @@ else
     private string FechProFiltro { get; set; } = "";
     private bool traduccionesCargadas = false;
     private int idPais { get; set; }
+    private bool mostrarInactivos = true;
+
+    private readonly Dictionary<int, FechaProgDTO> _snapshotsFechas = new();
+
+    private static FechaProgDTO CloneFecha(FechaProgDTO f) => new()
+    {
+        IdFechaPr = f.IdFechaPr,
+        IdMaster  = f.IdMaster,
+        Fpprogra  = f.Fpprogra,
+        Fpdesc    = f.Fpdesc,
+        Fpestado  = f.Fpestado,
+        Fpcrea    = f.Fpcrea,
+        Fpmodic   = f.Fpmodic,
+        linea     = f.linea
+    };
+
+    private static void CopyFecha(FechaProgDTO src, FechaProgDTO dst)
+    {
+        dst.Fpprogra = src.Fpprogra;
+        dst.Fpdesc   = src.Fpdesc;
+        dst.Fpestado = src.Fpestado;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -587,9 +589,6 @@ else
         }
 
     }
-
-
-
 
     protected async Task BuscarDivision(ChangeEventArgs e)
     {
@@ -676,6 +675,14 @@ else
         idCent = 0;
     }
 
+    private static string GetFpEstadoString(FechaProgDTO d)
+    => d.Fpestado ? "true" : "false";
+
+    private static void SetFpEstadoString(FechaProgDTO d, string v)
+    {
+        d.Fpestado = string.Equals(v, "true", StringComparison.OrdinalIgnoreCase);
+    }
+
     protected async Task Get()
     {
         if (idCent != 0 && idDiv != 0 && idLin != 0)
@@ -706,12 +713,17 @@ else
             }
             else
             {
-                int idBusqueda = MaestraData.maestra.Where(m => m.IdLinea == idLin).FirstOrDefault().IdMaster;
+                int idBusqueda = MaestraData.maestra
+                    .Where(m => m.IdLinea == idLin)
+                    .FirstOrDefault().IdMaster;
                 dataIsLoaded = 1;
-                await MaestraData.GetFechaTrabajoXIdMaster(idBusqueda);
+                MaestraData.fechaProg =
+                    await MaestraData.GetFechaTrabajoXIdMaster(idBusqueda, true);
                 foreach (var item in MaestraData.fechaProg)
                 {
-                    item.linea = MaestraData.maestra.Where(m => m.IdLinea == idLin).FirstOrDefault().Linea;
+                    item.linea = MaestraData.maestra
+                        .Where(m => m.IdLinea == idLin)
+                        .FirstOrDefault().Linea;
                 }
                 dataIsLoaded = 2;
             }
@@ -719,7 +731,6 @@ else
         else
         {
             NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["CamposNecesarios"]));
-
         }
         tipo = 2;
     }
@@ -727,11 +738,33 @@ else
     async Task Habilitar(int id)
     {
         idFechaPro = id;
+
+        if (!_snapshotsFechas.ContainsKey(id))
+        {
+            var current = MaestraData.fechaProg.FirstOrDefault(x => x.IdFechaPr == id);
+            if (current != null)
+            {
+                _snapshotsFechas[id] = CloneFecha(current);
+            }
+        }
     }
+    
     async Task Cancelar()
     {
+        if (idFechaPro != 0 &&
+            _snapshotsFechas.TryGetValue(idFechaPro, out var snap))
+        {
+            var current = MaestraData.fechaProg
+                .FirstOrDefault(x => x.IdFechaPr == idFechaPro);
+
+            if (current != null)
+                CopyFecha(snap, current);
+
+            _snapshotsFechas.Remove(idFechaPro);
+        }
+
         idFechaPro = 0;
-        //ventanaModal = 0;
+        StateHasChanged();
     }
     @* async Task Editar(FechaProgDTO fechaP)
     {
@@ -783,31 +816,26 @@ else
     {
         try
         {
-            fechaProg.IdFechaPr = fechaP.IdFechaPr;
-            fechaProg.IdMaster = fechaP.IdMaster;
-            fechaProg.Fpdesc = fechaP.Fpdesc;
-            fechaProg.Fpestado = fechaP.Fpestado;
-            fechaProg.Fpprogra = fechaP.Fpprogra;
-            fechaProg.Fpmodic = fechaP.Fpmodic;
-            fechaProg.Fpcrea = fechaP.Fpcrea;
+            bool band = await MaestraData.UpdateFechaTrabajo(fechaP, fechaP.IdFechaPr);
 
-            bool band = await MaestraData.UpdateFechaTrabajo(fechaProg, fechaP.IdFechaPr);
-
-            if (band == true)
+            if (band)
             {
-                NotificationService.Notify(Notificar.Notificacion("exito", DiccionarioTraduccionesService.Traducciones["Exito"], DiccionarioTraduccionesService.Traducciones["MExito"]));
-            }
-            else
-            {
-
-                NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["ErrorInesp"]));
+                NotificationService.Notify(
+                    Notificar.Notificacion("exito",
+                    DiccionarioTraduccionesService.Traducciones["Exito"],
+                    DiccionarioTraduccionesService.Traducciones["MExito"]));
             }
 
+            _snapshotsFechas.Remove(fechaP.IdFechaPr);
             idFechaPro = 0;
         }
         catch (Exception ex)
         {
-            NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["EDato"], ex.Message));
+            NotificationService.Notify(
+                Notificar.Notificacion("error",
+                DiccionarioTraduccionesService.Traducciones["EDato"],
+                ex.Message));
         }
     }
+
 }
