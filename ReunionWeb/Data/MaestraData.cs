@@ -156,12 +156,15 @@ public class MaestraData : IMaestraData
         return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
     }
 
-    public async Task<List<FechaProgDTO>> GetFechaTrabajoXIdMaster(int IdMaster)
+    public async Task<List<FechaProgDTO>> GetFechaTrabajoXIdMaster(
+        int IdMaster,
+        bool incluirInactivos = false)
     {
-        url = $"{BaseUrl}/GetFechaTrabajoXIdMaster/{IdMaster}";
-        cliente = _clientFactory.CreateClient();
-        return fechaProg = await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url) ?? new List<FechaProgDTO>();
+        var url = $"{BaseUrl}/GetFechaTrabajoXIdMaster/{IdMaster}?incluirInactivos={incluirInactivos}";
+        var cliente = _clientFactory.CreateClient();
 
+        return await cliente.GetFromJsonAsync<List<FechaProgDTO>>(url)
+            ?? new List<FechaProgDTO>();
     }
 
     public async Task<List<FechaProgDTO>> GetFechaTrabajoXFecha(DateTime f1, DateTime f2, int idMaster)
