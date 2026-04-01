@@ -129,7 +129,7 @@ else
 
                             <BSCol Column="4">
                                 <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
-                                <BSInput InputType="InputType.Select" @bind-Value="idLin">
+                                <BSInput InputType="InputType.Select" @bind-Value="idLin" @onchange="OnLineaChanged">
                                     <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]...</option>
                                     @foreach (var d in MaestraData.lineas)
                                     {
@@ -147,7 +147,7 @@ else
                         <BSRow>
                             <BSCol Column="3">
                                 <BSLabel>@DiccionarioTraduccionesService.Traducciones["FechaProgramada"]</BSLabel>
-                                <BSInput InputType="InputType.Date" @bind-Value="@fecha" />
+                                <BSInput InputType="InputType.Date" @bind-Value="fechaProg.Fpprogra" />
                                 <BSFeedback For="@(() => fechaProg.Fpprogra)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                             </BSCol>
                         </BSRow>
@@ -218,7 +218,7 @@ else
 
                 <BSCol Column="3">
                     <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
-                    <BSInput InputType="InputType.Select" @bind-Value="idLin">
+                    <BSInput InputType="InputType.Select" @bind-Value="idLin" @onchange="OnLineaChanged">
                         <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]...</option>
                         @foreach (var d in MaestraData.lineas)
                         {
@@ -505,7 +505,6 @@ else
     private int idCent { get; set; } = 0;
     private int idDiv { get; set; } = 0;
     private int idLin { get; set; } = 0;
-    private DateTime fecha { get; set; } = DateTime.Now;
     private DateTime? fecha1 { get; set; } = null;
     private DateTime? fecha2 { get; set; } = null;
     private DateTime _fecha1 { get; set; }
@@ -515,7 +514,10 @@ else
     private string UsrRol { get; set; }
     int dataIsLoaded = 0;
     int punto = 0;
-    FechaProgDTO fechaProg { get; set; } = new FechaProgDTO();
+    FechaProgDTO fechaProg { get; set; } = new FechaProgDTO()
+        {
+        Fpprogra = DateTime.Today
+    };
     List<FechaProgDTO> lisFechaProg { get; set; } = new List<FechaProgDTO>();
     private int idFechaPro { get; set; } = 0;//id para mostar los campos de edicion
     private NotifiRadzen Notificar = new NotifiRadzen();//Logic para crear las noyificaciones radzen
@@ -523,6 +525,9 @@ else
     private bool traduccionesCargadas = false;
     private int idPais { get; set; }
     private bool mostrarInactivos = true;
+    
+
+
 
     private readonly Dictionary<int, FechaProgDTO> _snapshotsFechas = new();
 
@@ -543,6 +548,32 @@ else
         dst.Fpprogra = src.Fpprogra;
         dst.Fpdesc   = src.Fpdesc;
         dst.Fpestado = src.Fpestado;
+    }
+
+    protected async Task OnLineaChanged(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+
+        if (!int.TryParse(value, out var lineaSeleccionada))
+        {
+            fechaProg.IdMaster = 0;
+            return;
+        }
+
+        idLin = lineaSeleccionada;
+
+        if (idLin == 0)
+        {
+            fechaProg.IdMaster = 0;
+            return;
+        }
+
+        await MaestraData.GetMaestraXLinea(idLin);
+
+        var master = MaestraData.maestra
+            .FirstOrDefault(m => m.IdLinea == idLin);
+
+        fechaProg.IdMaster = master?.IdMaster ?? 0;
     }
 
     protected override async Task OnInitializedAsync()
@@ -612,67 +643,90 @@ else
     {
         idDiv = int.Parse(e.Value.ToString());
         idLin = 0;
+        fechaProg.IdMaster = 0;
 
         try
         {
-            if (idCent != 0)
+            if (idDiv != 0)
             {
-                MaestraData.lineas = await MaestraData.ObtenerLasLineasPorDivision(idDiv);
+                MaestraData.lineas =
+                    await MaestraData.ObtenerLasLineasPorDivision(idDiv);
             }
         }
         catch (Exception ex)
         {
-            mensaje = "Error: " + ex.Message;
+            mensaje = ex.Message;
         }
     }
 
     protected async Task SaveFT(EditContext e)
     {
-        if (idCent != 0 && idDiv != 0 && idLin != 0)
+        if (!e.Validate())
+            return;
+
+        if (fechaProg.IdMaster == 0)
         {
-            if (e.Validate())
-            {
-                try
-                {
-                    List<FechaProgDTO> listaFechaProg = new List<FechaProgDTO>();
-                    fechaProg.Fpcrea = DateTime.Now;
-                    fechaProg.Fpprogra = fecha;
-                    fechaProg.Fpestado = true;
-                    fechaProg.Fpmodic = DateTime.Now;
-                    await MaestraData.GetMaestraXLinea(idLin);
-                    fechaProg.IdMaster = MaestraData.maestra.Where(m => m.IdLinea == idLin).FirstOrDefault().IdMaster;
-                    listaFechaProg.Add(fechaProg);
-
-                    bool band = await MaestraData.AddFechaTrabajo(listaFechaProg);
-
-                    if (band == true)
-                    {
-                        NotificationService.Notify(Notificar.Notificacion("exito", DiccionarioTraduccionesService.Traducciones["Exito"], DiccionarioTraduccionesService.Traducciones["GuardarFechaN"]));
-                    }
-                    else
-                    {
-                        NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["ErrorInesp"]));
-                    }
-                    Reset();
-                }
-                catch (Exception ex)
-                {
-                    NotificationService.Notify(Notificar.Notificacion("error", DiccionarioTraduccionesService.Traducciones["EDato"],
-                    ex.Message));
-
-                }
-            }
+            NotificationService.Notify(
+                Notificar.Notificacion(
+                    "advertencia",
+                    DiccionarioTraduccionesService.Traducciones["Atencion"],
+                    DiccionarioTraduccionesService.Traducciones["VerifiqueCampos"]
+                ));
+            return;
         }
-        else
+
+        try
         {
-            NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["VerifiqueCampos"]));
+            fechaProg.Fpcrea  = DateTime.Now;
+            fechaProg.Fpmodic = DateTime.Now;
+            fechaProg.Fpestado = true;
+
+            var lista = new List<FechaProgDTO> { fechaProg };
+
+            bool band = await MaestraData.AddFechaTrabajo(lista);
+
+            if (band)
+            {
+                NotificationService.Notify(
+                    Notificar.Notificacion(
+                        "exito",
+                        DiccionarioTraduccionesService.Traducciones["Exito"],
+                        DiccionarioTraduccionesService.Traducciones["GuardarFechaN"]
+                    ));
+            }
+            else
+            {
+                NotificationService.Notify(
+                    Notificar.Notificacion(
+                        "advertencia",
+                        DiccionarioTraduccionesService.Traducciones["Atencion"],
+                        DiccionarioTraduccionesService.Traducciones["ErrorInesp"]
+                    ));
+            }
+
+            await Reset();
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(
+                Notificar.Notificacion(
+                    "error",
+                    DiccionarioTraduccionesService.Traducciones["EDato"],
+                    ex.Message
+                ));
         }
     }
 
     protected async Task Reset()
     {
-        fechaProg = new FechaProgDTO();
+        fechaProg = new FechaProgDTO
+        {
+            Fpprogra = DateTime.Today
+        };
+
         idCent = 0;
+        idDiv = 0;
+        idLin = 0;
     }
 
     private static string GetFpEstadoString(FechaProgDTO d)
