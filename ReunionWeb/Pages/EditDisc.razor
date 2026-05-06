@@ -87,11 +87,26 @@ else
                         </BSInput>
                         <BSFeedback For="@(() => DiscForm.Idksf)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                     </BSCol>
-
                     <BSCol Column="3">
-                        <BSLabel>@DiccionarioTraduccionesService.Traducciones["CodigoDeEquipo"]</BSLabel>
-                        <BSInput InputType="InputType.Text" @bind-Value="DiscForm.RdcodEq" ValidateOnInput="true" />
-                        <BSFeedback For="@(() => DiscForm.RdcodEq)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
+                        <BSLabel>
+                            @DiccionarioTraduccionesService.Traducciones["CodigoDeEquipo"]
+                        </BSLabel>
+
+                        <BSInput InputType="InputType.Text"
+                                @bind-Value="DiscForm.RdcodEq"
+                                @oninput="OnCodigoEquipoChanged"
+                                ValidateOnInput="true" />
+
+                        <BSFeedback For="@(() => DiscForm.RdcodEq)"
+                                    ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
+                    <div class="mt-1 text-muted" style="font-size: 0.85rem;">
+                        <i class="oi oi-tag"></i>
+                        @(
+                            !string.IsNullOrWhiteSpace(DiscForm.EnombreEam)
+                            ? DiscForm.EnombreEam
+                            : DiccionarioTraduccionesService.Traducciones["EquipoNoDisponible"]
+                        )
+                    </div>
                     </BSCol>
                     @if ((int)tipo == 1)
                     {
@@ -659,7 +674,32 @@ else
     private int idPais { get; set; }
     private static string E(string? s) => Uri.EscapeDataString(s ?? string.Empty);
     private List<FechaProgDTO> fechasProgramadas = new();
+    private string NombreEquipoSeleccionado = string.Empty;
 
+    private void OnCodigoEquipoChanged(ChangeEventArgs e)
+    {
+        DiscForm.RdcodEq = e.Value?.ToString();
+        ActualizarNombreEquipo();
+    }
+
+    private void ActualizarNombreEquipo()
+    {
+        if (MaestraData?.equipos == null || !MaestraData.equipos.Any())
+        {
+            NombreEquipoSeleccionado = string.Empty;
+            return;
+        }
+
+        var codigoNormalizado = (DiscForm.RdcodEq ?? string.Empty).Trim();
+
+        NombreEquipoSeleccionado = MaestraData.equipos
+            .FirstOrDefault(x =>
+                x.EcodEquiEam != null &&
+                x.EcodEquiEam.Trim().Equals(codigoNormalizado, StringComparison.OrdinalIgnoreCase)
+            )
+            ?.EnombreEam
+            ?? DiccionarioTraduccionesService.Traducciones["EquipoNoDisponible"];
+    }
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -691,12 +731,46 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-
         await CreateData();
         loader = true;
+
+        // 1️⃣ Cargar discrepancia
+        DiscForm = await PizarraData.GetDiscrepantacia((int)Id);   
+        // Si el backend no lo trae, intentamos recuperar el valor visual desde Pendientes
+        if (string.IsNullOrWhiteSpace(DiscForm.EnombreEam))
+        {
+            var cache = await LocalStorage.GetItemAsStringAsync($"EqName_{Id}");
+            if (!string.IsNullOrWhiteSpace(cache))
+                DiscForm.EnombreEam = cache;
+        }
+        // (Opcional) limpiar para no dejar basura
+        await LocalStorage.RemoveItemAsync($"EqName_{Id}");
+
+        NombreEquipoSeleccionado = string.IsNullOrWhiteSpace(DiscForm.EnombreEam)
+            ? DiccionarioTraduccionesService.Traducciones["EquipoNoDisponible"]
+            : DiscForm.EnombreEam.Trim();
+        // 2️⃣ Cargar maestra desde IdMaster
+        if (DiscForm.IdMaster.HasValue)
+        {
+            MaestraData.maestra =
+                await MaestraData.GetMaestraXLinea(DiscForm.IdMaster.Value);
+
+            var idLinea = MaestraData.maestra
+                .FirstOrDefault()
+                ?.IdLinea;
+
+            if (idLinea.HasValue)
+            {
+                MaestraData.equipos =
+                    await MaestraData.GetEquiposEAMPorLinea(idLinea.Value);
+
+                ActualizarNombreEquipo();
+            }
+        }
+
+
         Emp = claims[5].Value;
         planificador = claims[1].Value;
-        DiscForm = await PizarraData.GetDiscrepantacia((int)Id);
         await AvisadorData.GetCambioFecha((int)Id);
         CambiosFecha = AvisadorData.cambiofecha;
 
