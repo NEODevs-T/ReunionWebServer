@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using ReunionWeb.ReunionDiaria.DTOs;
+using System.Net.Http.Json;
 
 
 using static System.Net.WebRequestMethods;
@@ -101,26 +102,28 @@ public class MaestraData : IMaestraData
 
     public async Task<string> AddEquipo(EquipoEamDTO equipo)
     {
-        url = $"{BaseUrl}/AddEquipo";
-        cliente = _clientFactory.CreateClient();
+        var url = $"{BaseUrl}/AddEquipo";
+        var cliente = _clientFactory.CreateClient();
         var respuesta = await cliente.PostAsJsonAsync(url, equipo);
-        return respuesta.IsSuccessStatusCode ? "OK" : "ERROR";
+        var body = await respuesta.Content.ReadAsStringAsync();
+
+        if (respuesta.IsSuccessStatusCode)
+            return "OK";
+        return string.IsNullOrWhiteSpace(body) ? "ERROR" : body.Trim('"');
     }
 
     public async Task<string> UpdateEquipo(EquipoEamDTO equipo)
-{
-    var url = $"{BaseUrl}/UpdateEquipo";
-    var cliente = _clientFactory.CreateClient();
-    var respuesta = await cliente.PostAsJsonAsync(url, equipo);
+    {
+        var url = $"{BaseUrl}/UpdateEquipo";
+        var cliente = _clientFactory.CreateClient();
+        var respuesta = await cliente.PostAsJsonAsync(url, equipo);
+        var body = await respuesta.Content.ReadAsStringAsync();
 
-    if (respuesta.IsSuccessStatusCode)
-        return "Registro Exitoso";
-
-    var detalle = await respuesta.Content.ReadAsStringAsync();
-    return string.IsNullOrWhiteSpace(detalle)
-        ? "Error al actualizar el equipo"
-        : $"Error al actualizar el equipo: {detalle}";
-}
+        if (respuesta.IsSuccessStatusCode)
+            return "OK";
+        
+        return string.IsNullOrWhiteSpace(body) ? "ERROR" : body.Trim('"');
+    }
 
     public async Task<List<EquipoEamDTO>> GetEquiposCentro(string idCentro)
     {

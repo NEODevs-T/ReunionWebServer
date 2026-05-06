@@ -22,6 +22,7 @@
 @using System.Security.Claims
 @using System.Threading
 @using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
 @attribute [Authorize(Roles = "Admin, AdminChempro,SuperAdmin, PrimeUser")]
 
 @if (!traduccionesCargadas || MaestraData.centro.Count() == 0)
@@ -79,10 +80,10 @@ else
                     <BSCol Column="4">
                         <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
                         <BSInput InputType="InputType.Select"
-                                TValue="int"
-                                Value="IdLin"
-                                ValueChanged="OnLineaChanged"
-                                ValueExpression="@(()=> IdLin)">
+                                 TValue="int"
+                                 Value="IdLin"
+                                 ValueChanged="OnLineaChanged"
+                                 ValueExpression="@(() => IdLin)">
                             <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                             @foreach (var d in MaestraData.lineas)
                             {
@@ -102,11 +103,11 @@ else
                             <BSLabel>@DiccionarioTraduccionesService.Traducciones["CodigoEAM"]</BSLabel>
 
                             <div class="input-icon-group @(codeExists ? "error" : codigoOk ? "success" : "")">
-                            <input class="form-control codigo-input"
-                                @bind-Value="EquipoForm.EcodEquiEam"
-                                @bind-Value:event="oninput"
-                                @bind-Value:after="OnCodigoAfterBind"
-                                @onblur="ValidarCodigoEquipoAsync" />
+                                <input class="form-control codigo-input"
+                                       @bind-Value="EquipoForm.EcodEquiEam"
+                                       @bind-Value:event="oninput"
+                                       @bind-Value:after="OnCodigoAfterBind"
+                                       @onblur="ValidarCodigoEquipoAsync" />
 
                                 <span class="input-icon">
                                     @if (isCheckingCode)
@@ -155,7 +156,6 @@ else
                                         <div class="preview-header">
                                             <span class="label">@DiccionarioTraduccionesService.Traducciones["CodigoEAM"]:</span>
                                             <span class="badge bg-danger">@eq.EcodEquiEam</span>
-
                                         </div>
                                         <div class="preview-body">
                                             <div class="preview-row">
@@ -250,10 +250,10 @@ else
             <BSCol Column="3">
                 <BSLabel>@DiccionarioTraduccionesService.Traducciones["Linea"]</BSLabel>
                 <BSInput InputType="InputType.Select"
-                        TValue="int"
-                        Value="IdLin"
-                        ValueChanged="OnLineaChanged"
-                        ValueExpression="@(()=> IdLin)">
+                         TValue="int"
+                         Value="IdLin"
+                         ValueChanged="OnLineaChanged"
+                         ValueExpression="@(() => IdLin)">
                     <option value="0">@DiccionarioTraduccionesService.Traducciones["Seleccione"]</option>
                     @foreach (var d in MaestraData.lineas)
                     {
@@ -267,7 +267,9 @@ else
                 <BSRow>
                     <BSLabel>@DiccionarioTraduccionesService.Traducciones["Buscar"]</BSLabel>
                 </BSRow>
-                <button onclick="@Get" class="btn btn-success">
+
+                @* ✅ EXTRA RECOMENDADO *@
+                <button type="button" class="btn btn-success" @onclick="Get">
                     <i class="oi oi-magnifying-glass"></i>
                 </button>
             </BSCol>
@@ -298,11 +300,15 @@ else
                     </BSTHead>
 
                     <BSTBody>
-                        @if (EquiposFiltrados.Any())
+                        @{
+                            var lista = EquiposFiltrados?.ToList() ?? new List<EquipoEamDTO>();
+                        }
+
+                        @if (lista.Any())
                         {
-                            @foreach (var d in EquiposFiltrados)
+                            @foreach (var d in lista)
                             {
-                                <BSTR>
+                                <BSTR @key="d.IdEquipo">
                                     <BSTD>@d.Linea</BSTD>
 
                                     @if (idequipoeditar == d.IdEquipo)
@@ -312,8 +318,11 @@ else
                                             <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                                         </BSTD>
 
+                                        @* ✅ CAMBIO CLAVE: Buffer para el código (NO modificamos d.EcodEquiEam mientras escribimos) *@
                                         <BSTD>
-                                            <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
+                                            <input class="form-control"
+                                                   value="@GetEditCodigo(d.IdEquipo)"
+                                                   @oninput="(e) => SetEditCodigo(d.IdEquipo, e.Value?.ToString())" />
                                             <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                                         </BSTD>
 
@@ -321,19 +330,21 @@ else
                                             <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
                                             <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                                         </BSTD>
+
                                         <BSTD>
                                             <BSInput InputType="InputType.Select"
-                                                    TValue="string"
-                                                    Value="@GetEestaString(d)"
-                                                    ValueChanged="@( (string v) => SetEestaString(d, v) )"
-                                                    ValueExpression="@(() => GetEestaString(d))">
+                                                     TValue="string"
+                                                     Value="@GetEestaString(d)"
+                                                     ValueChanged="@((string v) => SetEestaString(d, v))"
+                                                     ValueExpression="@(() => GetEestaString(d))">
                                                 <option value="true">@DiccionarioTraduccionesService.Traducciones["Activar"]</option>
                                                 <option value="false">@DiccionarioTraduccionesService.Traducciones["Desactivar"]</option>
                                             </BSInput>
                                             <BSFeedback For="@(() => d.EestaEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                                         </BSTD>
+
                                         <BSTD>
-                                            <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))">
+                                            <BSButton Color="BSColor.Primary" IsOutlined @onclick="async () => await Editar(d)">
                                                 <i class="oi oi-circle-check"></i>
                                             </BSButton>
                                             <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar">
@@ -375,7 +386,7 @@ else
                         {
                             @foreach (var d in MaestraData.equiposlinea)
                             {
-                                <BSTR>
+                                <BSTR @key="d.IdEquipo">
                                     <BSTD>@d.Linea</BSTD>
 
                                     @if (idequipoeditar == d.IdEquipo)
@@ -385,8 +396,11 @@ else
                                             <BSFeedback For="@(() => d.EnombreEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                                         </BSTD>
 
+                                        @* ✅ CAMBIO CLAVE: Buffer para el código *@
                                         <BSTD>
-                                            <BSInput InputType="InputType.Text" @bind-Value="d.EcodEquiEam" />
+                                            <input class="form-control"
+                                                   value="@GetEditCodigo(d.IdEquipo)"
+                                                   @oninput="(e) => SetEditCodigo(d.IdEquipo, e.Value?.ToString())" />
                                             <BSFeedback For="@(() => d.EcodEquiEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                                         </BSTD>
 
@@ -394,19 +408,21 @@ else
                                             <BSInput InputType="InputType.Text" @bind-Value="d.EdescriEam" />
                                             <BSFeedback For="@(() => d.EdescriEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                                         </BSTD>
+
                                         <BSTD>
                                             <BSInput InputType="InputType.Select"
-                                                    TValue="string"
-                                                    Value="@GetEestaString(d)"
-                                                    ValueChanged="@( (string v) => SetEestaString(d, v) )"
-                                                    ValueExpression="@(() => GetEestaString(d))">
+                                                     TValue="string"
+                                                     Value="@GetEestaString(d)"
+                                                     ValueChanged="@((string v) => SetEestaString(d, v))"
+                                                     ValueExpression="@(() => GetEestaString(d))">
                                                 <option value="true">@DiccionarioTraduccionesService.Traducciones["Activar"]</option>
                                                 <option value="false">@DiccionarioTraduccionesService.Traducciones["Desactivar"]</option>
                                             </BSInput>
                                             <BSFeedback For="@(() => d.EestaEam)" ValidMessage="@DiccionarioTraduccionesService.Traducciones["Correcto"]" />
                                         </BSTD>
+
                                         <BSTD>
-                                            <BSButton Color="BSColor.Primary" IsOutlined @onclick="(() => Editar(d))" Target="History">
+                                            <BSButton Color="BSColor.Primary" IsOutlined @onclick="async () => await Editar(d)" Target="History">
                                                 <i class="oi oi-circle-check"></i>
                                             </BSButton>
                                             <BSButton Color="BSColor.Danger" IsOutlined @onclick="Cancelar" Target="History">
@@ -420,7 +436,7 @@ else
                                         <BSTD>@d.EcodEquiEam</BSTD>
                                         <BSTD>@d.EdescriEam</BSTD>
                                         <BSTD>
-                                            @if (d.EestaEam == true)
+                                            @if (d.EestaEam)
                                             {
                                                 <p>@DiccionarioTraduccionesService.Traducciones["Activo"]</p>
                                             }
@@ -431,8 +447,7 @@ else
                                         </BSTD>
 
                                         <BSTD>
-                                            <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdEquipo))"
-                                                      Target="History">
+                                            <BSButton Color="BSColor.Success" IsOutlined @onclick="(() => Habilitar(d.IdEquipo))" Target="History">
                                                 <i class="oi oi-pencil"></i>
                                             </BSButton>
                                         </BSTD>
@@ -469,15 +484,17 @@ else
 @code {
     [Required(ErrorMessage = "Seleccione el Centro.")]
     private int IdCent { get; set; }
+
     [Required(ErrorMessage = "Seleccione la división.")]
     private int IdDiv { get; set; }
+
     [Required(ErrorMessage = "Seleccione la Línea.")]
     private int IdLin { get; set; }
 
     private string EquipoFiltro { get; set; } = "";
     private int tipo { get; set; } = 0;
-    private int idequipoeditar { get; set; } = 0;//id para mostrar los campos de edición
-    private string mensaje = "", result = "";//resultado del save
+    private int idequipoeditar { get; set; } = 0;
+    private string mensaje = "", result = "";
 
     int dataIsLoaded = 0;
     string _message;
@@ -496,29 +513,38 @@ else
 
     private readonly Dictionary<int, EquipoEamDTO> _snapshots = new();
 
+    // ✅ Buffer de edición SOLO para el código (evita que el filtro saque la fila)
+    private readonly Dictionary<int, string> _editCodigo = new();
+
+    private string GetEditCodigo(int idEquipo)
+        => _editCodigo.TryGetValue(idEquipo, out var v) ? v : string.Empty;
+
+    private void SetEditCodigo(int idEquipo, string? value)
+        => _editCodigo[idEquipo] = value ?? string.Empty;
+
     private static EquipoEamDTO CloneEquipo(EquipoEamDTO e) => new EquipoEamDTO
     {
-        IdEquipo    = e.IdEquipo,
-        IdLinea     = e.IdLinea,
+        IdEquipo = e.IdEquipo,
+        IdLinea = e.IdLinea,
         EcodEquiEam = e.EcodEquiEam,
-        EdescriEam  = e.EdescriEam,
-        EestaEam    = e.EestaEam,
-        EnombreEam  = e.EnombreEam,
-        Efecha      = e.Efecha,
-        Linea       = e.Linea,
-        IdEmpresa   = e.IdEmpresa
+        EdescriEam = e.EdescriEam,
+        EestaEam = e.EestaEam,
+        EnombreEam = e.EnombreEam,
+        Efecha = e.Efecha,
+        Linea = e.Linea,
+        IdEmpresa = e.IdEmpresa
     };
 
     private static void CopyEquipo(EquipoEamDTO src, EquipoEamDTO dst)
     {
-        dst.IdLinea     = src.IdLinea;
+        dst.IdLinea = src.IdLinea;
         dst.EcodEquiEam = src.EcodEquiEam;
-        dst.EdescriEam  = src.EdescriEam;
-        dst.EestaEam    = src.EestaEam;
-        dst.EnombreEam  = src.EnombreEam;
-        dst.Efecha      = src.Efecha;
-        dst.Linea       = src.Linea;
-        dst.IdEmpresa   = src.IdEmpresa;
+        dst.EdescriEam = src.EdescriEam;
+        dst.EestaEam = src.EestaEam;
+        dst.EnombreEam = src.EnombreEam;
+        dst.Efecha = src.Efecha;
+        dst.Linea = src.Linea;
+        dst.IdEmpresa = src.IdEmpresa;
     }
 
     private bool codigoOk =>
@@ -539,12 +565,50 @@ else
     private static string NormalizarCodigo(string? s) =>
         (s ?? string.Empty).Trim().Replace(" ", string.Empty).ToUpperInvariant();
 
+    private async Task ValidarCodigoEquipoEnLineaCoreAsync(CancellationToken ct)
+    {
+        var codigo = NormalizarCodigo(EquipoForm.EcodEquiEam);
+        EquiposConCodigo.Clear();
+
+        if (IdLin == 0 || string.IsNullOrWhiteSpace(codigo))
+        {
+            codeExists = false;
+            return;
+        }
+
+        var equipos = await MaestraData.GetEquiposPorLinea(IdLin.ToString());
+        ct.ThrowIfCancellationRequested();
+
+        var matches = equipos?
+            .Where(eq => NormalizarCodigo(eq.EcodEquiEam) == codigo)
+            .ToList() ?? new List<EquipoEamDTO>();
+
+        var nombreLinea = MaestraData.lineas?.FirstOrDefault(l => l.IdLinea == IdLin)?.Linea;
+        foreach (var m in matches)
+            m.Linea ??= nombreLinea;
+
+        EquiposConCodigo.AddRange(matches);
+        codeExists = EquiposConCodigo.Any();
+    }
+
+    private async Task<List<EquipoEamDTO>> BuscarDuplicadosEnLineaParaEdicionAsync(
+        int idLinea, int idEquipoActual, string codigoNormalizado, CancellationToken ct = default)
+    {
+        var equipos = await MaestraData.GetEquiposPorLinea(idLinea.ToString());
+        ct.ThrowIfCancellationRequested();
+
+        return equipos?
+            .Where(eq => eq.IdEquipo != idEquipoActual &&
+                         NormalizarCodigo(eq.EcodEquiEam) == codigoNormalizado)
+            .ToList() ?? new List<EquipoEamDTO>();
+    }
+
     private async Task OnCodigoEamChanged(ChangeEventArgs e)
     {
         EquipoForm.EcodEquiEam = NormalizarCodigo(e?.Value?.ToString());
         EquiposConCodigo.Clear();
 
-        if (IdDiv == 0 || IdCent == 0 || string.IsNullOrWhiteSpace(EquipoForm.EcodEquiEam))
+        if (IdLin == 0 || string.IsNullOrWhiteSpace(EquipoForm.EcodEquiEam))
         {
             codeExists = false;
             isCheckingCode = false;
@@ -563,7 +627,7 @@ else
         try
         {
             await Task.Delay(300, token);
-            await ValidarCodigoEquipoCoreAsync(token);
+            await ValidarCodigoEquipoEnLineaCoreAsync(token);
         }
         catch (TaskCanceledException) { }
         finally
@@ -572,7 +636,7 @@ else
             StateHasChanged();
         }
     }
-    
+
     private async Task OnCodigoAfterBind()
     {
         var args = new ChangeEventArgs { Value = EquipoForm.EcodEquiEam };
@@ -583,7 +647,7 @@ else
     {
         EquiposConCodigo.Clear();
 
-        if (IdDiv == 0 || IdCent == 0 || string.IsNullOrWhiteSpace(EquipoForm?.EcodEquiEam))
+        if (IdLin == 0 || string.IsNullOrWhiteSpace(EquipoForm?.EcodEquiEam))
         {
             codeExists = false;
             isCheckingCode = false;
@@ -600,7 +664,7 @@ else
 
         try
         {
-            await ValidarCodigoEquipoCoreAsync(token);
+            await ValidarCodigoEquipoEnLineaCoreAsync(token);
         }
         catch (TaskCanceledException) { }
         finally
@@ -612,7 +676,6 @@ else
 
     private async Task Atras()
     {
-
         await Reset();
 
         dataIsLoaded = 0;
@@ -621,54 +684,17 @@ else
 
         idequipoeditar = 0;
         _snapshots.Clear();
+        _editCodigo.Clear();
 
         IdCent = 0;
-        IdDiv  = 0;
-        IdLin  = 0;
+        IdDiv = 0;
+        IdLin = 0;
         MaestraData.divisions?.Clear();
         MaestraData.lineas?.Clear();
 
         tipo = 0;
 
         StateHasChanged();
-    }
-
-
-    private async Task ValidarCodigoEquipoCoreAsync(CancellationToken ct)
-    {
-        var codigo = NormalizarCodigo(EquipoForm.EcodEquiEam);
-        EquiposConCodigo.Clear();
-
-        if (MaestraData.lineas == null || !MaestraData.lineas.Any(l => l.IdDivision == IdDiv))
-        {
-            MaestraData.lineas = await MaestraData.ObtenerLasLineasPorDivision(IdDiv);
-        }
-
-        var lineas = MaestraData.lineas.Where(l => l.IdDivision == IdDiv).ToList();
-
-        foreach (var lin in lineas)
-        {
-            var equipos = await MaestraData.GetEquiposPorLinea(lin.IdLinea.ToString());
-            ct.ThrowIfCancellationRequested();
-
-            var matches = equipos?
-                .Where(eq => NormalizarCodigo(eq.EcodEquiEam) == codigo)
-                .ToList();
-
-            if (matches != null && matches.Count > 0)
-            {
-                foreach (var m in matches)
-                {
-                    if (string.IsNullOrWhiteSpace(m.Linea))
-                    {
-                        m.Linea = lin.Linea; 
-                    }
-                }
-                EquiposConCodigo.AddRange(matches);
-            }
-        }
-
-        codeExists = EquiposConCodigo.Any();
     }
 
     private async Task CreateData()
@@ -685,7 +711,7 @@ else
     }
 
     private static string GetEestaString(EquipoEamDTO d)
-    => (d?.EestaEam ?? false) ? "true" : "false";
+        => (d?.EestaEam ?? false) ? "true" : "false";
 
     private static void SetEestaString(EquipoEamDTO d, string v)
     {
@@ -804,27 +830,10 @@ else
         CultureInfo.CurrentUICulture = CultureInfo.DefaultThreadCurrentUICulture;
         await DiccionarioTraduccionesService.CargarTraduccionesAsync();
         traduccionesCargadas = true;
+
         if (claims != null && claims.Count > 10)
         {
             await MaestraData.GetCentrosxEmpresa("All" + claims[10].Value);
-        }
-    }
-
-    private async Task SeleccionarLinea(ChangeEventArgs e)
-    {
-        if (int.TryParse(e?.Value?.ToString(), out var lineaId))
-        {
-            IdLin = lineaId;
-
-            if (tipo == 2 && IdLin != 0)
-            {
-                dataIsLoaded = 0;
-                await Get();
-            }
-        }
-        else
-        {
-            IdLin = 0;
         }
     }
 
@@ -832,7 +841,6 @@ else
     {
         if (e.Validate())
         {
-
             if (string.IsNullOrWhiteSpace(EquipoForm.EcodEquiEam) ||
                 string.IsNullOrWhiteSpace(EquipoForm.EnombreEam) ||
                 string.IsNullOrWhiteSpace(EquipoForm.EdescriEam) ||
@@ -845,7 +853,6 @@ else
 
             try
             {
-
                 EquipoForm.EcodEquiEam = NormalizarCodigo(EquipoForm.EcodEquiEam);
                 await ValidarCodigoEquipoAsync();
 
@@ -882,7 +889,6 @@ else
                     ));
 
                     await Reset();
-
                     tipo = 0;
                 }
                 else
@@ -905,13 +911,14 @@ else
     {
         idequipoeditar = id;
 
-        if (!_snapshots.ContainsKey(id))
+        var current = MaestraData.equiposlinea?.FirstOrDefault(x => x.IdEquipo == id);
+        if (current != null)
         {
-            var current = MaestraData.equiposlinea?.FirstOrDefault(x => x.IdEquipo == id);
-            if (current != null)
-            {
+            if (!_snapshots.ContainsKey(id))
                 _snapshots[id] = CloneEquipo(current);
-            }
+
+            // ✅ Inicializa el buffer del código
+            _editCodigo[id] = current.EcodEquiEam ?? string.Empty;
         }
     }
 
@@ -928,7 +935,9 @@ else
             }
 
             _snapshots.Remove(id);
+            _editCodigo.Remove(id); // ✅ limpiar buffer
             idequipoeditar = 0;
+
             StateHasChanged();
         }
     }
@@ -937,37 +946,39 @@ else
     {
         try
         {
-            // 1) Normaliza el nuevo código
-            var codigoNuevo = NormalizarCodigo(equipo.EcodEquiEam);
+            // ✅ Tomar el código desde el buffer (lo que el usuario escribió)
+            var codigoIngresado = GetEditCodigo(equipo.IdEquipo);
+            var codigoNuevo = NormalizarCodigo(codigoIngresado);
 
-            // 2) Determina la división del equipo (por la línea del equipo o el filtro actual)
-            var idDivEquipo = MaestraData.lineas?.FirstOrDefault(l => l.IdLinea == equipo.IdLinea)?.IdDivision ?? IdDiv;
+            _snapshots.TryGetValue(equipo.IdEquipo, out var snap);
+            var codigoOriginal = NormalizarCodigo(snap?.EcodEquiEam);
 
-            // 3) Busca duplicados dentro de esa división EXCLUYENDO el equipo actual
-            var duplicados = await BuscarDuplicadosEnDivisionParaEdicionAsync(idDivEquipo, equipo.IdEquipo, codigoNuevo);
+            var cambioCodigo = !string.Equals(codigoOriginal, codigoNuevo, StringComparison.OrdinalIgnoreCase);
 
-            if (duplicados.Any())
+            if (cambioCodigo)
             {
-                // 4) Notifica y cancela
-                var primero = duplicados.First();
-                var detalle = $"{DiccionarioTraduccionesService.Traducciones["CodigoYaExiste"]} - " +
-                            $"{DiccionarioTraduccionesService.Traducciones["Nombre"]}: {primero.EnombreEam}";
+                var duplicados = await BuscarDuplicadosEnLineaParaEdicionAsync(equipo.IdLinea, equipo.IdEquipo, codigoNuevo);
 
-                NotificationService.Notify(Notificar.Notificacion(
-                    "advertencia",
-                    DiccionarioTraduccionesService.Traducciones["Atencion"],
-                    detalle
-                ));
+                if (duplicados.Any())
+                {
+                    var primero = duplicados.First();
+                    var detalle = $"{DiccionarioTraduccionesService.Traducciones["CodigoYaExiste"]} - " +
+                                  $"{DiccionarioTraduccionesService.Traducciones["Nombre"]}: {primero.EnombreEam}";
 
-                return; // 🛑 No guardamos cambios
+                    NotificationService.Notify(Notificar.Notificacion(
+                        "advertencia",
+                        DiccionarioTraduccionesService.Traducciones["Atencion"],
+                        detalle
+                    ));
+                    return;
+                }
             }
 
-            // 5) Si no hay duplicados, construimos el DTO y actualizamos
-            EquipoEamDTO eq = new EquipoEamDTO
+            var eq = new EquipoEamDTO
             {
                 IdEquipo = equipo.IdEquipo,
                 IdLinea = equipo.IdLinea,
-                EcodEquiEam = codigoNuevo, // ya normalizado
+                EcodEquiEam = codigoNuevo,
                 EdescriEam = equipo.EdescriEam,
                 EestaEam = equipo.EestaEam,
                 EnombreEam = equipo.EnombreEam,
@@ -978,15 +989,46 @@ else
 
             if (mensaje == "OK")
             {
-                NotificationService.Notify(Notificar.Notificacion("exito", DiccionarioTraduccionesService.Traducciones["AExitoso"], ""));
+                var item = MaestraData.equiposlinea?.FirstOrDefault(x => x.IdEquipo == equipo.IdEquipo);
+                if (item != null)
+                {
+                    item.EcodEquiEam = codigoNuevo;
+                    item.EnombreEam = eq.EnombreEam;
+                    item.EdescriEam = eq.EdescriEam;
+                    item.EestaEam = eq.EestaEam;
+                    item.Efecha = eq.Efecha;
+                }
+
+                // ✅ CLAVE: limpiar filtro tras guardar
+                EquipoFiltro = string.Empty;
+
+                _editCodigo.Remove(equipo.IdEquipo);
+                _snapshots.Remove(equipo.IdEquipo);
+                idequipoeditar = 0;
+
+                await InvokeAsync(StateHasChanged);
+
+                NotificationService.Notify(Notificar.Notificacion(
+                    "exito",
+                    DiccionarioTraduccionesService.Traducciones["AExitoso"],
+                    ""
+                ));
             }
             else
             {
-                NotificationService.Notify(Notificar.Notificacion("advertencia", DiccionarioTraduccionesService.Traducciones["Atencion"], DiccionarioTraduccionesService.Traducciones["ErrorInesp"]));
+                NotificationService.Notify(Notificar.Notificacion(
+                    "advertencia",
+                    DiccionarioTraduccionesService.Traducciones["Atencion"],
+                    string.IsNullOrWhiteSpace(mensaje)
+                        ? DiccionarioTraduccionesService.Traducciones["ErrorInesp"]
+                        : mensaje
+                ));
             }
 
             _snapshots.Remove(equipo.IdEquipo);
             idequipoeditar = 0;
+
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
         {
@@ -1007,6 +1049,7 @@ else
         codeExists = false;
         isCheckingCode = false;
         EquiposConCodigo.Clear();
+
         if (tipo == 1 && !string.IsNullOrWhiteSpace(EquipoForm?.EcodEquiEam))
         {
             await ValidarCodigoEquipoAsync();
@@ -1015,12 +1058,11 @@ else
 
     protected async Task Reset()
     {
-
         EquipoForm = new EquipoEamDTO();
 
         IdCent = 0;
-        IdDiv  = 0;
-        IdLin  = 0;
+        IdDiv = 0;
+        IdLin = 0;
 
         MaestraData.divisions?.Clear();
         MaestraData.lineas?.Clear();
@@ -1032,6 +1074,8 @@ else
         EquiposConCodigo.Clear();
 
         idequipoeditar = 0;
+        _snapshots.Clear();
+        _editCodigo.Clear();
 
         dataIsLoaded = 0;
 
@@ -1040,43 +1084,6 @@ else
 
     private IEnumerable<EquipoEamDTO> EquiposFiltrados =>
         string.IsNullOrWhiteSpace(EquipoFiltro) || EquipoFiltro.Length <= 2
-        ? MaestraData.equiposlinea
-        : MaestraData.equiposlinea.Where(a => a.EcodEquiEam.Contains(EquipoFiltro, StringComparison.OrdinalIgnoreCase));
-        
-    private async Task<List<EquipoEamDTO>> BuscarDuplicadosEnDivisionParaEdicionAsync(
-    int idDivision, int idEquipoActual, string codigoNormalizado, CancellationToken ct = default)
-    {
-        var duplicados = new List<EquipoEamDTO>();
-
-        if (MaestraData.lineas == null || !MaestraData.lineas.Any(l => l.IdDivision == idDivision))
-        {
-            MaestraData.lineas = await MaestraData.ObtenerLasLineasPorDivision(idDivision);
-        }
-
-        var lineas = MaestraData.lineas.Where(l => l.IdDivision == idDivision).ToList();
-
-        foreach (var lin in lineas)
-        {
-            var equipos = await MaestraData.GetEquiposPorLinea(lin.IdLinea.ToString());
-            ct.ThrowIfCancellationRequested();
-
-            var matches = equipos?
-                .Where(eq => eq.IdEquipo != idEquipoActual &&
-                            NormalizarCodigo(eq.EcodEquiEam) == codigoNormalizado)
-                .ToList();
-
-            if (matches != null && matches.Count > 0)
-            {
-                // Fallback: si el DTO no trae la línea, la inferimos
-                foreach (var m in matches)
-                {
-                    if (string.IsNullOrWhiteSpace(m.Linea))
-                        m.Linea = lin.Linea;
-                }
-                duplicados.AddRange(matches);
-            }
-        }
-
-        return duplicados;
-    }
+            ? MaestraData.equiposlinea
+            : MaestraData.equiposlinea.Where(a => a.EcodEquiEam.Contains(EquipoFiltro, StringComparison.OrdinalIgnoreCase));
 }
