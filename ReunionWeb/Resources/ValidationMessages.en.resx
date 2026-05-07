@@ -162,7 +162,7 @@
 <data name="ProximaParada" xml:space="preserve"><value>Next Stop</value></data>
 <data name="FaltaRepuesto" xml:space="preserve"><value>Missing Spare Part</value></data>
 <data name="FaltaDePersonal" xml:space="preserve"><value>Lack of Personnel</value></data>
-<data name="EquipoNoDisponible" xml:space="preserve"><value>Equipment Not Available</value></data>
+<data name="EquipoNoDisponible" xml:space="preserve"><value>Equipment Not Registered</value></data>
 <data name="ParadaMayor" xml:space="preserve"><value>Major Downtime</value></data>
 <data name="Tiempo" xml:space="preserve"><value>Time</value></data>
 <data name="Requisicion" xml:space="preserve"><value>Requisition</value></data>

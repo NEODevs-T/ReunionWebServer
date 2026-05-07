@@ -162,7 +162,7 @@
 <data name="ProximaParada" xml:space="preserve"><value>Proxima Parada</value></data>
 <data name="FaltaRepuesto" xml:space="preserve"><value>Falta Repuesto</value></data>
 <data name="FaltaDePersonal" xml:space="preserve"><value>Falta de Personal</value></data>
-<data name="EquipoNoDisponible" xml:space="preserve"><value>Equipo no Disponible</value></data>
+<data name="EquipoNoDisponible" xml:space="preserve"><value>Equipo no Registrado</value></data>
 <data name="ParadaMayor" xml:space="preserve"><value>Parada Mayor</value></data>
 <data name="Tiempo" xml:space="preserve"><value>Tiempo</value></data>
 <data name="Requisicion" xml:space="preserve"><value>Requisición</value></data>
