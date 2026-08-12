@@ -582,7 +582,7 @@ else
 
 @if (CambiosFecha.Count() > 0)
 {
-    <p> @DiccionarioTraduccionesService.Traducciones["CambiosDeFechaDeTrabajoRestantes"] @(3 - CambiosFecha.Count()) </p>
+    <p> @DiccionarioTraduccionesService.Traducciones["CambiosDeFechaDeTrabajoRestantes"] @(4 - CambiosFecha.Count()) </p>
     <div style="width: 40vw;">
         <BSTable IsResponsive="true" IsStriped="true" IsBordered="true">
             <BSTHead Class="cabecera">
@@ -597,7 +597,7 @@ else
                 @foreach (var d in CambiosFecha)
                 {
                     <BSTR>
-                        <BSTD>@(CambiosFecha.IndexOf(d) + +1)</BSTD>
+                        <BSTD>@(CambiosFecha.IndexOf(d))</BSTD>
                         <BSTD>@d.Cffec.ToString("yyyy/MM/dd")</BSTD>
                             <BSTD>@d.CffecNew.ToString("yyyy/MM/dd")</BSTD>
                             <BSTD>@d.Cfuser</BSTD>
@@ -851,8 +851,8 @@ private async Task Editar()
 {
     try
     {
-        // ✅ Límite de cambios de fecha: máximo 3 por registro
-        if (CambiosFecha.Count() >= 3 && camFec != DiscForm.RdfecTra)
+        // ✅ Límite de cambios de fecha: máximo 4 por registro
+        if (CambiosFecha.Count() >= 4 && camFec != DiscForm.RdfecTra)
         {
             NotificationService.Notify(Notificar.Notificacion(
                 "error",
