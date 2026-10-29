@@ -24,27 +24,40 @@ namespace ReunionWeb
         }
 
 
-        public override async  Task<AuthenticationState>  GetAuthenticationStateAsync()
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-           string token = await _localStorage.GetItemAsStringAsync("ReunionDiariaToken");
-           
+            string token = await _localStorage.GetItemAsStringAsync("ReunionDiariaToken");
 
             var identity = new ClaimsIdentity();
             _http.DefaultRequestHeaders.Authorization = null;
 
             if (!string.IsNullOrEmpty(token))
             {
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-                _http.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+                try
+                {
+                    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+
+                    _http.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue(
+                            "Bearer",
+                            token.Replace("\"", ""));
+                }
+                catch
+                {
+                    await _localStorage.RemoveItemAsync("ReunionDiariaToken");
+
+                    identity = new ClaimsIdentity();
+
+                    _http.DefaultRequestHeaders.Authorization = null;
+                }
             }
 
             var user = new ClaimsPrincipal(identity);
             var state = new AuthenticationState(user);
 
             NotifyAuthenticationStateChanged(Task.FromResult(state));
-            return state;
 
+            return state;
         }
 
         public static IEnumerable<Claim>ParseClaimsFromJwt(string jwt)
